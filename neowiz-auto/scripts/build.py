@@ -94,34 +94,36 @@ def fetch_all_pages():
         f'AND type = page ORDER BY created DESC'
     )
     results = []
-    path = "/wiki/rest/api/content/search"
-    params = {
-        "cql": cql,
-        "limit": 100,
-        "expand": "content.history.createdBy",
-    }
+    start = 0
+    limit = 100
+    total = None
+
     while True:
-        data = api_get(path, params)
-        if not data or not data.get("results"):
+        data = api_get("/wiki/rest/api/content/search", {
+            "cql": cql,
+            "limit": limit,
+            "start": start,
+            "expand": "content.history.createdBy",
+        })
+        if not data:
             break
-        batch = data["results"]
+        batch = data.get("results", [])
+        if not batch:
+            break
         results.extend(batch)
+
+        if total is None:
+            total = data.get("totalSize", 0)
+            print(f"  \uc804\uccb4: {total}\uac1c")
+
         print(f"  \ub204\uc801: {len(results)}\uac1c")
-        # 커서 기반 next 링크 사용
-        next_link = data.get("_links", {}).get("next", "")
-        if not next_link:
+
+        if len(results) >= total or len(results) >= 1000:
             break
-        # next 링크에서 path와 params 분리
-        path = next_link.replace("/wiki", "").split("?")[0]
-        params = {}
-        for kv in next_link.split("?")[-1].split("&"):
-            if "=" in kv:
-                k, v = kv.split("=", 1)
-                from urllib.parse import unquote_plus
-                params[k] = unquote_plus(v)
-        if len(results) >= 1000:
-            break
-        time.sleep(0.2)
+
+        start += limit
+        time.sleep(0.3)
+
     return results
 
 def extract_types(text):
