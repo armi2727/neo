@@ -24,11 +24,10 @@ jobs:
           CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
           CONFLUENCE_API_TOKEN: ${{ secrets.CONF_TOKEN }}
         run: python neowiz-auto/scripts/build.py
-      - name: index.html 배포
+- name: index.html 배포
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          cp public/index.html index.html
           git add index.html
           git diff --staged --quiet || git commit -m "자동 업데이트"
           git push
