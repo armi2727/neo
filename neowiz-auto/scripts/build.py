@@ -94,15 +94,11 @@ def fetch_all_pages():
     )
     base_url = f"{CONFLUENCE_BASE}/wiki/rest/api/search"
     results = []
-    start = 0
-    limit = 50
+    params = {"cql": cql, "limit": 50}
+    url = base_url
 
     while True:
-        data = api_get(base_url, {
-            "cql": cql,
-            "limit": limit,
-            "start": start,
-        })
+        data = api_get(url, params)
         if not data:
             break
 
@@ -111,13 +107,18 @@ def fetch_all_pages():
             break
 
         results.extend(batch)
-        total = data.get("totalSize", 0)
+        total = data.get("totalSize", len(results))
         print(f"  \ub204\uc801: {len(results)}/{total}\uac1c")
 
-        if len(batch) < limit or (total > 0 and len(results) >= total):
+        # 다음 페이지: _links.next 커서 사용
+        next_path = data.get("_links", {}).get("next", "")
+        if not next_path:
             break
 
-        start += len(batch)
+        # next_path = "/wiki/rest/api/search?next=true&cursor=...&cql=..."
+        url = CONFLUENCE_BASE + next_path
+        params = None  # URL에 이미 파라미터 포함됨
+
         time.sleep(0.3)
 
     return results
