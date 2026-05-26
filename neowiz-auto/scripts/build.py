@@ -67,10 +67,7 @@ def get_auth():
 
 def api_get(path, params=None, retry=3):
     url = f"{CONFLUENCE_BASE}{path}"
-    headers = {
-        "Authorization": f"Basic {get_auth()}",
-        "Accept": "application/json",
-    }
+    headers = {"Authorization": f"Basic {get_auth()}", "Accept": "application/json"}
     for attempt in range(retry):
         try:
             r = requests.get(url, headers=headers, params=params, timeout=10)
@@ -103,6 +100,7 @@ def fetch_all_pages():
             "cql": cql,
             "limit": 100,
             "start": start,
+            "expand": "content.history.createdBy",
         })
         if not data or not data.get("results"):
             break
@@ -171,38 +169,37 @@ def main():
     seen = set()
 
     for i, r in enumerate(raw):
+        # 실제 API 응답 구조: r.content.id, r.title, r.excerpt, r.lastModified, r.url
         content = r.get("content", {})
-        cid = content.get("id", "")
-
-        # 중복 제거
+        cid = content.get("id")
         if not cid or cid in seen:
             continue
         seen.add(cid)
 
-        title = content.get("title", "")
-        webui = content.get("_links", {}).get("webui", "")
-        full_url = CONFLUENCE_BASE + "/wiki" + webui if webui else ""
+        title = r.get("title", "") or content.get("title", "")
+        excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:150]
+        last_mod = (r.get("lastModified") or "")[:10]
 
-        # space_key: webui에서 추출 (/spaces/XXXX/pages/...)
+        # URL: r.url = "/spaces/1107/pages/..."
+        page_url_path = r.get("url", "") or content.get("_links", {}).get("webui", "")
+        full_url = CONFLUENCE_BASE + "/wiki" + page_url_path if page_url_path else ""
+
+        # space_key: URL에서 추출
         space_key = ""
-        if webui:
-            parts = webui.split("/")
-            if "spaces" in parts:
-                idx2 = parts.index("spaces")
-                if idx2 + 1 < len(parts):
-                    space_key = parts[idx2 + 1]
+        parts = page_url_path.split("/")
+        if "spaces" in parts:
+            idx2 = parts.index("spaces")
+            if idx2 + 1 < len(parts):
+                space_key = parts[idx2 + 1]
 
         # resultGlobalContainer fallback
         if not space_key:
             display_url = r.get("resultGlobalContainer", {}).get("displayUrl", "")
-            if display_url:
-                space_key = display_url.strip("/").split("/")[-1]
+            space_key = display_url.strip("/").split("/")[-1] if display_url else ""
 
         team = SPACE_TEAM.get(space_key, "\ud37c\ud50c")
-        last_mod = (r.get("lastModified") or "")[:10]
-        excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:150]
 
-        # author: history가 있으면 사용
+        # author
         author = ""
         history = content.get("history", {})
         if history:
