@@ -193,7 +193,7 @@ def main():
         # r.id, r.title, r.url, r.excerpt, r.lastModified
         # r.resultGlobalContainer.displayUrl
         # r.content.history.createdBy (expand 있을 때)
-        cid = r.get("id", "")
+        cid = str(content.get("id", ""))
         if not cid or cid in seen:
             continue
         seen.add(cid)
