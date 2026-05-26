@@ -165,6 +165,15 @@ def main():
     raw = fetch_all_pages()
     print(f"  \uc4f0 {len(raw)}\uac1c \uacb0\uacfc")
 
+    # 첫 번째 결과 구조 디버그
+    if raw:
+        r0 = raw[0]
+        print(f"  DEBUG keys: {list(r0.keys())}")
+        print(f"  DEBUG content keys: {list(r0.get('content', {}).keys())}")
+        print(f"  DEBUG content.id: {r0.get('content', {}).get('id')}")
+        print(f"  DEBUG title: {r0.get('title')}")
+        print(f"  DEBUG url: {r0.get('url')}")
+
     pages = []
     seen = set()
 
