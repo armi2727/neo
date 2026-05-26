@@ -92,9 +92,6 @@ def fetch_all_pages():
         f'title ~ "AID TF" OR title ~ "AID TFT" OR title ~ "TechCraft") '
         f'AND type = page ORDER BY created DESC'
     )
-    # expand=content,content.history 를 명시적으로 추가
-    # 이렇게 하면 r.content.id, r.content._links.webui,
-    # r.content.history.createdBy.displayName 이 모두 반환됨
     base_url = f"{CONFLUENCE_BASE}/wiki/rest/api/search"
     results = []
     start = 0
@@ -105,7 +102,6 @@ def fetch_all_pages():
             "cql": cql,
             "limit": limit,
             "start": start,
-            "expand": "content,content.history",
         })
         if not data:
             break
@@ -118,7 +114,7 @@ def fetch_all_pages():
         total = data.get("totalSize", 0)
         print(f"  \ub204\uc801: {len(results)}/{total}\uac1c")
 
-        if len(batch) < limit or len(results) >= total:
+        if len(batch) < limit or (total > 0 and len(results) >= total):
             break
 
         start += len(batch)
@@ -189,18 +185,20 @@ def main():
     seen = set()
 
     for i, r in enumerate(raw):
+        # expand 없을 때: r.id, r.title, r.url, r.excerpt, r.lastModified 최상위에 있음
+        # expand 있을 때: r.content.id, r.content._links.webui 에 있음
         content = r.get("content", {})
-        cid = str(content.get("id", ""))
+        cid = str(r.get("id") or content.get("id") or "")
         if not cid or cid in seen:
             continue
         seen.add(cid)
 
-        title = r.get("title", "")
+        title = r.get("title", "") or content.get("title", "")
         excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:200]
         last_mod = (r.get("lastModified") or "")[:10]
 
         # URL
-        page_path = r.get("url", "")
+        page_path = r.get("url", "") or content.get("_links", {}).get("webui", "")
         full_url = CONFLUENCE_BASE + "/wiki" + page_path if page_path else ""
 
         # space_key
