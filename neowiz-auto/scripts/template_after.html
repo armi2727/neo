@@ -1,0 +1,88 @@
+
+
+const seen=new Set();
+const UP=PAGES.filter(p=>{if(seen.has(p.url))return false;seen.add(p.url);return true;});
+let selTeams=new Set(),selTypes=new Set(),curSort="newest",curSearch="";
+
+
+function getFiltered(){
+  return UP.filter(p=>{
+    const tOk=selTeams.size===0||selTeams.has(p.team);
+    const tyOk=selTypes.size===0||[...selTypes].every(t=>(p.types||[]).includes(t));
+    const q=curSearch.toLowerCase();
+    const sOk=!q||p.title.toLowerCase().includes(q)||(p.summary||'').toLowerCase().includes(q)||(p.author||'').toLowerCase().includes(q)||(p.tools||[]).join(' ').toLowerCase().includes(q)||p.team.toLowerCase().includes(q)||(p.types||[]).join(' ').toLowerCase().includes(q);
+    return tOk&&tyOk&&sOk;
+  }).sort((a,b)=>{
+    if(curSort==='newest')return b.date.localeCompare(a.date);
+    if(curSort==='views')return(b.views||0)-(a.views||0);
+    return a.title.localeCompare(b.title,'ko');
+  });
+}
+
+
+function toggleTeam(team){
+  // 단일 선택: 같은 팀 다시 누르면 전체로
+  if(selTeams.size===1&&selTeams.has(team)||team==='ALL'){selTeams.clear();}
+  else{selTeams.clear();if(team!=='ALL')selTeams.add(team);}
+  updateTeamUI();render();
+}
+
+
+function updateTeamUI(){
+  const teams=["레드","퍼플","블루","브라운","올림포스","공용"];
+  const allB=document.getElementById('tb-ALL');
+  if(selTeams.size===0){allB.style.background='#fff3f0';allB.style.color='var(--upvote)';}
+  else{allB.style.background='';allB.style.color='';}
+  teams.forEach(t=>{
+    const b=document.getElementById('tb-'+t);
+    const c=TC[t];
+    const cnt=b.querySelector('.team-cnt');
+    if(selTeams.has(t)){b.style.background=c.p+'55';b.style.color=c.t;cnt.style.background=c.s;cnt.style.color='#fff';cnt.style.borderColor='transparent';}
+    else{b.style.background='';b.style.color='';cnt.style.background='';cnt.style.color='';cnt.style.borderColor='';}
+  });
+}
+
+
+function renderTypeChips(){
+  document.getElementById('typeChips').innerHTML=Object.entries(TYC).map(([t,c])=>
+    `<button class="type-chip" id="tc-${t}" style="color:${c.bg};border-color:${c.bg}" onclick="toggleType('${t}',this)"><span class="tc-dot" style="background:${c.bg}"></span>${c.lb}</button>`
+  ).join('');
+}
+
+
+function toggleType(type,chip){
+  if(selTypes.has(type)){selTypes.delete(type);const c=TYC[type];chip.classList.remove('on');chip.style.background='';chip.style.color=c.bg;chip.style.borderColor=c.bg;}
+  else{selTypes.add(type);chip.classList.add('on');chip.style.background=TYC[type].bg;chip.style.color='#fff';chip.style.borderColor='transparent';}
+  updateHint();render();
+}
+
+
+function updateHint(){
+  const h=document.getElementById('filterHint');
+  if(selTypes.size===0){h.textContent='전체 작업 유형 표시 중. 클릭하면 복수 선택 가능합니다.';h.style.color='';h.style.fontWeight='';}
+  else{h.textContent='선택됨: '+[...selTypes].map(t=>TYC[t].lb).join(', ');h.style.color='var(--accent)';h.style.fontWeight='600';}
+}
+
+
+function setSort(s,btn){curSort=s;document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+
+
+function refreshPage(){
+  window.location.reload();
+}
+
+
+function renderToolChips(){
+  const cnt={};UP.forEach(p=>(p.tools||[]).forEach(t=>{cnt[t]=(cnt[t]||0)+1;}));
+  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,16);
+  document.getElementById('toolChips').innerHTML=top.map(([t,n],i)=>{
+    const c=TOOLCOLS[i%TOOLCOLS.length];
+    return `<button class="tool-chip" id="toolc-${t.replace(/[\s&]/g,'_')}" style="color:${c};border-color:${c}" onclick="searchTool('${t}',this)" title="${n}개">${t}</button>`;
+  }).join('');
+}
+
+
+function searchTool(tool,chip){
+  if(curSearch===tool){curSearch='';document.getElementById('searchInput').value='';renderToolChips();}
+  else{curSearch=tool;document.getElementById('searchInput').value=tool;document.querySelectorAll('.tool-chip').forEach(c=>c.classList.remove('on'));chip.classList.add('on');chip.style.background=chip.style.color;chip.style.color='#fff';chip.style.borderColor='transparent';}
+  render();

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>r/neowiz-design-ai — 디자인 · 이미지 생성 AI 페이지 모음</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--white:#fff;--bg:#f0f2f5;--bg2:#f6f7f9;--border:#f0f2f5;--border2:#e2e5e9;--text:#1c1c1e;--sub:#576069;--muted:#878a8c;--accent:#0079d3;--upvote:#ff4500;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.5;min-height:100vh;}
+.topnav{position:sticky;top:0;z-index:200;background:var(--white);border-bottom:1px solid var(--border2);height:48px;display:flex;align-items:center;padding:0 20px;gap:16px;box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;flex-shrink:0;}
+.logo-icon{width:32px;height:32px;background:var(--upvote);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;}
+.logo-txt{font-size:17px;font-weight:600;color:var(--text);}
+.logo-txt span{color:var(--muted);font-weight:400;}
+.srch{flex:1;max-width:480px;position:relative;}
+.srch input{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:20px;font-family:'IBM Plex Sans KR',sans-serif;font-size:15px;color:var(--text);padding:7px 16px 7px 38px;outline:none;transition:all .15s;}
+.srch input:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,121,211,.12);}
+.srch input::placeholder{color:var(--muted);}
+.srch-ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.nav-stat{margin-left:auto;font-size:14px;color:var(--muted);background:var(--bg2);padding:4px 12px;border-radius:20px;border:1px solid var(--border2);flex-shrink:0;}
+.nav-stat b{color:var(--upvote);}.nav-updated{font-size:11px;color:var(--muted);flex-shrink:0;}
+.layout{max-width:1360px;margin:0 auto;display:flex;gap:18px;padding:16px 14px;align-items:flex-start;}
+.sl{width:220px;flex-shrink:0;position:sticky;top:64px;max-height:calc(100vh - 80px);overflow-y:auto;}
+.panel{background:var(--white);border:1px solid var(--border2);border-radius:6px;overflow:hidden;margin-bottom:10px;}
+.panel-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 12px 6px;background:var(--bg2);border-bottom:1px solid var(--border2);}
+.sort-btn{display:flex;align-items:center;gap:8px;padding:9px 13px;border:none;background:none;width:100%;text-align:left;font-family:'IBM Plex Sans KR',sans-serif;font-size:14px;color:var(--sub);cursor:pointer;transition:background .1s;border-bottom:1px solid var(--border);}
+.sort-btn:last-of-type{border-bottom:none;}
+.sort-btn:hover{background:var(--bg2);}
+.sort-btn.active{background:#fff3f0;color:var(--upvote);font-weight:600;}
+.sort-btn .si{font-size:15px;width:18px;text-align:center;}
+.refresh-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:calc(100% - 24px);margin:10px 12px;padding:7px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-family:'IBM Plex Sans KR',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;}
+.refresh-btn:hover{background:#0067b3;}
+.team-btn{display:flex;align-items:center;gap:8px;padding:8px 12px;cursor:pointer;border:none;background:none;width:100%;text-align:left;font-family:'IBM Plex Sans KR',sans-serif;font-size:14px;color:var(--text);transition:background .1s;border-bottom:1px solid var(--border);}
+.team-btn:last-child{border-bottom:none;}
+.team-btn:hover{background:var(--bg2);}
+.team-pip{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.team-lbl{flex:1;}
+.team-cnt{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:1px 7px;flex-shrink:0;transition:all .15s;}
+.main{flex:1;min-width:0;}
+.type-filter-bar{background:var(--white);border:1px solid var(--border2);border-radius:6px;padding:14px 16px;margin-bottom:12px;}
+.type-filter-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.type-chips{display:flex;flex-wrap:wrap;gap:7px;}
+.type-chip{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;border:2px solid;background:none;font-family:'IBM Plex Sans KR',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;}
+.type-chip:hover{opacity:.85;transform:translateY(-1px);}
+.type-chip.on{color:#fff!important;border-color:transparent!important;}
+.tc-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.filter-hint{font-size:12px;color:var(--muted);margin-top:8px;transition:all .2s;}
+.feed-bar{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.flbl{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);}
+.post{background:var(--white);border:1px solid var(--border2);border-radius:6px;margin-bottom:8px;display:flex;transition:border-color .1s,box-shadow .1s;animation:su .2s both;overflow:hidden;cursor:pointer;}
+.post:hover{border-color:#818384;box-shadow:0 2px 8px rgba(0,0,0,.06);}
+@keyframes su{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+.post-bar{width:6px;flex-shrink:0;}
+.pc{flex:1;min-width:0;padding:10px 12px 9px 10px;}
+.ptop{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:5px;}
+.team-flair{font-size:12px;font-weight:700;padding:2px 8px;border-radius:3px;color:#fff;letter-spacing:.02em;white-space:nowrap;}
+.type-flair{font-size:11px;font-weight:600;padding:1px 6px;border-radius:3px;color:#fff;opacity:.85;white-space:nowrap;}
+.pmeta{font-size:12px;color:var(--muted);}
+.pmeta b{color:var(--sub);}
+.ptitle{font-size:16px;font-weight:500;color:var(--text);line-height:1.35;margin-bottom:5px;}
+.post:hover .ptitle{color:var(--accent);}
+.psummary{font-size:13px;color:var(--sub);line-height:1.55;margin-bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pact{display:flex;align-items:center;gap:3px;}
+.views-txt{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:3px;}
+.pa{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border:none;background:none;border-radius:3px;font-family:'IBM Plex Sans KR',sans-serif;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;text-decoration:none;transition:background .1s,color .1s;}
+.pa:hover{background:var(--bg2);color:var(--text);}
+.pa.open{color:var(--accent);}
+.pa.open:hover{background:#e8f0fe;}
+.sr{width:280px;flex-shrink:0;position:sticky;top:64px;max-height:calc(100vh - 80px);overflow-y:auto;}
+.tool-panel{background:var(--white);border:1px solid var(--border2);border-radius:6px;margin-bottom:10px;overflow:hidden;}
+.tool-panel-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:8px 12px 6px;background:var(--bg2);border-bottom:1px solid var(--border2);}
+.tool-chips{display:flex;flex-wrap:wrap;gap:6px;padding:12px;}
+.tool-chip{font-size:13px;font-weight:600;padding:5px 11px;border-radius:3px;border:1.5px solid;cursor:pointer;background:none;font-family:'IBM Plex Sans KR',sans-serif;transition:all .12s;white-space:nowrap;}
+.tool-chip:hover{opacity:.8;}
+.tool-chip.on{color:#fff!important;border-color:transparent!important;}
+.rank-item{display:flex;align-items:flex-start;gap:9px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s;}
+.rank-item:last-child{border-bottom:none;}
+.rank-item:hover{background:var(--bg2);}
+.rnum{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:700;min-width:16px;text-align:center;line-height:1.3;flex-shrink:0;}
+.rbdy{flex:1;min-width:0;}
+.rflair{display:inline-block;font-size:11px;font-weight:700;padding:1px 5px;border-radius:2px;color:#fff;margin-bottom:2px;}
+.rtitle{font-size:12px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.rmeta{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty-e{font-size:41px;margin-bottom:12px;display:block;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:2px;}
+.sr:hover::-webkit-scrollbar-thumb{background:var(--border2);}
+.sl:hover::-webkit-scrollbar-thumb{background:var(--border2);}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="logo" href="#"><div class="logo-icon">🎨</div><span class="logo-txt"><span>r/</span>neowiz-design-ai</span></a>
+  <div class="srch">
+    <svg class="srch-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="제목·요약·작성자·툴 검색…" oninput="curSearch=this.value;render()" onkeyup="curSearch=this.value;render()">
+  </div>
+  <div class="nav-stat">총 <b id="totalCount">0</b> 페이지</div><div class="nav-updated">🔄 __UPDATED_AT__</div>
+</nav>
+<div class="layout">
+  <aside class="sl">
+    <div class="panel">
+      <div class="panel-title">🔃 정렬</div>
+      <button class="sort-btn active" onclick="setSort('newest',this)"><span class="si">🆕</span>최신순</button>
+      <button class="sort-btn" onclick="setSort('views',this)"><span class="si">👁️</span>조회수순</button>
+      <button class="sort-btn" onclick="setSort('alpha',this)"><span class="si">🔤</span>가나다순</button>
+      <button class="refresh-btn" onclick="refreshPage()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>새로고침
+      </button>
+    </div>
+    <div class="panel">
+      <div class="panel-title">🏢 사업실</div>
+      <button class="team-btn" id="tb-ALL" onclick="toggleTeam('ALL')"><span class="team-pip" style="background:linear-gradient(135deg,#ffb3b3,#a8c8f8)"></span><span class="team-lbl">전체</span><span class="team-cnt" id="cnt-ALL">0</span></button>
+      <button class="team-btn" id="tb-레드" onclick="toggleTeam('레드')"><span class="team-pip" style="background:#ffb3b3"></span><span class="team-lbl">레드</span><span class="team-cnt" id="cnt-레드">0</span></button>
+      <button class="team-btn" id="tb-퍼플" onclick="toggleTeam('퍼플')"><span class="team-pip" style="background:#c8b4f5"></span><span class="team-lbl">퍼플</span><span class="team-cnt" id="cnt-퍼플">0</span></button>
+      <button class="team-btn" id="tb-블루" onclick="toggleTeam('블루')"><span class="team-pip" style="background:#a8c8f8"></span><span class="team-lbl">블루</span><span class="team-cnt" id="cnt-블루">0</span></button>
+      <button class="team-btn" id="tb-브라운" onclick="toggleTeam('브라운')"><span class="team-pip" style="background:#d4a574"></span><span class="team-lbl">브라운</span><span class="team-cnt" id="cnt-브라운">0</span></button>
+      <button class="team-btn" id="tb-올림포스" onclick="toggleTeam('올림포스')"><span class="team-pip" style="background:#a8d5c8"></span><span class="team-lbl">올림포스</span><span class="team-cnt" id="cnt-올림포스">0</span></button>
+      <button class="team-btn" id="tb-공용" onclick="toggleTeam('공용')"><span class="team-pip" style="background:#c4cdd6"></span><span class="team-lbl">공용</span><span class="team-cnt" id="cnt-공용">0</span></button>
+    </div>
+  </aside>
+  <main class="main">
+    <div class="type-filter-bar">
+      <div class="type-filter-title">🎨 작업 유형 필터 (중복 선택 가능)</div>
+      <div class="type-chips" id="typeChips"></div>
+      <div class="filter-hint" id="filterHint">전체 작업 유형 표시 중. 클릭하면 복수 선택 가능합니다.</div>
+    </div>
+    <div class="feed-bar">
+      <span style="font-size:13px;color:var(--accent);font-weight:600" id="activeFiltersLabel"></span>
+      <span class="flbl" id="feedLabel">0개</span>
+    </div>
+    <div id="postList"></div>
+  </main>
+  <aside class="sr">
+    <div class="tool-panel">
+      <div class="tool-panel-title">🔧 주요 사용 툴 (클릭 검색)</div>
+      <div class="tool-chips" id="toolChips"></div>
+    </div>
+    <div class="panel"><div class="panel-title">👁️ 조회수 TOP 5</div><div id="topViews"></div></div>
+    <div class="panel"><div class="panel-title">🆕 최신글 TOP 5</div><div id="topNew"></div></div>
+    <div class="panel">
+      <div class="panel-title" style="border-bottom:none">🔗 바로가기</div>
+      <div style="padding:10px 12px"><a href="https://neowiz.atlassian.net/wiki" target="_blank" style="font-size:13px;color:var(--accent);text-decoration:none;display:flex;align-items:center;gap:5px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Neowiz Confluence</a></div>
+    </div>
+  </aside>
+</div>
+<script>
+const TC={레드:{p:"#ffcdd2",s:"#ef9a9a",t:"#7a1a1a"},퍼플:{p:"#e1d5f7",s:"#b39ddb",t:"#3b1a7a"},블루:{p:"#bbdefb",s:"#90caf9",t:"#1a3a6a"},브라운:{p:"#ffe0b2",s:"#ffcc80",t:"#4a2810"},올림포스:{p:"#b2dfdb",s:"#80cbc4",t:"#1a4a3a"},공용:{p:"#cfd8dc",s:"#b0bec5",t:"#2a3a46"}};
+const TYC={이미지생성:{bg:"#67c4d8",lb:"이미지 생성"},포토샵:{bg:"#7b9fd4",lb:"포토샵·편집"},영상:{bg:"#d4956a",lb:"영상 제작"},"UI디자인":{bg:"#d47fa6",lb:"UI/UX 디자인"},리소스:{bg:"#72c28a",lb:"게임 리소스"},자동화툴:{bg:"#dbb76a",lb:"자동화 툴"},Figma:{bg:"#a688d4",lb:"Figma"}};
+const TOOLCOLS=["#0891b2","#7c3aed","#b45309","#be185d","#16a34a","#d97706","#0079d3","#dc2626","#475569","#92400e","#1d4ed8","#0f766e","#c2410c","#047857","#7e22ce","#1d4ed8"];
