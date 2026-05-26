@@ -173,6 +173,11 @@ def main():
         print(f"  DEBUG content.id: {r0.get('content', {}).get('id')}")
         print(f"  DEBUG title: {r0.get('title')}")
         print(f"  DEBUG url: {r0.get('url')}")
+        print(f"  DEBUG r0.id: {r0.get('id')}")
+        print(f"  DEBUG r0.entityType: {r0.get('entityType')}")
+        # 첫 5개 id 출력
+        ids = [r.get("id") for r in raw[:5]]
+        print(f"  DEBUG first 5 ids: {ids}")
 
     pages = []
     seen = set()
