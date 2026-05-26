@@ -2,20 +2,16 @@ name: Confluence AI 페이지 자동 업데이트
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '40 0 * * *'   # 오전 9:40 KST
+    - cron: '0 3 * * *'    # 오후 12:00 KST
   workflow_dispatch:
-
-permissions:
-  contents: write
-  pages: write
-  id-token: write
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: 코드 체크아웃
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Python 설정
         uses: actions/setup-python@v5
@@ -26,9 +22,10 @@ jobs:
         run: pip install requests
 
       - name: Confluence 데이터 수집 & HTML 빌드
+        timeout-minutes: 8
         env:
           CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
-          CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_API_TOKEN }}
+          CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
         run: python neowiz-auto/scripts/build.py
 
       - name: GitHub Pages 배포
@@ -36,4 +33,3 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./public
-          commit_message: '자동 업데이트'

@@ -79,7 +79,7 @@ def api_get(path, params=None, retry=3):
     url = f"{CONFLUENCE_BASE}{path}"
     for attempt in range(retry):
         try:
-            r = requests.get(url, headers=HEADERS, params=params, timeout=15)
+            r = requests.get(url, headers=HEADERS, params=params, timeout=5)
             if r.status_code in (401, 403):
                 print(f"  [HTTP {r.status_code}] \uc778\uc99d \uc624\ub958")
                 return None
