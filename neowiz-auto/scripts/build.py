@@ -211,11 +211,12 @@ def main():
     print(f"  \uc4f0 {len(results)}\uac1c \uacb0\uacfc")
 
     pages = []
-    seen_urls = set()
+    seen_ids = set()
     for i, r in enumerate(results):
         p = parse_page(r, i)
-        if p and p["url"] not in seen_urls:
-            seen_urls.add(p["url"])
+        cid = r.get("content", {}).get("id", "")
+        if p and cid and cid not in seen_ids:
+            seen_ids.add(cid)
             pages.append(p)
 
     print(f"  \ud544\ud130 \ud6c4 {len(pages)}\uac1c \ud398\uc774\uc9c0")
