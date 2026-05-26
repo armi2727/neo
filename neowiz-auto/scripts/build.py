@@ -23,7 +23,7 @@ TYPE_KEYWORDS = {
     "\uc774\ubbf8\uc9c0\uc0dd\uc131": ["image gen","\uc774\ubbf8\uc9c0 \uc0dd\uc131","\uc774\ubbf8\uc9c0\uc0dd\uc131","\uc77c\ub7ec\uc2a4\ud2b8","midjourney","\ubbf8\ub4dc\uc800\ub2c8","dzine","krea","flux","comfyui","dreamina","whisk","\ub098\ub178\ubc14\ub098\ub098","nanobanana","ai \uc774\ubbf8\uc9c0"],
     "\uc601\uc0c1": ["\uc601\uc0c1 \uc81c\uc791","\uc601\uc0c1\uc81c\uc791","video","kling","\ud074\ub9c1","sora","higgsfield","seedance","veo","hailuo","\ubaa8\uc158","\uc560\ub2c8\uba54\uc774\uc158"],
     "\ub9ac\uc18c\uc2a4": ["\uac8c\uc784 \ub9ac\uc18c\uc2a4","\ub9ac\uc18c\uc2a4 \uc81c\uc791","\uc2ac\ub86f.*\ub9ac\uc18c\uc2a4","\uc2ec\ubcfc","\uadf8\ub798\ud53d \ub9ac\uc18c\uc2a4"],
-    "\uc0ac\uc6b4\ub4dc": ["\uc0ac\uc6b4\ub4dc","\uc74c\uc545","bgm","sound","music","suno","elevenlabs","\uc624\ub514\uc624","\ubcf4\uc774\c2a4"],
+    "\uc0ac\uc6b4\ub4dc": ["\uc0ac\uc6b4\ub4dc","\uc74c\uc545","bgm","sound","music","suno","elevenlabs","\uc624\ub514\uc624","\ubcf4\uc774\uc2a4"],
     "\uc790\ub3d9\ud654\ud234": ["\uc790\ub3d9\ud654","automation","\uc2a4\ud06c\ub9bd\ud2b8","claude code","cursor","\ucee4\uc11c","n8n","gitlab ci","ci/cd"],
     "\ud3ec\ud1a0\uc0f5": ["\ud3ec\ud1a0\uc0f5","photoshop","\ud3b8\uc9d1","\ud6c4\ud3b8\uc9d1","weavy","\uc704\ube44","upscayl"],
     "UI\ub514\uc790\uc778": ["ui \ub514\uc790\uc778","ui design","\ubc30\ub108","\ud31d\uc5c5","\ubc84\ud2bc","ux"],
@@ -85,15 +85,6 @@ def api_get(url, params=None, retry=3):
                 return None
 
 def fetch_all_pages():
-    """
-    expand 없이 검색 — 이 경우 응답 구조:
-      r.content.id, r.content._links.webui
-      r.title, r.excerpt, r.lastModified, r.url
-      r.resultGlobalContainer.displayUrl
-      r.content.history.createdBy.displayName (expand 있을 때만)
-    
-    totalSize 기반으로 start 페이지네이션.
-    """
     spaces = ",".join(f'"{s}"' for s in SPACE_TEAM.keys())
     cql = (
         f'space in ({spaces}) AND '
@@ -101,33 +92,33 @@ def fetch_all_pages():
         f'title ~ "AID TF" OR title ~ "AID TFT" OR title ~ "TechCraft") '
         f'AND type = page ORDER BY created DESC'
     )
+    # expand=content,content.history 를 명시적으로 추가
+    # 이렇게 하면 r.content.id, r.content._links.webui,
+    # r.content.history.createdBy.displayName 이 모두 반환됨
     base_url = f"{CONFLUENCE_BASE}/wiki/rest/api/content/search"
     results = []
     start = 0
     limit = 50
-    total = None
 
     while True:
         data = api_get(base_url, {
             "cql": cql,
             "limit": limit,
             "start": start,
+            "expand": "content,content.history",
         })
         if not data:
             break
-
-        if total is None:
-            total = data.get("totalSize", 0)
-            print(f"  \uc804\uccb4: {total}\uac1c")
 
         batch = data.get("results", [])
         if not batch:
             break
 
         results.extend(batch)
-        print(f"  \ub204\uc801: {len(results)}\uac1c")
+        total = data.get("totalSize", 0)
+        print(f"  \ub204\uc801: {len(results)}/{total}\uac1c")
 
-        if len(results) >= total or len(batch) < limit:
+        if len(batch) < limit or len(results) >= total:
             break
 
         start += limit
@@ -185,34 +176,36 @@ def main():
     raw = fetch_all_pages()
     print(f"  \uc218\uc9d1: {len(raw)}\uac1c")
 
+    # 첫 번째 결과 구조 확인
+    if raw:
+        r0 = raw[0]
+        c0 = r0.get("content", {})
+        print(f"  DEBUG r0.keys: {list(r0.keys())[:6]}")
+        print(f"  DEBUG content.id: {c0.get('id')}")
+        print(f"  DEBUG r0.url: {r0.get('url')}")
+        print(f"  DEBUG content._links.webui: {c0.get('_links', {}).get('webui')}")
+
     pages = []
     seen = set()
 
     for i, r in enumerate(raw):
-        # expand 없을 때 구조:
-        # r.content.id, r.content._links.webui
-        # r.title, r.excerpt, r.lastModified, r.url
-        # r.resultGlobalContainer.displayUrl
         content = r.get("content", {})
         cid = content.get("id", "")
-
         if not cid or cid in seen:
             continue
         seen.add(cid)
 
-        title = r.get("title", "")
+        title = r.get("title", "") or content.get("title", "")
         excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:200]
         last_mod = (r.get("lastModified") or "")[:10]
 
-        # URL: r.url 또는 content._links.webui
+        # URL
         page_path = r.get("url", "") or content.get("_links", {}).get("webui", "")
         full_url = CONFLUENCE_BASE + "/wiki" + page_path if page_path else ""
 
-        # space_key: resultGlobalContainer.displayUrl = "/spaces/1107"
+        # space_key
         display_url = r.get("resultGlobalContainer", {}).get("displayUrl", "")
         space_key = display_url.strip("/").split("/")[-1] if display_url else ""
-
-        # space_key fallback: page_path에서 추출
         if not space_key and page_path:
             parts = page_path.split("/")
             if "spaces" in parts:
@@ -222,7 +215,7 @@ def main():
 
         team = SPACE_TEAM.get(space_key, "\ud37c\ud50c")
 
-        # author: content.history.createdBy
+        # author
         author = ""
         history = content.get("history", {})
         if history:
