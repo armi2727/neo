@@ -1,4 +1,4 @@
-﻿name: Confluence AI 페이지 자동 업데이트
+name: Confluence AI 페이지 자동 업데이트
 
 on:
   schedule:
