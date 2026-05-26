@@ -1,4 +1,4 @@
-name: Confluence AI 페이지 자동 업데이트
+name: Confluence AI update
 
 on:
   schedule:
@@ -12,22 +12,22 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Python 설정
+      - name: Python setup
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: 의존성 설치
+      - name: Install deps
         run: pip install requests
-      - name: Confluence 데이터 수집 & HTML 빌드
+      - name: Build
         timeout-minutes: 8
         env:
           CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
           CONFLUENCE_API_TOKEN: ${{ secrets.CONF_TOKEN }}
         run: python neowiz-auto/scripts/build.py
-- name: index.html 배포
+      - name: Deploy
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add index.html
-          git diff --staged --quiet || git commit -m "자동 업데이트"
+          git diff --staged --quiet || git commit -m "auto update"
           git push
