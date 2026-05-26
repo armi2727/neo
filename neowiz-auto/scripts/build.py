@@ -103,8 +103,7 @@ def fetch_all_pages():
     start = 0
     while True:
         data = api_get("/wiki/rest/api/content/search", {
-            "cql": cql, "limit": 50, "start": start,
-            "expand": "content.history.createdBy,content.space",
+            "cql": cql, "limit": 100, "start": start,
         })
         if not data or not data.get("results"):
             break
@@ -113,8 +112,10 @@ def fetch_all_pages():
         print(f"  \ub204\uc801: {len(results)}\uac1c")
         if not data.get("_links", {}).get("next"):
             break
-        start += 50
-        time.sleep(0.3)
+        if len(results) >= 1000:  # 안전장치
+            break
+        start += 100
+        time.sleep(0.2)
     return results
 
 def extract_types(text):
