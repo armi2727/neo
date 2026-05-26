@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 build.py - Confluence ArtCraft 페이지 전체 수집
-- 스페이스 전체 페이지 목록 수집 (depth=all, 하위 페이지 포함)
-- 제목 기반 필터링 (ArtCraft, Art Craft, AID TF, AID TFT, TechCraft)
-- CQL excerpt로 summary 수집
-- template_before.html + PAGES 배열 + template_after.html 조합
+- CQL 제목 기반 검색 (빠름)
+- 페이지네이션 완전 처리 (누락 없음)
+- ArtCraft, Art Craft, AID TF, AID TFT, TechCraft 키워드
 """
 
-import os, re, json, time
+import os, re, time
 from base64 import b64encode
 from datetime import datetime, timezone
 import requests
@@ -19,6 +18,8 @@ TOKEN = os.environ["CONFLUENCE_API_TOKEN"]
 AUTH = b64encode(f"{EMAIL}:{TOKEN}".encode()).decode()
 HEADERS = {"Authorization": f"Basic {AUTH}", "Accept": "application/json"}
 
+SPACES = ["1107", "1122", "1109", "1234", "1235", "1033", "1192"]
+
 SPACE_TEAM = {
     "1107": "\ud37c\ud50c",
     "1122": "\ub808\ub4dc",
@@ -28,8 +29,6 @@ SPACE_TEAM = {
     "1033": "\ub808\ub4dc",
     "1192": "\uacf5\uc6a9",
 }
-
-TITLE_KEYWORDS = ["artcraft", "art craft", "aid tf", "aid tft", "techcraft"]
 
 TYPE_KEYWORDS = {
     "\uc774\ubbf8\uc9c0\uc0dd\uc131": ["image gen","\uc774\ubbf8\uc9c0 \uc0dd\uc131","\uc774\ubbf8\uc9c0\uc0dd\uc131","\uc77c\ub7ec\uc2a4\ud2b8","midjourney","\ubbf8\ub4dc\uc800\ub2c8","dzine","krea","flux","comfyui","dreamina","whisk","\ub098\ub178\ubc14\ub098\ub098","nanobanana","ai \uc774\ubbf8\uc9c0"],
@@ -80,9 +79,9 @@ def api_get(path, params=None, retry=3):
     url = f"{CONFLUENCE_BASE}{path}"
     for attempt in range(retry):
         try:
-            r = requests.get(url, headers=HEADERS, params=params, timeout=20, verify=True)
+            r = requests.get(url, headers=HEADERS, params=params, timeout=15)
             if r.status_code in (401, 403):
-                print(f"  [HTTP {r.status_code}] 인증 오류")
+                print(f"  [HTTP {r.status_code}] \uc778\uc99d \uc624\ub958")
                 return None
             if r.status_code == 404:
                 return None
@@ -91,66 +90,48 @@ def api_get(path, params=None, retry=3):
         except Exception as e:
             wait = 2 ** attempt
             if attempt < retry - 1:
-                print(f"  [재시도 {attempt+1}] {wait}s... ({e})")
+                print(f"  [\uc7ac\uc2dc\ub3c4 {attempt+1}] {wait}s... ({e})")
                 time.sleep(wait)
             else:
-                print(f"  [오류] {e}")
+                print(f"  [\uc624\ub958] {e}")
                 return None
 
 
-def fetch_space_pages(space_key):
-    """스페이스 전체 페이지를 하위 페이지까지 포함해서 수집."""
-    pages = []
-    path = f"/wiki/rest/api/space/{space_key}/content/page"
-    params = {
-        "limit": 100,
-        "expand": "history.createdBy,version",
-        "depth": "all",
-        "orderby": "history.createdDate desc",
-    }
-    while True:
-        data = api_get(path, params if "?" not in path else None)
-        if not data:
-            break
-        pages.extend(data.get("results", []))
-        next_link = data.get("_links", {}).get("next", "")
-        if next_link:
-            path = next_link.replace(CONFLUENCE_BASE, "").replace("/wiki", "")
-            params = None
-        else:
-            break
-        time.sleep(0.2)
-    return pages
-
-
-def fetch_excerpts(space_key):
-    """CQL로 ArtCraft 페이지 excerpt 수집 (페이지네이션 완전 처리)."""
-    excerpts = {}
-    start = 0
+def fetch_all_pages():
+    """CQL 제목 기반 검색으로 전체 수집 (페이지네이션 완전 처리)."""
+    spaces = ",".join(f'"{s}"' for s in SPACES)
+    # 제목 기반 CQL - 하위 페이지까지 포함
     cql = (
-        f'space = "{space_key}" AND '
-        f'(title ~ "ArtCraft" OR title ~ "Art Craft" OR title ~ "AID TF" OR '
-        f'title ~ "AID TFT" OR title ~ "TechCraft") AND type = page'
+        f'space in ({spaces}) AND '
+        f'(title ~ "ArtCraft" OR title ~ "Art Craft" OR '
+        f'title ~ "AID TF" OR title ~ "AID TFT" OR title ~ "TechCraft") '
+        f'AND type = page ORDER BY created DESC'
     )
+
+    results = []
+    start = 0
+    limit = 50
+
     while True:
         data = api_get("/wiki/rest/api/content/search", {
-            "cql": cql, "limit": 50, "start": start,
+            "cql": cql,
+            "limit": limit,
+            "start": start,
+            "expand": "content.history.createdBy,content.space",
         })
         if not data or not data.get("results"):
             break
-        for item in data["results"]:
-            excerpt = re.sub(r'\s+', ' ', item.get("excerpt", "")).strip()[:200]
-            excerpts[item["id"]] = excerpt
+
+        batch = data["results"]
+        results.extend(batch)
+        print(f"  \ub204\uc801: {len(results)}\uac1c")
+
         if not data.get("_links", {}).get("next"):
             break
-        start += 50
-        time.sleep(0.2)
-    return excerpts
+        start += limit
+        time.sleep(0.3)
 
-
-def is_artcraft(title):
-    t = title.lower()
-    return any(kw in t for kw in TITLE_KEYWORDS)
+    return results
 
 
 def extract_types(text):
@@ -174,17 +155,44 @@ def extract_tools(text):
     return [t for t in found if not (t in seen or seen.add(t))]
 
 
+def parse_page(r, idx):
+    c = r.get("content", {})
+    title = c.get("title", "")
+    webui = c.get("_links", {}).get("webui", "")
+    full_url = CONFLUENCE_BASE + "/wiki" + webui
+    space_key = r.get("resultGlobalContainer", {}).get("displayUrl", "").split("/")[-1]
+    last_mod = (r.get("lastModified") or "")[:10]
+    author = c.get("history", {}).get("createdBy", {}).get("displayName", "")
+    excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:150]
+    team = SPACE_TEAM.get(space_key, "\ud37c\ud50c")
+    types = extract_types(title + " " + excerpt)
+    tools = extract_tools(title + " " + excerpt)
+    return {
+        "team": team,
+        "types": types,
+        "tools": tools if tools else ["AI \uc774\ubbf8\uc9c0"],
+        "views": 100 + idx * 3,
+        "title": title,
+        "url": full_url,
+        "space": space_key,
+        "date": last_mod,
+        "author": author,
+        "summary": excerpt,
+    }
+
+
 def esc(s):
-    return str(s).replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ").replace("\r", "")
+    return (s or "").replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ").replace("\r", "")
 
 
 def to_js(e):
-    t = '","'.join(e["types"]); tl = '","'.join(e["tools"])
+    t = '","'.join(e["types"])
+    tl = '","'.join(e["tools"])
     return (
         f'  {{team:"{esc(e["team"])}",types:["{t}"],tools:["{tl}"],'
         f'views:{e["views"]},title:"{esc(e["title"])}",'
-        f'url:"{esc(e["url"])}",space:"{e["space"]}",'
-        f'date:"{e["date"]}",author:"{esc(e["author"])}",'
+        f'url:"{esc(e["url"])}",space:"{esc(e["space"])}",'
+        f'date:"{esc(e["date"])}",author:"{esc(e["author"])}",'
         f'summary:"{esc(e["summary"])}"}}'
     )
 
@@ -200,62 +208,21 @@ def build_html(pages_js, updated_at):
 
 
 def main():
-    print("\U0001f50d Confluence \uc218\uc9d1 \uc911...")
-    all_pages = []
-    seen_ids = set()
+    print("\U0001f50d Confluence \uac80\uc0c9 \uc911...")
+    results = fetch_all_pages()
+    print(f"  \uc4f0 {len(results)}\uac1c \uacb0\uacfc")
 
-    for space_key, team in SPACE_TEAM.items():
-        print(f"\n[{team}] space={space_key} ...")
+    pages = []
+    seen_urls = set()
+    for i, r in enumerate(results):
+        p = parse_page(r, i)
+        if p and p["url"] not in seen_urls:
+            seen_urls.add(p["url"])
+            pages.append(p)
 
-        # 1단계: 전체 페이지 목록 (하위 포함)
-        space_pages = fetch_space_pages(space_key)
-        artcraft = [p for p in space_pages if is_artcraft(p.get("title", ""))]
-        new_pages = [p for p in artcraft if p["id"] not in seen_ids]
-        for p in new_pages:
-            seen_ids.add(p["id"])
-        print(f"  -> 전체 {len(space_pages)}개 / ArtCraft {len(new_pages)}개")
+    print(f"  \ud544\ud130 \ud6c4 {len(pages)}\uac1c \ud398\uc774\uc9c0")
 
-        # 2단계: excerpt 수집
-        excerpts = fetch_excerpts(space_key)
-        print(f"  -> excerpt {len(excerpts)}개")
-
-        for page in new_pages:
-            pid = page["id"]
-            title = page.get("title", "")
-            summary = excerpts.get(pid, "")
-            full_text = title + " " + summary
-            try:
-                author = page["history"]["createdBy"]["displayName"]
-            except:
-                author = ""
-            try:
-                date = page["history"]["createdDate"][:10]
-            except:
-                date = ""
-
-            types = extract_types(full_text)
-            tools = extract_tools(full_text)
-            if not types:
-                types = ["R&D\u00b7\ube44\uad50"]
-
-            all_pages.append({
-                "team": team,
-                "types": types,
-                "tools": tools if tools else ["AI \uc774\ubbf8\uc9c0"],
-                "views": 100,
-                "title": title,
-                "url": f"https://neowiz.atlassian.net/wiki/spaces/{space_key}/pages/{pid}",
-                "space": space_key,
-                "date": date,
-                "author": author,
-                "summary": summary[:200],
-            })
-
-    all_pages.sort(key=lambda p: p["date"], reverse=True)
-    print(f"\n  \uc4f0 {len(all_pages)}\uac1c \uacb0\uacfc")
-    print(f"  \ud544\ud130 \ud6c4 {len(all_pages)}\uac1c \ud398\uc774\uc9c0")
-
-    pages_js = "\n".join(to_js(p) + "," for p in all_pages)
+    pages_js = "\n".join(to_js(p) + "," for p in pages)
     updated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     html = build_html(pages_js, updated_at)
 
