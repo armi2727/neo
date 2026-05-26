@@ -121,7 +121,7 @@ def fetch_all_pages():
         if len(batch) < limit or len(results) >= total:
             break
 
-        start += limit
+        start += len(batch)
         time.sleep(0.3)
 
     return results
