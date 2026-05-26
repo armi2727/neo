@@ -189,10 +189,7 @@ def main():
     seen = set()
 
     for i, r in enumerate(raw):
-        # /rest/api/search 응답 구조:
-        # r.id, r.title, r.url, r.excerpt, r.lastModified
-        # r.resultGlobalContainer.displayUrl
-        # r.content.history.createdBy (expand 있을 때)
+        content = r.get("content", {})
         cid = str(content.get("id", ""))
         if not cid or cid in seen:
             continue
@@ -220,7 +217,6 @@ def main():
 
         # author
         author = ""
-        content = r.get("content", {})
         history = content.get("history", {})
         if history:
             author = history.get("createdBy", {}).get("displayName", "")
