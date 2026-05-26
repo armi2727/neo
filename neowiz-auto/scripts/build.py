@@ -115,8 +115,8 @@ def fetch_all_pages():
         if not next_path:
             break
 
-        # next_path = "/wiki/rest/api/search?next=true&cursor=...&cql=..."
-        url = CONFLUENCE_BASE + next_path
+        # next_path = "/rest/api/search?..." — /wiki 붙여야 함
+        url = CONFLUENCE_BASE + "/wiki" + next_path
         params = None  # URL에 이미 파라미터 포함됨
 
         time.sleep(0.3)
