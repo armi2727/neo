@@ -175,9 +175,10 @@ def main():
         print(f"  DEBUG url: {r0.get('url')}")
         print(f"  DEBUG r0.id: {r0.get('id')}")
         print(f"  DEBUG r0.entityType: {r0.get('entityType')}")
-        # 첫 5개 id 출력
-        ids = [r.get("id") for r in raw[:5]]
-        print(f"  DEBUG first 5 ids: {ids}")
+        # 유효 ID 카운트
+        valid = sum(1 for r in raw if r.get("id"))
+        invalid = sum(1 for r in raw if not r.get("id"))
+        print(f"  DEBUG valid ids: {valid}, invalid: {invalid}")
 
     pages = []
     seen = set()
