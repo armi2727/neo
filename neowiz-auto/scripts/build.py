@@ -142,7 +142,24 @@ def parse_page(r, idx):
     title = c.get("title", "")
     webui = c.get("_links", {}).get("webui", "")
     full_url = CONFLUENCE_BASE + "/wiki" + webui
-    space_key = r.get("resultGlobalContainer", {}).get("displayUrl", "").split("/")[-1]
+    # space_key 추출 - 여러 방법 시도
+    space_key = ""
+    # 방법 1: resultGlobalContainer
+    display_url = r.get("resultGlobalContainer", {}).get("displayUrl", "")
+    if display_url:
+        space_key = display_url.split("/")[-1]
+    # 방법 2: _expandable.space에서 추출
+    if not space_key:
+        space_url = c.get("_expandable", {}).get("space", "") or c.get("_expandable", {}).get("container", "")
+        if space_url:
+            space_key = space_url.split("/")[-1]
+    # 방법 3: webui URL에서 추출 (/spaces/1107/pages/...)
+    if not space_key and webui:
+        parts = webui.split("/")
+        if "spaces" in parts:
+            idx2 = parts.index("spaces")
+            if idx2 + 1 < len(parts):
+                space_key = parts[idx2 + 1]
     last_mod = (r.get("lastModified") or "")[:10]
     author = c.get("history", {}).get("createdBy", {}).get("displayName", "")
     excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:150]
