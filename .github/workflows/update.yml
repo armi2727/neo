@@ -28,8 +28,11 @@ jobs:
           CONFLUENCE_API_TOKEN: ${{ secrets.CONF_TOKEN }}
         run: python neowiz-auto/scripts/build.py
 
-      - name: GitHub Pages 배포
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+      - name: index.html을 main 브랜치에 커밋
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          cp public/index.html index.html
+          git add index.html
+          git diff --staged --quiet || git commit -m "자동 업데이트 $(date +'%Y-%m-%d %H:%M')"
+          git push
