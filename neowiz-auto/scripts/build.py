@@ -62,31 +62,28 @@ TOOL_KEYWORDS = {
     "AI \uc774\ubbf8\uc9c0": ["ai \uc774\ubbf8\uc9c0","ai\uc774\ubbf8\uc9c0"],
 }
 
-def get_headers():
-    auth = b64encode(f"{EMAIL}:{TOKEN}".encode("utf-8")).decode("ascii")
-    return {
-        "Authorization": f"Basic {auth}",
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-    }
+def get_auth():
+    return b64encode(f"{EMAIL}:{TOKEN}".encode("utf-8")).decode("ascii")
 
 def api_get(path, params=None, retry=3):
     url = f"{CONFLUENCE_BASE}{path}"
+    headers = {
+        "Authorization": f"Basic {get_auth()}",
+        "Accept": "application/json",
+    }
     for attempt in range(retry):
         try:
-            r = requests.get(url, headers=get_headers(), params=params, timeout=10)
+            r = requests.get(url, headers=headers, params=params, timeout=10)
             if r.status_code == 401:
-                print(f"  [HTTP 401] \uc778\uc99d \uc624\ub958 - \ud1a0\ud070 \ud655\uc778 \ud544\uc694")
+                print(f"  [HTTP 401] \uc778\uc99d \uc624\ub958")
                 return None
             if r.status_code == 404:
                 return None
             r.raise_for_status()
             return r.json()
         except Exception as e:
-            wait = 2 ** attempt
             if attempt < retry - 1:
-                print(f"  [\uc7ac\uc2dc\ub3c4 {attempt+1}] {wait}s ({e})")
-                time.sleep(wait)
+                time.sleep(2 ** attempt)
             else:
                 print(f"  [\uc624\ub958] {e}")
                 return None
@@ -103,7 +100,9 @@ def fetch_all_pages():
     start = 0
     while True:
         data = api_get("/wiki/rest/api/content/search", {
-            "cql": cql, "limit": 100, "start": start,
+            "cql": cql,
+            "limit": 100,
+            "start": start,
         })
         if not data or not data.get("results"):
             break
@@ -112,7 +111,7 @@ def fetch_all_pages():
         print(f"  \ub204\uc801: {len(results)}\uac1c")
         if not data.get("_links", {}).get("next"):
             break
-        if len(results) >= 1000:  # 안전장치
+        if len(results) >= 1000:
             break
         start += 100
         time.sleep(0.2)
@@ -136,48 +135,6 @@ def extract_tools(text):
             found.append(name)
     seen = set()
     return [t for t in found if not (t in seen or seen.add(t))]
-
-def parse_page(r, idx):
-    c = r.get("content", {})
-    title = c.get("title", "")
-    webui = c.get("_links", {}).get("webui", "")
-    full_url = CONFLUENCE_BASE + "/wiki" + webui
-    # space_key 추출 - 여러 방법 시도
-    space_key = ""
-    # 방법 1: resultGlobalContainer
-    display_url = r.get("resultGlobalContainer", {}).get("displayUrl", "")
-    if display_url:
-        space_key = display_url.split("/")[-1]
-    # 방법 2: _expandable.space에서 추출
-    if not space_key:
-        space_url = c.get("_expandable", {}).get("space", "") or c.get("_expandable", {}).get("container", "")
-        if space_url:
-            space_key = space_url.split("/")[-1]
-    # 방법 3: webui URL에서 추출 (/spaces/1107/pages/...)
-    if not space_key and webui:
-        parts = webui.split("/")
-        if "spaces" in parts:
-            idx2 = parts.index("spaces")
-            if idx2 + 1 < len(parts):
-                space_key = parts[idx2 + 1]
-    last_mod = (r.get("lastModified") or "")[:10]
-    author = c.get("history", {}).get("createdBy", {}).get("displayName", "")
-    excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:150]
-    team = SPACE_TEAM.get(space_key, "\ud37c\ud50c")
-    types = extract_types(title + " " + excerpt)
-    tools = extract_tools(title + " " + excerpt)
-    return {
-        "team": team,
-        "types": types,
-        "tools": tools if tools else ["AI \uc774\ubbf8\uc9c0"],
-        "views": 100 + idx * 3,
-        "title": title,
-        "url": full_url,
-        "space": space_key,
-        "date": last_mod,
-        "author": author,
-        "summary": excerpt,
-    }
 
 def esc(s):
     return (s or "").replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ").replace("\r", "")
@@ -207,17 +164,66 @@ def main():
     print(f"  EMAIL: {EMAIL[:4]}..." if EMAIL else "  EMAIL: \ube44\uc5b4\uc788\uc74c")
     print(f"  TOKEN: {TOKEN[:4]}..." if TOKEN else "  TOKEN: \ube44\uc5b4\uc788\uc74c")
 
-    results = fetch_all_pages()
-    print(f"  \uc4f0 {len(results)}\uac1c \uacb0\uacfc")
+    raw = fetch_all_pages()
+    print(f"  \uc4f0 {len(raw)}\uac1c \uacb0\uacfc")
 
     pages = []
-    seen_ids = set()
-    for i, r in enumerate(results):
-        p = parse_page(r, i)
-        cid = r.get("content", {}).get("id", "")
-        if p and cid and cid not in seen_ids:
-            seen_ids.add(cid)
-            pages.append(p)
+    seen = set()
+
+    for i, r in enumerate(raw):
+        content = r.get("content", {})
+        cid = content.get("id", "")
+
+        # 중복 제거
+        if not cid or cid in seen:
+            continue
+        seen.add(cid)
+
+        title = content.get("title", "")
+        webui = content.get("_links", {}).get("webui", "")
+        full_url = CONFLUENCE_BASE + "/wiki" + webui if webui else ""
+
+        # space_key: webui에서 추출 (/spaces/XXXX/pages/...)
+        space_key = ""
+        if webui:
+            parts = webui.split("/")
+            if "spaces" in parts:
+                idx2 = parts.index("spaces")
+                if idx2 + 1 < len(parts):
+                    space_key = parts[idx2 + 1]
+
+        # resultGlobalContainer fallback
+        if not space_key:
+            display_url = r.get("resultGlobalContainer", {}).get("displayUrl", "")
+            if display_url:
+                space_key = display_url.strip("/").split("/")[-1]
+
+        team = SPACE_TEAM.get(space_key, "\ud37c\ud50c")
+        last_mod = (r.get("lastModified") or "")[:10]
+        excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:150]
+
+        # author: history가 있으면 사용
+        author = ""
+        history = content.get("history", {})
+        if history:
+            author = history.get("createdBy", {}).get("displayName", "")
+
+        full_text = title + " " + excerpt
+        types = extract_types(full_text)
+        tools = extract_tools(full_text)
+
+        pages.append({
+            "team": team,
+            "types": types,
+            "tools": tools if tools else ["AI \uc774\ubbf8\uc9c0"],
+            "views": 100 + i * 3,
+            "title": title,
+            "url": full_url,
+            "space": space_key,
+            "date": last_mod,
+            "author": author,
+            "summary": excerpt,
+        })
 
     print(f"  \ud544\ud130 \ud6c4 {len(pages)}\uac1c \ud398\uc774\uc9c0")
 
