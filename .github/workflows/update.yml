@@ -2,7 +2,7 @@ name: Confluence AI 페이지 자동 업데이트
 
 on:
   schedule:
-    - cron: '40 0 * * *'   # 오전 9:40 KST
+    - cron: '0 0 * * *'    # 오전 9:00 KST
     - cron: '0 3 * * *'    # 오후 12:00 KST
   workflow_dispatch:
 
@@ -25,7 +25,7 @@ jobs:
         timeout-minutes: 8
         env:
           CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
-          CONFLUENCE_API_TOKEN: ${{ secrets.CONFLUENCE_API_TOKEN }}
+          CONFLUENCE_API_TOKEN: ${{ secrets.CONF_TOKEN }}
         run: python neowiz-auto/scripts/build.py
 
       - name: GitHub Pages 배포
