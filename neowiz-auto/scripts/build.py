@@ -96,7 +96,6 @@ def fetch_all_pages():
     results = []
     start = 0
     limit = 100
-    total = None
 
     while True:
         data = api_get("/wiki/rest/api/content/search", {
@@ -111,14 +110,12 @@ def fetch_all_pages():
         if not batch:
             break
         results.extend(batch)
-
-        if total is None:
-            total = data.get("totalSize", 0)
-            print(f"  \uc804\uccb4: {total}\uac1c")
-
         print(f"  \ub204\uc801: {len(results)}\uac1c")
 
-        if len(results) >= total or len(results) >= 1000:
+        # batch 크기가 limit보다 작으면 마지막 페이지
+        if len(batch) < limit:
+            break
+        if len(results) >= 1000:
             break
 
         start += limit
