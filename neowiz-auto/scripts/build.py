@@ -95,7 +95,7 @@ def fetch_all_pages():
     # expand=content,content.history 를 명시적으로 추가
     # 이렇게 하면 r.content.id, r.content._links.webui,
     # r.content.history.createdBy.displayName 이 모두 반환됨
-    base_url = f"{CONFLUENCE_BASE}/wiki/rest/api/content/search"
+    base_url = f"{CONFLUENCE_BASE}/wiki/rest/api/search"
     results = []
     start = 0
     limit = 50
@@ -189,18 +189,21 @@ def main():
     seen = set()
 
     for i, r in enumerate(raw):
-        content = r.get("content", {})
-        cid = content.get("id", "")
+        # /rest/api/search 응답 구조:
+        # r.id, r.title, r.url, r.excerpt, r.lastModified
+        # r.resultGlobalContainer.displayUrl
+        # r.content.history.createdBy (expand 있을 때)
+        cid = r.get("id", "")
         if not cid or cid in seen:
             continue
         seen.add(cid)
 
-        title = r.get("title", "") or content.get("title", "")
+        title = r.get("title", "")
         excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:200]
         last_mod = (r.get("lastModified") or "")[:10]
 
         # URL
-        page_path = r.get("url", "") or content.get("_links", {}).get("webui", "")
+        page_path = r.get("url", "")
         full_url = CONFLUENCE_BASE + "/wiki" + page_path if page_path else ""
 
         # space_key
@@ -217,6 +220,7 @@ def main():
 
         # author
         author = ""
+        content = r.get("content", {})
         history = content.get("history", {})
         if history:
             author = history.get("createdBy", {}).get("displayName", "")
