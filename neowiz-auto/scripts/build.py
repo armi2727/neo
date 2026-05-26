@@ -157,13 +157,15 @@ def to_js(e):
     )
 
 def build_html(pages_js, updated_at):
+    # index.html에서 PAGES 배열만 교체
     base = os.path.dirname(os.path.abspath(__file__))
-    with open(os.path.join(base, "template_before.html"), encoding="utf-8") as f:
-        before = f.read()
-    with open(os.path.join(base, "template_after.html"), encoding="utf-8") as f:
-        after = f.read()
-    after = after.replace("__UPDATED_AT__", updated_at)
-    return before + "const PAGES=[\n" + pages_js + "\n];\n" + after
+    index_path = os.path.join(base, "..", "..", "index.html")
+    with open(index_path, encoding="utf-8") as f:
+        content = f.read()
+    import re as _re
+    new_pages = "const PAGES=[\n" + pages_js + "\n];"
+    content = _re.sub(r'const PAGES=\[.*?\];', new_pages, content, flags=_re.DOTALL)
+    return content
 
 def main():
     print("Confluence \uac80\uc0c9 \uc911...")
