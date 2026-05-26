@@ -188,22 +188,20 @@ def main():
         excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:150]
         last_mod = (r.get("lastModified") or "")[:10]
 
-        # URL: r.url = "/spaces/1107/pages/..."
-        page_url_path = r.get("url", "") or ""
+        # URL: _links.webui 또는 url 필드
+        page_url_path = r.get("url", "") or r.get("_links", {}).get("webui", "") or ""
         full_url = CONFLUENCE_BASE + "/wiki" + page_url_path if page_url_path else ""
 
-        # space_key: URL에서 추출
-        space_key = ""
-        parts = page_url_path.split("/")
-        if "spaces" in parts:
-            idx2 = parts.index("spaces")
-            if idx2 + 1 < len(parts):
-                space_key = parts[idx2 + 1]
+        # space_key: resultGlobalContainer 우선, URL fallback
+        display_url = r.get("resultGlobalContainer", {}).get("displayUrl", "")
+        space_key = display_url.strip("/").split("/")[-1] if display_url else ""
 
-        # resultGlobalContainer fallback
-        if not space_key:
-            display_url = r.get("resultGlobalContainer", {}).get("displayUrl", "")
-            space_key = display_url.strip("/").split("/")[-1] if display_url else ""
+        if not space_key and page_url_path:
+            parts = page_url_path.split("/")
+            if "spaces" in parts:
+                idx2 = parts.index("spaces")
+                if idx2 + 1 < len(parts):
+                    space_key = parts[idx2 + 1]
 
         team = SPACE_TEAM.get(space_key, "\ud37c\ud50c")
 
