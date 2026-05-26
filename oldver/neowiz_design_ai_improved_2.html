@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>r/neowiz-design-ai — 디자인 · 이미지 생성 AI 페이지 모음</title>
+<link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+:root{
+  --white:#ffffff;
+  --bg:#ffffff;
+  --bg2:#f5f6f8;
+  --bg3:#eef0f3;
+  --border:#eaecf0;
+  --border2:#dde0e5;
+  --text:#111318;
+  --sub:#4a5568;
+  --muted:#8a94a6;
+  --accent:#1a6ef5;
+  --accent-light:#eff4ff;
+  --accent-hover:#1558cc;
+  --upvote:#e8410a;
+  --radius:10px;
+  --radius-sm:6px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.05),0 1px 2px rgba(0,0,0,.03);
+  --shadow:0 2px 8px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.04);
+  --shadow-md:0 4px 16px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.05);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Pretendard',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh;}
+
+/* ── NAV ── */
+.topnav{
+  position:sticky;top:0;z-index:200;
+  background:#ffffff;
+  border-bottom:1.5px solid var(--border);
+  height:52px;display:flex;align-items:center;
+  padding:0 24px;gap:14px;
+}
+.logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0;}
+.logo-icon{width:34px;height:34px;background:var(--upvote);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 2px 6px rgba(232,65,10,.3);}
+.logo-txt{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.02em;}
+.logo-txt span{color:var(--muted);font-weight:400;}
+.srch{position:relative;}
+.srch input{
+  width:100%;background:var(--bg2);
+  border:1.5px solid var(--border2);
+  border-radius:8px;
+  font-family:'Pretendard',sans-serif;font-size:15px;color:var(--text);
+  padding:10px 18px 10px 40px;outline:none;
+  transition:all .18s;font-weight:400;
+}
+.srch input:focus{background:#fff;border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,110,245,.1);}
+.srch input::placeholder{color:var(--muted);}
+.srch-ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none;}
+.nav-stat{
+  margin-left:auto;font-size:13px;font-weight:500;color:var(--sub);
+  background:var(--bg);padding:5px 13px;border-radius:20px;
+  border:1.5px solid var(--border2);flex-shrink:0;
+}
+.nav-stat b{color:var(--upvote);font-weight:700;}
+
+/* ── LAYOUT ── */
+.layout{max-width:1400px;margin:0 auto;display:flex;gap:16px;padding:18px 18px;align-items:flex-start;}
+.sl{width:216px;flex-shrink:0;position:sticky;top:68px;max-height:calc(100vh - 84px);overflow-y:auto;}
+.panel{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:10px;}
+.panel-title{
+  font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);padding:9px 13px 7px;
+  background:var(--bg3);border-bottom:1px solid var(--border);
+}
+.sort-btn{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 13px;border:none;background:none;width:100%;
+  text-align:left;font-family:'Pretendard',sans-serif;
+  font-size:14px;color:var(--sub);cursor:pointer;
+  transition:background .12s;border-bottom:1px solid var(--border);
+}
+.sort-btn:last-of-type{border-bottom:none;}
+.sort-btn:hover{background:var(--bg2);}
+.sort-btn.active{background:#fff5f2;color:var(--upvote);font-weight:600;}
+.sort-btn .si{font-size:14px;width:18px;text-align:center;opacity:.8;}
+.refresh-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:calc(100% - 24px);margin:10px 12px;padding:8px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:var(--radius-sm);
+  font-family:'Pretendard',sans-serif;font-size:13.5px;font-weight:600;
+  cursor:pointer;transition:all .15s;letter-spacing:-.01em;
+  box-shadow:0 2px 8px rgba(26,110,245,.25);
+}
+.refresh-btn:hover{background:var(--accent-hover);box-shadow:0 3px 12px rgba(26,110,245,.35);transform:translateY(-1px);}
+.team-btn{
+  display:flex;align-items:center;gap:9px;
+  padding:9px 13px;cursor:pointer;border:none;background:none;
+  width:100%;text-align:left;
+  font-family:'Pretendard',sans-serif;font-size:14px;color:var(--text);
+  transition:background .12s;border-bottom:1px solid var(--border);
+}
+.team-btn:last-child{border-bottom:none;}
+.team-btn:hover{background:var(--bg2);}
+.team-pip{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.team-lbl{flex:1;font-weight:500;}
+.team-cnt{
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;
+  color:var(--muted);background:var(--bg2);
+  border:1px solid var(--border);border-radius:10px;
+  padding:1px 7px;flex-shrink:0;transition:all .15s;font-weight:500;
+}
+
+/* ── MAIN ── */
+.main{flex:1;min-width:0;}
+.type-filter-bar{
+  background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:var(--radius);padding:14px 16px;
+  margin-bottom:12px;
+}
+.type-filter-title{
+  font-size:11px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:10px;
+}
+.type-chips{display:flex;flex-wrap:wrap;gap:7px;}
+.type-chip{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 13px;border-radius:20px;border:1.5px solid;
+  background:none;font-family:'Pretendard',sans-serif;
+  font-size:13.5px;font-weight:600;cursor:pointer;
+  transition:all .15s;white-space:nowrap;
+}
+.type-chip:hover{opacity:.82;transform:translateY(-1px);}
+.type-chip.on{color:#fff!important;border-color:transparent!important;box-shadow:0 2px 8px rgba(0,0,0,.14);}
+.tc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.filter-hint{font-size:12px;color:var(--muted);margin-top:9px;transition:all .2s;font-weight:400;}
+.feed-bar{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+.flbl{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--muted);font-weight:500;}
+
+/* ── POST CARD ── */
+.post{
+  background:var(--white);
+  border:none;
+  border-bottom:1.5px solid var(--border);
+  border-radius:0;
+  margin-bottom:0;
+  display:flex;
+  transition:background .12s;
+  animation:su .22s both;overflow:hidden;cursor:pointer;
+}
+.post:first-child{border-top:1.5px solid var(--border);}
+.post:hover{background:#f8f9ff;}
+@keyframes su{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.post-bar{width:4px;flex-shrink:0;}
+.pc{flex:1;min-width:0;padding:20px 20px 18px 16px;}
+.ptop{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.team-flair{
+  font-size:11.5px;font-weight:700;padding:2px 9px;
+  border-radius:4px;color:#fff;letter-spacing:.01em;white-space:nowrap;
+}
+.type-flair{
+  font-size:11px;font-weight:600;padding:2px 7px;
+  border-radius:4px;color:#fff;white-space:nowrap;opacity:.9;
+}
+.pmeta{font-size:12px;color:var(--muted);font-weight:400;}
+.pmeta b{color:var(--sub);font-weight:500;}
+.ptitle{
+  font-size:28px;font-weight:400;color:var(--text);
+  line-height:1.35;margin-bottom:10px;letter-spacing:-.02em;
+}
+.post:hover .ptitle{color:var(--accent);}
+.psummary{
+  font-size:14px;color:var(--sub);line-height:1.75;
+  margin-bottom:14px;
+  display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden;
+  font-weight:400;
+}
+.pact{display:flex;align-items:center;gap:2px;}
+.pa{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 9px;border:none;background:none;
+  border-radius:5px;font-family:'Pretendard',sans-serif;
+  font-size:12px;font-weight:500;color:var(--muted);
+  cursor:pointer;text-decoration:none;transition:background .1s,color .1s;
+}
+.pa:hover{background:var(--bg2);color:var(--text);}
+.pa.open{color:var(--accent);}
+.pa.open:hover{background:var(--accent-light);}
+
+/* ── RIGHT SIDEBAR ── */
+.sr{width:272px;flex-shrink:0;position:sticky;top:68px;max-height:calc(100vh - 84px);overflow-y:auto;}
+.tool-panel{
+  background:var(--white);
+  border:none;
+  border-bottom:1.5px solid var(--border);
+  border-radius:0;
+  margin-bottom:0;overflow:hidden;
+}
+.tool-panel-title{
+  font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);padding:20px 4px 8px;
+  background:var(--white);border-bottom:none;
+}
+.tool-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 0 16px;}
+.tool-chip{
+  font-size:12.5px;font-weight:600;padding:4px 10px;
+  border-radius:5px;border:1.5px solid;cursor:pointer;
+  background:none;font-family:'Pretendard',sans-serif;
+  transition:all .12s;white-space:nowrap;
+}
+.tool-chip:hover{opacity:.78;}
+.tool-chip.on{color:#fff!important;border-color:transparent!important;box-shadow:0 2px 6px rgba(0,0,0,.15);}
+
+/* ── RANK ── */
+.sr-section-label{
+  font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);padding:20px 0 8px;display:block;
+}
+.rank-item{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 0;border-bottom:1px solid var(--border);
+  cursor:pointer;transition:background .12s;
+}
+.rank-item:last-child{border-bottom:none;}
+.rank-item:hover .rtitle{color:var(--accent);}
+.rnum{
+  font-family:'IBM Plex Mono',monospace;font-size:15px;
+  font-weight:700;min-width:16px;text-align:center;
+  line-height:1.4;flex-shrink:0;
+}
+.rbdy{flex:1;min-width:0;}
+.rflair{
+  display:inline-block;font-size:10.5px;font-weight:700;
+  padding:1px 6px;border-radius:3px;color:#fff;margin-bottom:3px;
+}
+.rtitle{
+  font-size:15px;font-weight:500;color:var(--text);
+  line-height:1.55;margin-bottom:2px;
+  display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden;
+  transition:color .12s;
+}
+.rmeta{font-size:11px;color:var(--muted);font-family:'IBM Plex Mono',monospace;font-weight:400;}
+.sr-rank-block{border-bottom:1.5px solid var(--border);padding-bottom:4px;margin-bottom:0;}
+.sr-rank-block:last-child{border-bottom:none;}
+.sr-banner-block{padding-bottom:16px;}
+.site-banner{
+  display:block;text-decoration:none;
+  border-radius:10px;overflow:hidden;
+  margin-top:8px;position:relative;
+  transition:transform .15s,box-shadow .15s;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+.site-banner:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.13);}
+.site-banner-bg{
+  position:absolute;inset:0;opacity:.12;
+}
+.site-banner-bg--confluence{background:linear-gradient(135deg,#0052cc,#2684ff);}
+.site-banner-bg--pandora{background:linear-gradient(135deg,#7c3aed,#c026d3);}
+.site-banner-inner{
+  position:relative;
+  display:flex;align-items:center;gap:10px;
+  padding:11px 12px;
+  background:#fff;
+}
+.site-banner-icon{
+  width:34px;height:34px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;flex-shrink:0;
+  box-shadow:0 1px 4px rgba(0,0,0,.15);
+}
+.site-banner-text{flex:1;min-width:0;}
+.site-banner-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:1px;letter-spacing:-.01em;}
+.site-banner-url{font-size:10.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.site-banner-arrow{flex-shrink:0;color:var(--muted);opacity:.5;transition:opacity .15s;}
+.site-banner:hover .site-banner-arrow{opacity:.9;}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty-e{font-size:40px;margin-bottom:12px;display:block;}
+
+/* ── LEFT SIDEBAR FLAT LIST ── */
+.sl-section-label{
+  font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);padding:16px 4px 7px;
+}
+.sl-section-label:first-child{padding-top:4px;}
+.sl-item{
+  display:flex;align-items:center;gap:9px;
+  padding:8px 10px;cursor:pointer;border:none;background:none;
+  width:100%;text-align:left;font-family:'Pretendard',sans-serif;
+  font-size:20px;color:#4a5568;font-weight:500;
+  border-radius:8px;transition:background .12s;
+}
+.sl-item:hover{background:rgba(0,0,0,.05);}
+.sl-item.active{background:var(--accent-light);color:var(--accent);font-weight:600;}
+.sl-item .si{font-size:14px;width:18px;text-align:center;opacity:.7;}
+.sl-item-lbl{flex:1;}
+.sl-item-cnt{
+  font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;
+  color:var(--muted);background:var(--bg3);
+  border-radius:10px;padding:1px 7px;flex-shrink:0;
+}
+.sl-item.active .sl-item-cnt{background:rgba(26,110,245,.15);color:var(--accent);}
+.sl-divider{height:1px;background:var(--border);margin:6px 0;}
+.sl-refresh{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;padding:8px 10px;margin-top:4px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:8px;
+  font-family:'Pretendard',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s;
+  box-shadow:0 2px 8px rgba(26,110,245,.25);
+}
+.sl-confluence-link{
+  display:flex;align-items:center;gap:7px;
+  font-size:14px;font-weight:500;color:var(--accent);
+  text-decoration:none;padding:8px 10px;
+  border-radius:8px;transition:background .12s;
+  margin-bottom:8px;
+}
+.sl-confluence-link:hover{background:var(--accent-light);}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:transparent;border-radius:2px;}
+.sr:hover::-webkit-scrollbar-thumb{background:var(--border2);}
+.sl:hover::-webkit-scrollbar-thumb{background:var(--border2);}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <a class="logo" href="#"><div class="logo-icon">🎨</div><span class="logo-txt"><span>r/</span>neowiz-design-ai</span></a>
+  <div class="nav-stat">총 <b id="totalCount">0</b> 페이지</div>
+</nav>
+<div class="layout">
+  <aside class="sl">
+    <div class="sl-section-label">🏢 사업실</div>
+    <button class="sl-item" id="tb-ALL" onclick="toggleTeam('ALL')"><span class="team-pip" style="background:linear-gradient(135deg,#ffb3b3,#a8c8f8)"></span><span class="sl-item-lbl">전체</span><span class="sl-item-cnt" id="cnt-ALL">0</span></button>
+    <button class="sl-item" id="tb-레드" onclick="toggleTeam('레드')"><span class="team-pip" style="background:#ffb3b3"></span><span class="sl-item-lbl">레드</span><span class="sl-item-cnt" id="cnt-레드">0</span></button>
+    <button class="sl-item" id="tb-퍼플" onclick="toggleTeam('퍼플')"><span class="team-pip" style="background:#c8b4f5"></span><span class="sl-item-lbl">퍼플</span><span class="sl-item-cnt" id="cnt-퍼플">0</span></button>
+    <button class="sl-item" id="tb-블루" onclick="toggleTeam('블루')"><span class="team-pip" style="background:#a8c8f8"></span><span class="sl-item-lbl">블루</span><span class="sl-item-cnt" id="cnt-블루">0</span></button>
+    <button class="sl-item" id="tb-브라운" onclick="toggleTeam('브라운')"><span class="team-pip" style="background:#d4a574"></span><span class="sl-item-lbl">브라운</span><span class="sl-item-cnt" id="cnt-브라운">0</span></button>
+    <button class="sl-item" id="tb-올림포스" onclick="toggleTeam('올림포스')"><span class="team-pip" style="background:#a8d5c8"></span><span class="sl-item-lbl">올림포스</span><span class="sl-item-cnt" id="cnt-올림포스">0</span></button>
+    <button class="sl-item" id="tb-공용" onclick="toggleTeam('공용')"><span class="team-pip" style="background:#c4cdd6"></span><span class="sl-item-lbl">공용</span><span class="sl-item-cnt" id="cnt-공용">0</span></button>
+    <div class="sl-divider"></div>
+    <button class="sl-refresh" onclick="refreshPage()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>새로고침
+    </button>
+    <div class="sl-divider" style="margin-top:10px;"></div>
+    <a href="https://neowiz.atlassian.net/wiki" target="_blank" class="site-banner">
+      <div class="site-banner-bg site-banner-bg--confluence"></div>
+      <div class="site-banner-inner">
+        <div class="site-banner-icon" style="background:linear-gradient(135deg,#0052cc,#2684ff)">📋</div>
+        <div class="site-banner-text">
+          <div class="site-banner-name">Neowiz Confluence</div>
+          <div class="site-banner-url">neowiz.atlassian.net</div>
+        </div>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="site-banner-arrow"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </div>
+    </a>
+    <a href="https://metaforge.ai.pmang.cloud/" target="_blank" class="site-banner">
+      <div class="site-banner-bg site-banner-bg--pandora"></div>
+      <div class="site-banner-inner">
+        <div class="site-banner-icon" style="background:linear-gradient(135deg,#7c3aed,#c026d3)">🤖</div>
+        <div class="site-banner-text">
+          <div class="site-banner-name">판도라</div>
+          <div class="site-banner-url">metaforge.ai.pmang.cloud</div>
+        </div>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="site-banner-arrow"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </div>
+    </a>
+  </aside>
+  <main class="main">
+    <div class="type-filter-bar">
+      <div class="type-filter-title">🎨 작업 유형 필터 (중복 선택 가능)</div>
+      <div class="type-chips" id="typeChips"></div>
+      <div class="filter-hint" id="filterHint">전체 작업 유형 표시 중 · 복수 선택 가능</div>
+    </div>
+    <div class="srch" style="margin-bottom:12px;">
+      <svg class="srch-ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="제목·요약·작성자·툴 검색…" oninput="curSearch=this.value;render()" onkeyup="curSearch=this.value;render()" style="max-width:100%;border-radius:8px;">
+    </div>
+    <div class="feed-bar">
+      <span style="font-size:13px;color:var(--accent);font-weight:600" id="activeFiltersLabel"></span>
+      <span class="flbl" id="feedLabel">0개</span>
+    </div>
+    <div id="postList"></div>
+  </main>
+  <aside class="sr">
+    <div class="tool-panel">
+      <div class="tool-panel-title">🔧 주요 사용 툴 (클릭 검색)</div>
+      <div class="tool-chips" id="toolChips"></div>
+    </div>
+    <div class="sr-rank-block">
+      <span class="sr-section-label">🔥 반응 많은 글 TOP 5 <span style="font-size:10px;font-weight:400;color:var(--muted)">(2026 Q2 · 이모티콘)</span></span>
+      <div id="topNew"></div>
+    </div>
+    <div class="sr-rank-block">
+      <span class="sr-section-label">👀 구독자 많은 글 TOP 5 <span style="font-size:10px;font-weight:400;color:var(--muted)">(2026 Q2)</span></span>
+      <div id="topWatchers"></div>
+    </div>
+    <div class="sr-rank-block">
+      <span class="sr-section-label">✏️ 수정 많은 글 TOP 5 <span style="font-size:10px;font-weight:400;color:var(--muted)">(2026 Q2)</span></span>
+      <div id="topVersion"></div>
+    </div>
+  </aside>
+</div>
+<script>
+const TC={레드:{p:"#ffcdd2",s:"#ef9a9a",t:"#7a1a1a"},퍼플:{p:"#e1d5f7",s:"#b39ddb",t:"#3b1a7a"},블루:{p:"#bbdefb",s:"#90caf9",t:"#1a3a6a"},브라운:{p:"#ffe0b2",s:"#ffcc80",t:"#4a2810"},올림포스:{p:"#b2dfdb",s:"#80cbc4",t:"#1a4a3a"},공용:{p:"#cfd8dc",s:"#b0bec5",t:"#2a3a46"}};
+const TYC={이미지생성:{bg:"#67c4d8",lb:"이미지 생성"},영상:{bg:"#d4956a",lb:"영상 제작"},리소스:{bg:"#72c28a",lb:"게임 리소스"},사운드:{bg:"#f08cb0",lb:"사운드·음악"},자동화툴:{bg:"#dbb76a",lb:"자동화 툴"},포토샵:{bg:"#7b9fd4",lb:"포토샵·편집"},"UI디자인":{bg:"#d47fa6",lb:"UI/UX 디자인"},"R&D·비교":{bg:"#a8a8c8",lb:"R&D·비교"},Figma:{bg:"#a688d4",lb:"Figma"}};
+const TOOLCOLS=["#0891b2","#7c3aed","#b45309","#be185d","#16a34a","#d97706","#0079d3","#dc2626","#475569","#92400e","#1d4ed8","#0f766e","#c2410c","#047857","#7e22ce","#1d4ed8"];
+const TOP_WATCHERS=[
+  {team:"퍼플",title:"[Art Craft] 일관성 앱(크래프트캠프) 사용방법_응용편",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/218923700/Art+Craft+_",watchers:44,version:12},
+  {team:"퍼플",title:"[Art Craft] Slot Agent Studio — 버튼 하나로 완성되는 AI 슬롯 에이전트",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/237306784/Art+Craft+Slot+Agent+Studio+AI",watchers:44,version:12},
+  {team:"퍼플",title:"[Artcraft] Pet_Story_Dad_didn't_Want_a_Dog 빅윈 시 사용 될 영상 제작 2",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/276464706/Artcraft+Pet_Story_Dad_didn+t_Want_a_Dog+2",watchers:44,version:10},
+  {team:"퍼플",title:"[Artcraft] 260407 - 캐릭터 컨셉 제작하기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/219119661/Artcraft+260407+-",watchers:44,version:8},
+  {team:"퍼플",title:"[Artcraft] Battle of the Ocean -AI를 활용하여 360도 회전 심볼 만들기(5월 1주차)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/272400423/Artcraft+Battle+of+the+Ocean+-AI+360+5+1",watchers:44,version:6}
+];
+const TOP_VERSION=[
+  {team:"레드",title:"[ArtCraft] Pix Ai - 모델 & LoRA 종류",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/236782243/ArtCraft+Pix+Ai+-+LoRA",version:28,watchers:25},
+  {team:"퍼플",title:"[Art Craft] 일관성 앱(크래프트캠프) 사용방법_응용편",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/218923700/Art+Craft+_",version:12,watchers:44},
+  {team:"퍼플",title:"[Art Craft] Slot Agent Studio — 버튼 하나로 완성되는 AI 슬롯 에이전트",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/237306784/Art+Craft+Slot+Agent+Studio+AI",version:12,watchers:44},
+  {team:"퍼플",title:"[Artcraft] Pet_Story_Dad_didn't_Want_a_Dog 빅윈 시 사용 될 영상 제작 2",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/276464706/Artcraft+Pet_Story_Dad_didn+t_Want_a_Dog+2",version:10,watchers:44},
+  {team:"블루",title:"[Art Craft] 쇼다운 홀덤 HOP 글로벌 폰트 테스트 툴 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/145196336/Art+Craft+HOP",version:9,watchers:21}
+];
+const TOP_REACTION=[
+  {team:"브라운",title:"[ArtCraft] AI UX/UI Design 세미나 자료",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/212140154/ArtCraft+AI+UX+UI+Design",total:28,label:"👏8 😀1 😍3 👍16"},
+  {team:"퍼플",title:"[Art Craft] Slot Agent Studio — 버튼 하나로 완성되는 AI 슬롯 에이전트",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/237306784/Art+Craft+Slot+Agent+Studio+AI",total:14,label:"🥳1 👍13"},
+  {team:"퍼플",title:"[Art Craft] 일관성 앱(크래프트캠프) 사용방법_응용편",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/218923700/Art+Craft+_",total:8,label:"👏8"},
+  {team:"퍼플",title:"[Art Craft] 3D 텍스트 스타일 변환 앱",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/286851481/Art+Craft+3D",total:7,label:"👍7"},
+  {team:"블루",title:"[Art Craft] 쇼다운 홀덤 HOP 글로벌 폰트 테스트 툴 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/145196336/Art+Craft+HOP",total:6,label:"👏1 👍5"}
+];
+
+const PAGES=[
+  {team:"퍼플",types:["R&D·비교"],tools:["AI 이미지"],views:100,title:"[Art Craft] Prism 일관성앱 QA 리스트  -26.05.20",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/290652950/Art+Craft+Prism+QA+-26.05.20",space:"1107",date:"2026-05-20",author:"채하늘",summary:"아직 테스트가 끝난 것은 아니지만 수정이 필요한 우선사항들 정리해보았습니다. 추후 더 테스트 해보고 추가 요청드리도록 하겠습니다. 잘 구현해주셔서 감사합니다.  1. 기능 제거 및 삭제 (Removal) 시드값 삭제: 똑같은 장면을 재현하거나 아주 약간의 수정이 아닌 "},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","나노바나나","Dzine"],views:103,title:"[Art Craft] GRAND V (?월 ?주차)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/289999005/Art+Craft+GRAND+V",space:"1107",date:"2026-05-19",author:"김진우",summary:"프로젝트 GRAND V 생성자 김진우 생성 일자 2026-05-19  ~ ? 사용 툴 dzine, Gemini, KREA, nano banana 플랫폼, PSD경로 *이미지 시안과 구글 드라이브 PSD 동기화는 프로젝트 후반에 따로 JIRA를 등록한 정규 일정으로 실시"},
+  {team:"퍼플",types:["영상"],tools:["Seedance","Higgsfield"],views:106,title:"[Artcraft] Pet_Story_Dad_didn't_Want_a_Dog 인트로 영상 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/289672378/Artcraft+Pet_Story_Dad_didn+t_Want_a_Dog",space:"1107",date:"2026-05-19",author:"강준모",summary:"프로젝트 및 지라  Pet_Story_Dad_didn&#39;t_Want_a_Dog 인트로에 사용 될 영상 제작 작성자  강준모 작성날짜  2026-05-19   사용툴  higgsfield &gt; seedance 2.0 모델 사용 예상 기대 효과  인트로 시 사용할"},
+  {team:"레드",types:["리소스","이미지생성"],tools:["Gemini","ChatGPT"],views:109,title:"[ArtCraft] 노출 수위 조정하기+  원하는 옷 입히기",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/289670647/ArtCraft",space:"1033",date:"2026-05-19",author:"한시내",summary:"관련 프로젝트 피망 섯다 앱 내 이벤트 리소스 제작 생성자 한시내 생성 일자 2026-05-19   사용 툴 Gemini chat GPT 예상 기대 효과 리소스 제작 시간 단축, 적용 가능성 여부 확인 적용 효과 제작 시간 단축에 효율적 프롬프트 첨부 이미지 참고 ��"},
+  {team:"레드",types:["이미지생성"],tools:["Gemini","ChatGPT"],views:112,title:"[ArtCraft] Pix Ai - 맥심 캐릭터 스타일 정의 및 일광성 있는 프롬프트 구조화",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/289081183/ArtCraft+Pix+Ai+-",space:"1122",date:"2026-05-21",author:"고수욱",summary:"프로젝트 및 지라 [ArtCraft] Pix Ai - 맥심 캐릭터 스타일 정의 및 프롬프트 구조화 작성자 고수욱 작성날짜 2026-05-20  사용툴 Pix AI, GPT, Gemini, Pormpt,  Eagle. 예상기대효과 맥심 캐릭터 스타일을 정의하여 편차없는 "},
+  {team:"브라운",types:["이미지생성"],tools:["AI 이미지"],views:115,title:"[26.05.14][ArtCraft][HOB] IOS 미국 3자 결제(Xsolla) 적용 - 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/288719838/26.05.14+ArtCraft+HOB+IOS+3+Xsolla+-",space:"1234",date:"2026-05-18",author:"박중신",summary:"프로젝트 및 지라  작성자 박중신 작성날짜 2026-05-14  사용된 AI툴 및 적용부분 클로드ai PSD 경로 최민창  정원희  HOB ios 3자 결제 적용 디자인 공유드립니다. 3자결제 팝업 결제완료 후 복귀 팝업 결제 결과 팝업은  기존 PopupPurchas"},
+  {team:"브라운",types:["UI디자인"],tools:["나노바나나","위비"],views:118,title:"[26.05.12][ArtCraft]VIP 시스템 리뉴얼 - 오픈 안내 배너 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/288392419/26.05.12+ArtCraft+VIP+-",space:"1234",date:"2026-05-18",author:"박중신",summary:"프로젝트 및 지라  작성자 박중신 작성날짜 2026-05-12  사용된 AI툴 및 적용부분 위비, 나노바나나 프로 PSD 경로  오픈 안내 배너 김희영  뉴스&amp;이벤트 907 x618 로비 서브 배너 242x388 웹메인 배너 763x287 제작과정 제미나이에서 "},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:121,title:"[ArtCraft] 디자인 프로토타입 툴_ver.2(클로드 디자인을 꿈꾸며..배포까지 가능할까...)",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/288129164/ArtCraft+_ver.2+..+...",space:"1122",date:"2026-05-18",author:"장혜진",summary:"프로젝트 및 지라 [ArtCraft] 디자인 프로토타입 툴 v2(클로드 디자인을 꿈꾸며..?) 작성자 장혜진 작성날짜 2027-05-18  사용툴 커서, 클로드코드 예상기대효과 초고속 프로토타이핑을 통한 &#39;생각의 시각화&#39; 시간 단축 디자인 시스템 선택을 "},
+  {team:"레드",types:["자동화툴","영상"],tools:["AI 이미지"],views:124,title:"[ArtCraft] 2. 에이전트와 스킬 사용하여 영상 자동화 만들기 질문과 해결과정 공유",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/287081756/ArtCraft+2.",space:"1122",date:"2026-05-15",author:"장혜진",summary:"젝트 및 지라 [ArtCraft]  영상 자동화 질문과 답변 기록 작성자 장혜진 작성날짜 2026-05-15  사용툴  커서, 클로드 코드 예상기대효과 적용 효과 프롬프트 아래 자동화 시스템을 만든 과정에 대한 자세한 기록. 질문 과정으로 하네스를 어떻게 구축해 나갔는"},
+  {team:"레드",types:["이미지생성"],tools:["ChatGPT"],views:127,title:"[ArtCraft] 5월 1주_결제",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/286818832/ArtCraft+5+1+_",space:"1122",date:"2026-05-15",author:"김인옥",summary:"프로젝트 및 지라 [ArtCraft] 5월 1주_결제 작성자 김인옥 작성날짜 2026-04-15  사용된 AI툴 및 적용부분 구글ai스튜디오, 쳇gpt PSD 경로 과정 인생 기본 플랜은 무료, 재미는 유료 오늘은 무엇을 결제해볼까? 인형 키링을 살까? 주식 한 주를 "},
+  {team:"퍼플",types:["R&D·비교","이미지생성"],tools:["Google AI Studio"],views:130,title:"[Art Craft] 3D 텍스트 스타일 변환 앱",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/286851481/Art+Craft+3D",space:"1107",date:"2026-05-21",author:"박채빈",summary:"프로젝트 명 3D 텍스트 스타일 변환 앱 지라   작성자 박채빈  작성날짜 2026-05-21 사용툴 Google AI Studio 예상기대효과 작업 시간 단축 3D 텍스트 시안을 빠르게 생성하고, 다양한 Shape와 Material 조합을 짧은 시간 안에 비교할 수 "},
+  {team:"블루",types:["자동화툴","UI디자인"],tools:["ChatGPT","Claude"],views:133,title:"사본 [ArtCraft] UI Resource Namer : 파일명 생성기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/285476553/ArtCraft+UI+Resource+Namer",space:"1109",date:"2026-05-14",author:"황은미",summary:"프로젝트 명 공통 / 업무 자동화 작성자 황은미  작성날짜 2026-05-12  사용툴 Claude Code, ChatGPT 예상 효과 파일명 일괄 생성 및 수정 적용 효과 네이밍 작업 시간 단축 프롬프트 제작 과정 참고 UI_Resource_Namer  링크 다운로드"},
+  {team:"퍼플",types:["이미지생성"],tools:["나노바나나"],views:136,title:"[Art Craft] 게임 제작기_2_Rally X",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/286065764/Art+Craft+_2_Rally+X",space:"1235",date:"2026-05-15",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 AI 기반 게임 디자인 및 POC 구현_2 (가제 : Rally X) 게임 실행 링크 : https://rallyx.pages.dev/ 생성자 배태환 생성 일자 2026-05-15   사용 툴 Cursor, Nano Banana P"},
+  {team:"블루",types:["자동화툴","UI디자인"],tools:["Gemini","Claude"],views:139,title:"[ArtCraft] UI 오브젝트 Align Tool",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/285378581/ArtCraft+UI+Align+Tool",space:"1109",date:"2026-05-19",author:"양창숙",summary:"프로젝트 명 UI 오브젝트 Align Tool(Custom Spacing Edition) 이미지, 텍스트, 프리팹(그룹) 모두 가능 지라 작성자 양창숙  작성날짜 2026-05-14 사용툴 Gemini , Claude 예상기대효과 반복 작업 제로 그동안 Anchor와 "},
+  {team:"레드",types:["자동화툴","Figma"],tools:["Claude"],views:142,title:"[Art Craft] Claude로 피그마 반복 디자인 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/284297797/Art+Craft+Claude",space:"1033",date:"2026-05-15",author:"오선화",summary:"AI 활용 기본 정보 관련 프로젝트 뉴베가스 VIP 개편 웹페이지 수정 생성자 오선화 생성 일자 2026-05-13 사용 툴 피그마 플러그인, Claude 예상 기대 효과 피그마 내 반복 생성 작업 빠르게 적용하기 적용 효과 원하는 피그마 디자인 템플릿이 있다면 빠르게"},
+  {team:"레드",types:["자동화툴"],tools:["AI 이미지"],views:145,title:"[ArtCraft]  AI 기반 SNS 트렌드 콘텐츠 자동화 웹 앱 제작기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/283870303/ArtCraft+AI+SNS",space:"1122",date:"2026-05-15",author:"고수욱",summary:"프로젝트 및 지라 [ArtCraft] AI 기반 SNS 트렌드 콘텐츠 자동화 웹 앱 제작기 작성자 고수욱 작성날짜 2027-04-14  사용툴 구글 AI 스튜디오 예상기대효과 인스타그램 등 SNS에 업로드할 트렌드 소재를 자동으로 발굴하고, 이를 바탕으로 대본(스크립트"},
+  {team:"블루",types:["이미지생성"],tools:["Google AI Studio"],views:148,title:"[ArtCraft] 영어 배너 생성 앱",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/284557781/ArtCraft",space:"1109",date:"2026-05-13",author:"한주현",summary:"프로젝트 명 hop 글로벌 이식 지라  작성자 한주현  작성날짜 2026-05-13  사용툴 Google AI Studio 예상기대효과 영어 배너 제작 효율성 향상 프로제트 적용 스크린샷  or 최종 결과물 ��  영어 배너 생성앱 생성된 결과물1 생성된 결과물2 생성"},
+  {team:"레드",types:["영상"],tools:["AI 이미지"],views:151,title:"[ArtCraft][섯다] 맥심 6월 뉴스레터 프로모션",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/284295972/ArtCraft+6",space:"1122",date:"2026-05-13",author:"최강",summary:"프로젝트 및 지라 [ArtCraft][섯다] 맥심 6월 뉴스레터  작성자 최강 작성날짜 2026-05-13  PSD 경로  완성본"},
+  {team:"브라운",types:["포토샵","이미지생성"],tools:["ChatGPT","Midjourney","Weavy"],views:154,title:"[Art Craft][05.13] 캐쉬포뮬러 로딩 & 튜토리얼",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/283607395/Art+Craft+05.13",space:"1234",date:"2026-05-13",author:"박문수",summary:"프로젝트 및 지라  작성자 박문수 작성날짜 2026-05-13  사용된 AI툴 및 적용부분 ChatGPT(이미지생성, 편집), Midjourney(캐릭터), Weavy AI(편집) PSD 경로 H5 골드 포뮬러의 로딩과 튜토리얼 화면을 진행했습니다. 로딩화면 인게임 튜"},
+  {team:"레드",types:["이미지생성"],tools:["Dzine"],views:157,title:"[ArtCraft] 4월 5주 _ 고마움을 전하는 5월",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/282591482/ArtCraft+4+5+_+5",space:"1122",date:"2026-05-12",author:"정윤주",summary:"프로젝트 및 지라 [ArtCraft] 4월 4주 _ 고마움을 전하는 5월  작성자 정윤주 작성날짜 2026-04-15  사용된 AI툴 및 적용부분 Dzine PSD 경로 뉴맞고 착장앱으로 카네이션 든 도리 제작 여기서 카네이션 든 도리를 만들었습니다. Dzine에서 꽃"},
+  {team:"블루",types:["자동화툴","UI디자인"],tools:["ChatGPT","Claude"],views:160,title:"[ArtCraft] UI Resource Namer : 파일명 생성기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/281510470/ArtCraft+UI+Resource+Namer",space:"1109",date:"2026-05-19",author:"황은미",summary:"프로젝트 명 공통 / 업무 자동화 작성자 황은미  작성날짜 2026-05-12  사용툴 Claude Code, ChatGPT 예상 효과 파일명 일괄 생성 및 수정 적용 효과 네이밍 작업 시간 단축 프롬프트 제작 과정 참고 UI_Resource_Namer  링크 다운로드"},
+  {team:"레드",types:["자동화툴"],tools:["AI 이미지"],views:163,title:"[ArtCraft] 스플래시 운영툴 V2",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/281444912/ArtCraft+V2",space:"1122",date:"2026-05-12",author:"최강",summary:"프로젝트 및 지라 [ArtCraft] 스플래시 운영툴 V1  작성자 최강 작성날짜 2026-05-12  사용툴 클로드 Cowork 예상기대효과 스플래시 운영 현황을 직관적으로 파악하게 하고 운영을 단순화시켜 업무 코스트 절약 적용 효과 프롬프트 작업 과정에 상세 기술 "},
+  {team:"블루",types:["자동화툴"],tools:["AI 이미지"],views:166,title:"[ArtCraft] 개인 자동화",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/282558466/ArtCraft",space:"1109",date:"2026-05-12",author:"황은미",summary:""},
+  {team:"레드",types:["포토샵","이미지생성"],tools:["AI 이미지"],views:169,title:"[ArtCraft] 포토샵에서 Ai로 쉽게 이미지 합성하기",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/280756519/ArtCraft+Ai",space:"1033",date:"2026-05-12",author:"이종민(AB디자인팀)",summary:"아시는 분들도 계시겠지만 모르시는 분들도 계시는거 같아서 기능이 좋은거 같아서 소개드립니다. 아주 쉽게 가능합니다. 몇 개 안해보았는데 톤 앤 매너도 잘 맞춰 줍니다. 내가 원하는 위치에 정확히 배치 가능합니다. 소스들 결과물 방법  새 편집기로 변환 후 버전 게시됨 "},
+  {team:"레드",types:["이미지생성"],tools:["Dzine"],views:172,title:"[ArtCraft] PC 광고 지면 웹페이지에 AI 활용 (3D 느낌 아이콘, 커텐 제작)",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/278267721/ArtCraft+PC+AI+3D",space:"1122",date:"2026-05-11",author:"정윤주",summary:"프로젝트 및 지라 [ArtCraft] PC 광고 지면 웹페이지에 AI 활용 (3D 느낌 아이콘, 커텐 제작)   작성자 정윤주 작성날짜 2026-04-28  사용된 AI툴 및 적용부분 Dzine PSD 경로   참여방법 가이드 아이콘 AI 생성 기획서를 보니 아이콘을 "},
+  {team:"레드",types:["영상","이미지생성"],tools:["Dzine"],views:175,title:"[ArtCraft] 섯다:황금패의 비밀 _ 보따리 오브젝트 AI 생성과 오픈 연출 AI 활용",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/279511041/ArtCraft+_+AI+AI",space:"1122",date:"2026-05-11",author:"정윤주",summary:"프로젝트 및 지라 [ArtCraft] 섯다:황금패의 비밀 _ 보따리 오브젝트 AI 생성과 오픈 연출 AI 활용  작성자 정윤주 작성날짜 2026-05-11  사용된 AI툴 및 적용부분 Dzine PSD 경로 보따리 오브젝트 생성 기타 보상을 공통적인 이미지 하나로 보여"},
+  {team:"레드",types:["포토샵","이미지생성"],tools:["Dzine"],views:178,title:"[ArtCraft] 섯다: 황금패의 비밀 _ 캐릭터 얼굴 합성, 배너 배경 AI 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/278824311/ArtCraft+_+AI",space:"1122",date:"2026-05-11",author:"정윤주",summary:"프로젝트 및 지라  [ArtCraft] 섯다: 황금패의 비밀 _ 배너 배경 AI 생성, 캐릭터 얼굴 합성 작성자 정윤주 작성날짜 2026-05-08  사용된 AI툴 및 적용부분 Dzine PSD 경로  얼굴과 몸통 합성하기 왼쪽 얼굴에 오른쪽의 몸통을 합성해야했습니다."},
+  {team:"레드",types:["자동화툴"],tools:["AI 이미지"],views:181,title:"[ArtCraft] 스플래시 운영툴 V1",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/278561051/ArtCraft+V1",space:"1122",date:"2026-05-12",author:"최강",summary:"프로젝트 및 지라 [ArtCraft] 스플래시 운영툴 V1  작성자 최강 작성날짜 2026-05-11  사용툴 클로드 Cowork 예상기대효과 스플래시 운영 현황을 직관적으로 파악하게 하고 운영을 단순화시켜 업무 코스트 절약 적용 효과 프롬프트 작업 과정에 상세 기술 "},
+  {team:"레드",types:["자동화툴","포토샵"],tools:["AI 이미지"],views:184,title:"[ArtCraft] 스플래시 운영툴 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/277677195/ArtCraft",space:"1122",date:"2026-05-11",author:"최강",summary:"새 편집기로 변환 후 버전 게시됨"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:187,title:"[Artcraft] 5월 2주차 AI활용 - 길로틴 빅윈리소스 작업중",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/278822969/Artcraft+5+2+AI+-",space:"1107",date:"2026-05-11",author:"박주홍",summary:"프로젝트 및 지라 [ArtCraft] 퍼플실 공용아트팀  작성자 박주홍 작성날짜 20260501 ~ 20260511 사용된 AI툴 및 적용부분 Chat GPT, Midjourney, nanobanana, Dzine, dreamina, krea 프롬프트 Draw a fu"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:190,title:"[ArtCraft] 섯다 황금패의 비밀 프로필 AI 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/277480316/ArtCraft+AI",space:"1122",date:"2026-05-11",author:"정윤주",summary:"프로젝트 및 지라 [ArtCraft] 섯다 황금패의 비밀 프로필 AI 생성  작성자 정윤주 작성날짜 2026-05-11  사용된 AI툴 및 적용부분 제미나이, Pixai PSD 경로 제미나이와 컨셉 잡기 + 이미 전에 황금패 카드 디자인 검증을 물어봤던 터라 대화 기록"},
+  {team:"퍼플",types:["Figma","R&D·비교"],tools:["ChatGPT","나노바나나"],views:193,title:"[Art Craft] Mine 게임 컨셉 시안 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/278005055/Art+Craft+Mine",space:"1235",date:"2026-05-11",author:"전진영",summary:"AI 활용 기본 정보  관련 프로젝트 Mine Game 생성자 전진영 생성 일자 2026-05-06   사용 툴 Figma / 나노바나나2 / ChatGPT 예상 기대 효과 초기 컨셉 시안 제작 시간을 크게 줄일 수 있음 다양한 아트 방향성을 빠르게 비교하고 선택 가능"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["Kling AI"],views:196,title:"[Artcraft] 5월 2주차 - X1341_Wolves 연출 테스트 겸 Kling AI와 Midjurney 비교",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/277479674/Artcraft+5+2+-+X1341_Wolves+Kling+AI+Midjurney",space:"1107",date:"2026-05-11",author:"장세준",summary:"프로젝트 및 지라  X1341_Wolves   작성자  장세준 작성날짜  2026-05-11  사용툴  Kling AI / Midjurney 예상 기대 효과   적용 효과   프롬프트  특정 프롬프트 사용안함 �� 제작 과정 구체적인 프롬프트 없이 연출용 테스트겸 아이"},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:199,title:"[Artcraft] 2026 5월-2 AI를 활용  - 작성중 -",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/277250958/Artcraft+2026+5+-2+AI+-+-",space:"1107",date:"2026-05-11",author:"박진주",summary:"프로젝트 및 지라        작성자  박진주 작성날짜  2026-05-11 사용툴  디즌, 제미나이 예상 기대 효과  기존 작업자의 만들어 둔 스타일을 학습 시켜 적용 효과  다른 팀원분이 기준을 세운 아트풍 유지하면 다른 화면 작업. 프롬프트  첨부한 이미지로 원하"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Kling AI"],views:202,title:"[Artcraft] Pet_Story_Dad_didn't_Want_a_Dog 빅윈 시 사용 될 영상 제작 2",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/276464706/Artcraft+Pet_Story_Dad_didn+t_Want_a_Dog+2",space:"1107",date:"2026-05-11",author:"강준모",summary:"프로젝트 및 지라  Pet_Story_Dad_didn&#39;t_Want_a_Dog 빅윈 시 사용 될 영상 제작 2 작성자  강준모 작성날짜  2026-05-11   사용툴  dezine + 클링 3.0 예상 기대 효과  빅윈 시 나오는 팝업 이미지 영사으로 대체하여 "},
+  {team:"블루",types:["UI디자인","이미지생성"],tools:["ChatGPT"],views:205,title:"[ArtCraft] ShapeFeather 쉐이더",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/274339698/ArtCraft+ShapeFeather",space:"1109",date:"2026-05-08",author:"이신우",summary:"프로젝트 명 unity (2D) 도형 구현 쉐이더 작성자 이신우  작성날짜 2026-05-08  사용툴 GPT 적용 효과 unity에서 직접 도형을 생성하여 리소스 절감 ShapeFeather ��  제작배경 코드 기반 실시간 도형 생성 방식의 필요성 반복적인 이미지 "},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:208,title:"[Art Craft] 게임 제작기_1_Wrestle Royale",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/275383514/Art+Craft+_1_Wrestle+Royale",space:"1235",date:"2026-05-15",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 AI 기반 게임 디자인 및 POC 구현 (https://wrestle-royale-live-pixi.vercel.app/ui/index.html ) 생성자 배태환 생성 일자 2026-05-08   사용 툴 Cursor, Nano B"},
+  {team:"블루",types:["UI디자인","리소스"],tools:["ChatGPT","Claude"],views:211,title:"[ArtCraft] Unity RoundMaker 쉐이더",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/275579690/ArtCraft+Unity+RoundMaker",space:"1109",date:"2026-05-08",author:"이신우",summary:"프로젝트 명 Unity (2D) RoundMaker 작성자 이신우  작성날짜 2026-05-08  사용툴 gpt, claude 예상기대효과 Round 수치별 PNG 리소스 제작 감소 적용 효과 변형 가능한 Round 로 인한 효율성 향성 Unity Shader 생성 R"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:214,title:"[Artcraft] Wolves - Choose Your Path Paid 음악 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/274467554/Artcraft+Wolves+-+Choose+Your+Path+Paid",space:"1107",date:"2026-05-08",author:"선종길",summary:"관련 프로젝트 퍼플 팀드래곤 Wolves - Choose Your Path 슬롯 생성자 선종길 생성 일자 2026-05-08   사용 툴 Suno 예상 기대 효과 결과물 퀄리티 증가 예상 작업 시간 단축 예상 적용 효과 기존 대비 소요 시간 단축 결과물 퀄리티 증가 프"},
+  {team:"퍼플",types:["사운드","영상"],tools:["Suno","ElevenLabs"],views:217,title:"[ArtCraft] SoundAutoCue 활용기 1탄_FIRE WHACK PARTY 10000 인트로 사운드 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/274301948/ArtCraft+SoundAutoCue+1+_FIRE+WHACK+PARTY+10000",space:"1107",date:"2026-05-08",author:"박은송",summary:"인트로 연출 사운드 큐시트 생성 및 제작 관련 프로젝트 퍼플 스프린트팀  FIRE WHACK PARTY 10000 인트로 사운드 작업 생성자 박은송 생성 일자 2026-04-24   사용 툴 SoundAutoCue, Suno, ElevenLabs 예상 기대 효과 작업 "},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:220,title:"[Art Craft] SkyLumina: 기획서로 실행하는 AI 디자이너",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/274399632/Art+Craft+SkyLumina+AI",space:"1107",date:"2026-05-11",author:"채하늘",summary:"→ 현재 계속 디벨롭중 각각 게임의 대표 IP 캐릭터 등록 필요 SkyLumina (스카이 루미나) 기획서(.docx / .md)를 입력하면 AI가 정리본(spec.md) → 와이어프레임 → 스킨 디자인까지 자동으로 만들어 주는 사내 도구입니다. 이벤트 페이지·인게임 "},
+  {team:"퍼플",types:["사운드","이미지생성"],tools:["Suno"],views:223,title:"[Artcraft] Jackpot Sit&Go 핀볼 음악 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/271650525/Artcraft+Jackpot+Sit+Go",space:"1107",date:"2026-05-07",author:"선종길",summary:"관련 프로젝트 블루사업실 싯앤고 핀볼 생성자 선종길 생성 일자 2026-05-07   사용 툴 Suno 예상 기대 효과 결과물 퀄리티 증가 예상 작업 시간 단축 예상 적용 효과 기존 대비 소요 시간 단축 결과물 퀄리티 증가 프롬프트 Waiting_BGM: Deep ho"},
+  {team:"퍼플",types:["사운드","이미지생성"],tools:["Google Flow"],views:226,title:"[Artcraft] Google Flow Music",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/271159434/Artcraft+Google+Flow+Music",space:"1107",date:"2026-05-07",author:"김택희",summary:"관련 프로젝트 생성자 김택희 생성 일자 2025년 5월 07일 사용 툴 Google flow music 프롬프트   설명 2026년 4월 20일경, 구글은 ProducerAI를 &#39;Google Flow Music&#39;으로 공식 리브랜딩하며 새로운 리믹스 기능과"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Claude","Higgsfield"],views:229,title:"[Art Craft] Higgsfield AI Skills: 만든 앱에 스킬로 힉스필드 이미지/영상 모델 넣기(Seedream모델 지원)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/272237268/Art+Craft+Higgsfield+AI+Skills+Seedream",space:"1107",date:"2026-05-06",author:"채하늘",summary:"힉스필드 AI(Higgsfield AI)의 강력한 이미지 및 영상 생성 기능을 Claude(클로드), Cursor(커서)와 같은 AI 채팅 도구에 직접 연결하여 사용할 수 있게 해주는 &#39;스킬(Skills)&#39; 통합 서비스를 오픈했습니다. 쉽게 말해, 힉스필"},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","나노바나나","Kling AI"],views:232,title:"[Artcraft] Battle of the Ocean -AI를 활용하여 360도 회전 심볼 만들기(5월 1주차)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/272400423/Artcraft+Battle+of+the+Ocean+-AI+360+5+1",space:"1107",date:"2026-05-11",author:"김경민(퍼플아트팀)",summary:"프로젝트 및 지라     작성자  김경민 작성날짜  2026-05-06  사용된 AI툴 및 분  3D -tripo 3D / blender 이미지 생성 - higgsfield ( chat GPT image2.0 ,nano banana pro ) 영상 - kling3.0 "},
+  {team:"레드",types:["영상","이미지생성"],tools:["AI 이미지"],views:235,title:"[ArtCraft] [섯다] 도화듀나 인게임 연출 적용",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/270631359/ArtCraft",space:"1122",date:"2026-05-04",author:"최강",summary:"프로젝트 및 지라 [ArtCraft] [섯다] 도화듀나 인게임 연출 적용  작성자 최강 작성날짜 2026-04-30  사용된 AI툴 및 적용부분 PixAI, 그록 PSD 경로  1. 프로필 2. 연출 Case 적용 이미지 메이드 광땡 메이드 메이드 윈 일반 윈 Cent"},
+  {team:"레드",types:["영상","이미지생성"],tools:["AI 이미지"],views:238,title:"[ArtCraft] [섯다] 과즙하나 인게임 연출 적용",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/269816957/ArtCraft",space:"1122",date:"2026-05-04",author:"최강",summary:"프로젝트 및 지라 [ArtCraft] [섯다] 과즙하나 인게임 연출 적용  작성자 최강 작성날짜 2026-04-30  사용된 AI툴 및 적용부분 PixAI, 그록 PSD 경로  1. 프로필 2. 연출 Case 적용 이미지 메이드 광땡 메이드 메이드 윈 일반 윈 Cent"},
+  {team:"레드",types:["영상","이미지생성"],tools:["AI 이미지"],views:241,title:"[ArtCraft] [섯다] 네온유키 인게임 연출 적용",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/267813390/ArtCraft",space:"1122",date:"2026-05-04",author:"최강",summary:"프로젝트 및 지라 [ArtCraft] [섯다] 네온유키 인게임 연출 적용  작성자 최강 작성날짜 2026-04-30  사용된 AI툴 및 적용부분 PixAI, 그록 PSD 경로  1. 프로필 2. 연출 Case 적용 이미지 메이드 광땡 메이드 메이드 윈 일반 윈 Cent"},
+  {team:"레드",types:["영상","이미지생성"],tools:["AI 이미지"],views:244,title:"[ArtCraft] [섯다] 채솔 Heart Pick 인게임 연출 적용",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/267092730/ArtCraft+Heart+Pick",space:"1122",date:"2026-05-11",author:"최강",summary:"프로젝트 및 지라 [ArtCraft] [섯다] 채솔 Heart Pick 인게임 연출 적용  작성자 최강 작성날짜 2026-04-30  사용된 AI툴 및 적용부분 PixAI, 그록 PSD 경로  1. 프로필 2. 연출 Case 적용 이미지 메이드 광땡 메이드 메이드 윈 "},
+  {team:"레드",types:["영상","이미지생성"],tools:["AI 이미지"],views:247,title:"[ArtCraft] [섯다] 채솔 Melting 인게임 연출 적용",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/267813264/ArtCraft+Melting",space:"1122",date:"2026-04-30",author:"최강",summary:"프로젝트 및 지라 [ArtCraft] [섯다] 채솔 Melting 인게임 연출 적용  작성자 최강 작성날짜 2026-04-30  사용된 AI툴 및 적용부분 PixAI, 그록 PSD 경로  1. 프로필 2. 연출 Case 적용 이미지 메이드 광땡 메이드 메이드 윈 일반 "},
+  {team:"퍼플",types:["포토샵","R&D·비교"],tools:["ComfyUI","FLUX"],views:250,title:"[AID TF] ComfyUI, ComfyUI+FLUX 사용 노트 및 LT2 캐릭터 R&D",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027116/AID+TF+ComfyUI+ComfyUI+FLUX+LT2+R+D",space:"1107",date:"2026-01-20",author:"김진우",summary:"관련 프로젝트 LT2 - 호선헌서 생성자 김진우 생성 일자 2025-04-10   사용 툴 StableDiffusion, ComfyUI 예상 기대 효과 소요 시간 단축  적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 - R&amp;D로 끝난 내용이"},
+  {team:"레드",types:["자동화툴"],tools:["Gemini"],views:253,title:"[AID TF] 최강_5월2주_바이브 코딩(Gemini)으로 화투패 부루마불 만들어 보기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83907800/AID+TF+_5+2+_+Gemini",space:"1122",date:"2025-11-21",author:"최강",summary:"플레이 해보기 : https://olympos.pages.nwz.cloud/red/docs/red-web/gamejam/samsamtour/ 1. 계기 과거 화투패를 사용한 솔리테어를 만들어 보려고 한 적이 있었으나 확실히 트럼프 카드에 비해 화투패는 인지가 어려워 포"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:256,title:"[AID TF] LT2 狐仙献瑞 ENCHANTED TAILS",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96941610/AID+TF+LT2+ENCHANTED+TAILS",space:"1107",date:"2025-09-01",author:"김진우",summary:"(진행중, 작성중) 관련 프로젝트 LT GAME 협업 제작 게임 狐仙献瑞 – Enchanted Tails 생성자 김진우 생성 일자 2025-05-29   사용 툴 dzine, midjourney, dreamina, chatgpt, ... 예상 기대 효과 소요 시간 단축"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT"],views:259,title:"[AID TF] 픽셀 게임 리소스 제작에 활용한 AI",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97014693/AID+TF+AI",space:"1107",date:"2025-08-18",author:"장세준",summary:"AI 활용 기본 정보  관련 프로젝트 - 생성자 장세준 생성 일자 2025-08-12   사용 툴 Chat GPT  예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 픽셀 리소스 이미지 제작 (소요시간 50% 단축 예상) 적용 효과 (예상 기대효"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["ChatGPT"],views:262,title:"[AID TF] 연출AI활용 R&D_1. 이미지 분할_1트",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96966124/AID+TF+AI+R+D_1.+_1",space:"1107",date:"2025-07-29",author:"서영은",summary:"연출파트에서 ai를 활용할수 있는 방법에 대해 고민중, 가장 손이 많이 가고 반복적인 작업이 Spine에 올리기전 이미지를 파츠별로 분할하는 일이라는게 파츠분할중에 생각나서 GPT와 싸워보기로 하였음. 그럴듯한 대답에 두근두근. 정말 예전에 그려두었던 그림을 올려보기로"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["Kling AI"],views:265,title:"[AID TF] 슬롯 배경 연출에 활용한 AI 영상",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96939215/AID+TF+AI",space:"1107",date:"2025-09-01",author:"장세준",summary:"AI 활용 기본 정보  관련 프로젝트 X1305_Thor God of The Viking 생성자 장세준 생성 일자 2025-07-17   사용 툴 Kling AI 예상 기대 효과 자연 물리 구현과 캐릭터 페이셜 애니메이션 영상을 인게임에 적용할 수 있는지에 대한 테스트"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:268,title:"[AID TF] TDQ 파생 게임 2종(THUNDER - REALM OF LIGHTNING, DRAGON - REALM OF LONGJIE)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96941173/AID+TF+TDQ+2+THUNDER+-+REALM+OF+LIGHTNING+DRAGON+-+REALM+OF+LONGJIE",space:"1107",date:"2025-09-01",author:"김진우",summary:"관련 프로젝트 THUNDER - REALM OF LIGHTNING, DRAGON - REALM OF LONGJIE 생성자 김진우 생성 일자 2025-06-16   사용 툴 dzine, midjourney, dreamina, chatgpt, ... 예상 기대 효과 소요 "},
+  {team:"퍼플",types:["영상","리소스"],tools:["Whisk"],views:271,title:"[AID TF] [공통] Whisk를 활용한 초!! 스피드 슬롯 아이디어 구체화",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97026271/AID+TF+Whisk",space:"1107",date:"2026-01-20",author:"고수욱",summary:"Whisk Whisk Whisk Whisk Whisk 구글에서 발표한 Whisk AI는 복잡한 프롬프트 없이도 직관적인 인터페이스로 빠르게! 독창적인 아이디어와 영감을 구체화하는데 장점이 있습니다. 무료로 사용 가능!! https://labs.google/fx/ko/t"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["ChatGPT","Segment Anything"],views:274,title:"[AID TF] 연출AI활용 R&D_1. 이미지 분할_2트",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96997181/AID+TF+AI+R+D_1.+_2",space:"1107",date:"2025-09-08",author:"서영은",summary:"AI 활용 기본 정보 관련 프로젝트 생성자 서영은 생성 일자 사용 툴 코미코 / 메타 Segment Anything https://segment-anything.com/  / GPT 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 파츠 분할 시"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Upscayl"],views:277,title:"[AID TF] [연출] Spine 해상도 변경 _ Upscayl",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96997146/AID+TF+Spine+_+Upscayl",space:"1107",date:"2025-09-08",author:"서영은",summary:"관련 프로젝트 X1934_X1935_LingShouXianRui 생성자 서영은 생성 일자 사용 툴 https://upscayl.org/ 예상 기대 효과 최소한의 노력으로 FHD 해상도의 spine 리소스를 4K로 변경 소요시간 단축 30% 적용 효과 소요시간 단축 30"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["AI 이미지"],views:280,title:"[AID TF] [아트] THOR- GOD OF THE VIKINGS 슬롯 - AI를 활용한 심볼 이미지 제작 사례",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97026261/AID+TF+THOR-+GOD+OF+THE+VIKINGS+-+AI",space:"1107",date:"2025-11-17",author:"고수욱",summary:"THOR- GOD OF THE VIKINGS https://www.qa.slotmart.io/slot/x1305/ 기존 심볼 이미지를 AI를 활용하여 제작하여 교체 AI를 활용하여 심볼 스타일를 확정하고 시안단계까지는 투입시간을 대폭 축소하여 결과물을 제작, 전반적인 "},
+  {team:"브라운",types:["영상"],tools:["AI 이미지"],views:283,title:"[25.07.01][AID TF][뉴베가스] 시즌 이벤트 25년 8월 - 출석보너스",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113944950/25.07.01+AID+TF+25+8+-",space:"1234",date:"2025-07-28",author:"박중신",summary:"Psd - https://drive.google.com/drive/u/0/folders/1_kSuSjk3WwZ6tsWXJcypulpoJX46CP4a 출석보너스 가을 시즈널 스킨 기존 콘텐츠의 구성과 레이아웃은 유지하되, 그래픽과 연출 요소를 가을 시즌에 맞춰 리뉴얼하는"},
+  {team:"브라운",types:["포토샵","이미지생성"],tools:["AI 이미지"],views:286,title:"[25.07.02][AID TF][뉴베가스] 시즌 이벤트_25년 8월 - 인트로",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113944955/25.07.02+AID+TF+_25+8+-",space:"1234",date:"2026-01-20",author:"안형수",summary:"가을 시즌 이벤트 인트로 제작 기존의 인트로 배경 기존의 인트로 배경을 가을(한가위)에 맞게 보름달/물든 나무잎/낙엽 추가하여 편집 중앙으로 건물과 보름달/나무를 중앙 중심으로 배치한 배경 광각이 들어간 배경으로 나무와 보름달을 더 강조하며 욕망과 성공, 속도와 자유,"},
+  {team:"퍼플",types:["영상","리소스"],tools:["Gemini","ChatGPT","Midjourney"],views:289,title:"[AID TF] Three Little Pigs AI를 활용한 캐릭터 디자인 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96987809/AID+TF+Three+Little+Pigs+AI",space:"1107",date:"2025-07-30",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트 NEO팀 - The Three Little Pigs 슬롯 생성자 박채빈 생성 일자 2025-07-07   사용 툴 Dreamina, Dzine, Midjourney(영상) , GPT (프롬프트 생성 및 이미지 생성), Gemini "},
+  {team:"퍼플",types:["이미지생성"],tools:["KREA"],views:292,title:"[AID TF] Three Little Pigs_ 집 릴프레임 AI 도출 과정(제미나이, Krea, Dizen 활용, Krea 꿀팁)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97016254/AID+TF+Three+Little+Pigs_+AI+Krea+Dizen+Krea",space:"1107",date:"2025-09-08",author:"채하늘",summary:"관련 프로젝트 Three Little Pigs 생성자 채하늘 생성 일자 2025-07-15 사용 툴 제미나이, Krea, Dizen 예상 기대 효과 50% 일정 단축 적용 효과 제작 기간 단축 퀄리티 유지 및 반복 가능성 확보 동일한 품질을 유지하면서도 결과물을 반복적"},
+  {team:"레드",types:["영상","리소스"],tools:["ChatGPT"],views:295,title:"[AID TF] Alpay Toss 프로모션 랜딩 이미지 및 리소스 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106785845/AID+TF+Alpay+Toss",space:"1033",date:"2025-08-26",author:"오선화",summary:"AI 활용 기본 정보 관련 프로젝트 UA 이미지 소재 제작  생성자 한시내 생성 일자 2025-08-25   사용 툴 Chat GPT 예상 기대 효과 특정 컨셉에 맞는 스타일의 리소스 제작으로 리소스 제작 시간 단축 예상 적용 효과 제작물 전체 리소스 제작 (배경 포함"},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:298,title:"AID TF",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718184/AID+TF",space:"1235",date:"2025-07-08",author:"배태환",summary:""},
+  {team:"브라운",types:["영상","이미지생성"],tools:["AI 이미지"],views:301,title:"[25.07.02][AID TF][뉴베가스] 시즌 이벤트_25년 8월 - 인트로 연출",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945056/25.07.02+AID+TF+_25+8+-",space:"1234",date:"2026-01-20",author:"안형수",summary:"프리팹  Step_Intro_Newvegas  사용. 마지막에 Resore Active State 적용으로 정상적으로 변경.&#39;  효과  나무 흔들림. + 낙엽 + 달 효과.  최대 해상도 (22:9) 영상 ai 레퍼런스 hailuo 사용  imageFX 단풍잎 "},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["AI 이미지"],views:304,title:"1> [AID TFT] X2001_Cinderella (Magic Never Ends)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97019186/1+AID+TFT+X2001_Cinderella+Magic+Never+Ends",space:"1107",date:"2025-09-08",author:"강준모",summary:"2025-07-08  심볼에 활용 (걸린 시간: 5분) 용량: 640kb [AID TFT] 작업물 아카이빙 템플릿 AI 활용 기본 정보 관련 프로젝트 X2001_Cinderella (Magic Never Ends)1 생성자 강준모 생성 일자 2025-07-11   사용"},
+  {team:"브라운",types:["영상"],tools:["AI 이미지"],views:307,title:"[25.07.09][AID TF] 피망포커스_8월대회 홍보영상 - 목업!!!!",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945077/25.07.09+AID+TF+_8+-",space:"1234",date:"2026-01-20",author:"안형수",summary:"기획서&gt;https://drive.google.com/file/d/1upRvvFj4ViCD8pzl7q7fgsEpF4udlCNf/view 마케팅팀 영상 Flow 논의 할 내용 원본 : UHD (4K) - 3840x2160 각 디바이스 별로 해상도로 제작할 필요? 빠른"},
+  {team:"퍼플",types:["영상","리소스"],tools:["FLUX"],views:310,title:"[AID TF]  Flux를 사용하는 업스케일",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718214/AID+TF+Flux",space:"1235",date:"2025-07-28",author:"전진영",summary:"기존의 단순한 Upscale (픽셀 보간이나 스케일 + 노이즈 제거 + 선명화 + 디블러링 정도.. 결국 뭉개지는 지점이 생김)과는 달리, 텍스트 프롬프트(positive/negative) 를 활용해 이미지를 다시 그려서 디테일을 보강 하는 구조의 업스케일 워크플로우."},
+  {team:"브라운",types:["영상"],tools:["AI 이미지"],views:313,title:"[25.07.10][AID TF][뉴베가스] 시즌 이벤트_25년 8월 - 한가위 스탬프 챌린지 - 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945102/25.07.10+AID+TF+_25+8+-+-",space:"1234",date:"2025-07-28",author:"박중신",summary:"PSD- https://drive.google.com/drive/u/0/folders/12peBWAI9AxZ-h--KOBwsosjq9uFRefxg PNG- https://drive.google.com/drive/u/0/folders/1St2fFTyIcBZusGOoH8w"},
+  {team:"브라운",types:["이미지생성"],tools:["AI 이미지"],views:316,title:"06. [AID TFT] 작업물 아카이빙 템플릿 가이드",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945117/06.+AID+TFT",space:"1234",date:"2025-07-15",author:"안형수",summary:"AID 디자인 리더분 각 실의 위키 ... 버튼을 누르면 공간 선택 &gt; 브라운사업실  맨 밑으로 가보면 아키이빙 템플릿이 있습니다. 만들기를 하고  내용이 나옵니다. 전체 내용을 복사한 후  각 소속된 실에서  ...버튼을 눌려 선택된 공간에 양식을 추가하거나 사"},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:319,title:"[AID TFT] 7월-1 AI 사용 내역",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97016592/AID+TFT+7+-1+AI",space:"1107",date:"2025-09-08",author:"박진주",summary:"AI 활용 기본 정보  관련 프로젝트 퍼플실 스프린트 생성자 박진주 생성 일자 2025-07-08   2025-07-09   2025-07-10   2025-07-11   사용 툴 드리미아, 디즌, 챗gtp 예상 기대 효과 균일한 스타일 유지하면서 업무 단축 하기 및 "},
+  {team:"퍼플",types:["이미지생성"],tools:["Midjourney"],views:322,title:"[AID TFT] 작업물 아카이빙 템플릿",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97015698/AID+TFT",space:"1107",date:"2025-07-11",author:"김택희",summary:"AI 활용 기본 정보  관련 프로젝트 (프로젝트 명 및 요청 팀) 생성자 (담당자 이름 또는 공동 작업자) 생성 일자 2025-07-11   사용 툴 (미드저니, DALLE 등) 예상 기대 효과 (*예시입니다. 참고 후 자유롭게 작성해주세요.) 소요 시간 단축 적용 가"},
+  {team:"브라운",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney","KREA"],views:325,title:"[25.07.15][AID TF][뉴베가스] VIP 설문 배너 #2",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945149/25.07.15+AID+TF+VIP+2",space:"1234",date:"2025-07-28",author:"이민영 (Deactivated)",summary:"AI 활용 기본 정보  관련 프로젝트 [피망 뉴베가스] VIP 설문 배너 제작 생성자 이민영 생성 일자 2025-07-15   사용 툴 미드저니, Image FX, Chat GPT, Krea 예상 기대 효과 전체 이미지 리소스 ai로 생성하기 / 텍스트형 타이틀 적용 "},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:328,title:"[AID TF] Suno AI를 활용한 Perseus or Medusa 슬롯 음악작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96917501/AID+TF+Suno+AI+Perseus+or+Medusa",space:"1107",date:"2025-07-28",author:"선종길",summary:"AI 활용 기본 정보 관련 프로젝트 스프린트팀 슬롯 Perseus or Medusa 생성자 선종길 생성 일자 2025-07-16   사용 툴 SUNO AI Music 예상 기대 효과 소요 시간 단축 적용 효과 음악 제작 시 1곡 기준 4~5일 정도 소요될 시간이 sun"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Kling AI"],views:331,title:"[AID TFT] 7월-2 AI 사용 내역",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97016673/AID+TFT+7+-2+AI",space:"1107",date:"2025-09-08",author:"박진주",summary:"AI 활용 기본 정보  관련 프로젝트 퍼플실 스프린트 생성자 박진주 생성 일자 2025-07-23   사용 툴 디즌 - 클링2.1std 예상 기대 효과 다양한 포즈를 뽑을 수 있는 영상 적용 효과 소요 시간 단축(40%) 프롬프트 Create a highly energ"},
+  {team:"브라운",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney","KREA"],views:334,title:"[25.07.15][AID TF][뉴베가스] VIP 설문 배너 #1",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945164/25.07.15+AID+TF+VIP+1",space:"1234",date:"2025-07-28",author:"박문수",summary:"AI 활용 기본 정보  관련 프로젝트 [피망 뉴베가스] VIP 설문 배너 제작 생성자 박문수 생성 일자 2025-07-15   사용 툴 미드저니, Image FX, Chat GPT, krea 예상 기대 효과 이미지 리소스 ai로 생성하기  적용 효과 기존 대비 소요 시"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney"],views:337,title:"[AID TF] Tower Bonanza 캐릭터 원화",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718276/AID+TF+Tower+Bonanza",space:"1235",date:"2025-07-28",author:"전진영",summary:"항목 내용 입력 프로젝트 Tower Bonanza  생성자 전진영 / 디자인팀 공동작업 생성일자 2025-07-09 사용 툴 Midjourney,chatgpt 예상 기대효과 제작 시간 50% 단축 적용 효과 실제 제작 시간 2일 → 0.5일 프롬프트 (Prompt) 내"},
+  {team:"블루",types:["UI디자인","이미지생성"],tools:["ChatGPT","Dzine","FLUX"],views:340,title:"[AID TF]  UI 워크플로우 1. 기획 및 아이디어 구상",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79935232/AID+TF+UI+1.",space:"1109",date:"2025-07-29",author:"장은혜",summary:"AI 활용 기본 정보  관련 프로젝트 [포커] 프로필 정챙 변경/ 아바타 뽑기  생성자 장은혜 생성 일자 2025-07-15   사용 툴 Chat GPT, Perplexity, FluxAI, Dzine, OpenArt 예상 기대 효과 소요 시간 단축 적용 가능성 결과물"},
+  {team:"브라운",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney","Sora"],views:343,title:"[25.07.15][AID TF][뉴베가스]시즌 이벤트_25년 8월 - 한가위 스탬프 배너 5종",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945171/25.07.15+AID+TF+_25+8+-+5",space:"1234",date:"2025-08-19",author:"박중신",summary:"AI 활용 기본 정보  관련 프로젝트 [뉴베가스] 시즌 이벤트_25년 8월 - 한가위 스탬프 배너 5종 - 디자인 생성자 박중신 생성 일자 2025-07-15   사용 툴 Chat GPT, Midjourney, Sora 예상 기대 효과 Ai로 제작한 토큰 이미지 각도에"},
+  {team:"블루",types:["UI디자인","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:346,title:"[AID TF] 9월 쇼다운홀덤 X TMTC 토너먼트 배너 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79974394/AID+TF+9+X+TMTC",space:"1109",date:"2025-08-13",author:"양창숙",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운홀덤 X TMTC 토너먼트 대회 배너 디자인  생성자 양창숙 생성 일자 2025-08-11   사용 툴 미드저니, ChatGPT, Dzine 예상 기대 효과 브랜드 일관성 강화 국가별·대회별로 차별화된 컬러 포인트를 부여하면서"},
+  {team:"브라운",types:["영상","이미지생성"],tools:["Midjourney","Kling AI","Dzine"],views:349,title:"[25.07.16][AID TF] 피망포커스_8월대회 홍보영상 - 최종공유",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945179/25.07.16+AID+TF+_8+-",space:"1234",date:"2026-01-20",author:"안형수",summary:"AI 활용 기본 정보  관련 프로젝트 피망포커스_8월대회 홍보영상 생성자 안형수  이종민(AB디자인팀)  박문수 생성 일자 2025-07-11   사용 툴 미드저니, Dzine, Kling AI 예상 기대 효과 최대한 AI툴을 이용하여 퀄러티 있는 영상을 제작 적용 효"},
+  {team:"브라운",types:["영상","이미지생성"],tools:["Midjourney"],views:352,title:"[25.07.16][AID TF] 피망포커스_8월대회  홍보영상 - 제작기",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945183/25.07.16+AID+TF+_8+-",space:"1234",date:"2026-01-20",author:"이종민(AB디자인팀)",summary:"AI 활용 기본 정보  관련 프로젝트 (프로젝트 명 및 요청 팀) 생성자 이종민 생성 일자 2025-07-16   사용 툴 (미드저니, Hailuo, 에프터 이펙트, 프리미어) 예상 기대 효과 라스베가스 드론샷과 트로피를 3D로  제작 할 경우 .  아래 영상을 3D로"},
+  {team:"퍼플",types:["UI디자인","리소스"],tools:["Dzine","KREA"],views:355,title:"[AID TFT] Cinderella 팝업 디자인 - 유리질감 개선",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97006319/AID+TFT+Cinderella+-",space:"1107",date:"2025-07-17",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트 NEO팀 - Cinderella슬롯 생성자 박채빈 생성 일자 2025-07-16   사용 툴 Krea, Dzine 예상 기대 효과 소요 시간 단축 여러가지 안을 동시에 보고 채택하기 때문에 의사 결정이 빠를 것 적용 효과  기존 대"},
+  {team:"블루",types:["자동화툴","UI디자인"],tools:["ChatGPT"],views:358,title:"[AID TF] 메모 & 라벨 UI디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79934654/AID+TF+UI",space:"1109",date:"2025-07-29",author:"양창숙",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운홀덤 &gt; 내정보 &gt; 메모 &amp; 라벨 아웃게임 디자인  생성자 양창숙 생성 일자 2025-07-14   사용 툴 ChatGPT, .Uizard 예상 기대 효과 UI/UX 검수 자동화: AI툴을 통해 공개된 화면 "},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney"],views:361,title:"[AID TFT] Tower Bonanza 배경 원화",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718332/AID+TFT+Tower+Bonanza",space:"1235",date:"2025-07-16",author:"전진영",summary:"프로젝트 Tower Bonanza  생성자 전진영 / 디자인팀 공동작업 생성일자 2025-07-09 사용 툴 Midjourney,chatgpt 예상 기대효과 제작 시간 50% 단축 적용 효과 실제 제작 시간 2일 → 0.5일 프롬프트 (Prompt) 내용 프롬프트  A"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT"],views:364,title:"[AID TF] Tower Bonanza 아이템 소품제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718334/AID+TF+Tower+Bonanza",space:"1235",date:"2025-07-28",author:"전진영",summary:"프로젝트 Tower Bonanza  생성자 전진영 / 디자인팀 공동작업 생성일자 2025-07-09 사용 툴 chatgpt 예상 기대효과 제작 시간 50% 단축 적용 효과 실제 제작 시간 2일 → 0.5일 프롬프트 (Prompt) 내용 프롬프트 gpt는 한글로 명령어 "},
+  {team:"블루",types:["이미지생성"],tools:["ChatGPT","Midjourney"],views:367,title:"[AID TF] 10월 아바타 생성 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79935156/AID+TF+10",space:"1109",date:"2025-07-29",author:"장은혜",summary:"1. AI 활용 기본 정보 프로젝트 명 25년 10월 세일즈 요청팀 블루 사업실 적용 범위 아바타 생성 + 캐릭터 일관성 유지와 표정 변화  주 사용툴 Chat GPT, Midjourney, OpenArt 생성자 장은혜 생성 일자 2025-07-11 2. AI 제작과정"},
+  {team:"퍼플",types:["포토샵","R&D·비교"],tools:["AI 이미지"],views:370,title:"[Artcraft] 작업물 아카이빙 복사용 템플릿 -  AI R&D 업무, 기존의 방식과 다른 방식으로 AI가 적용된 업무",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97003573/Artcraft+-+AI+R+D+AI",space:"1107",date:"2026-04-20",author:"정선영",summary:"프로젝트 및 지라 작성자 작성날짜 사용툴 예상 기대 효과 적용 효과 프롬프트 �� 제작 과정 �� 활용 후기 및 개선 사항 �� 리뷰 및 피드백 �� 추가 개선 메모  새 편집기로 변환 후 버전 게시됨"},
+  {team:"퍼플",types:["R&D·비교","리소스"],tools:["Tripo 3D"],views:373,title:"[AID TFT] 2507_3주차_호선헌서 심볼 3d ai 적용",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96974169/AID+TFT+2507_3+_+3d+ai",space:"1107",date:"2025-09-02",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 팀드래곤 LT 호선헌서 생성자 김경민 생성 일자 2025-07-17   사용 툴 tripo ai / hitem 3d / cusor mcp(Tripo api연동) 예상 기대 효과 tripo 유료 버전의 기능 테스트 파츠 분리 부분 완"},
+  {team:"퍼플",types:["Figma","이미지생성"],tools:["ChatGPT"],views:376,title:"[AID TF]  Codia AI로 디자인 스크린샷을 Figma로 옮기기(텍스트 속성 및 이미지 생성)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97004057/AID+TF+Codia+AI+Figma",space:"1107",date:"2025-09-08",author:"정선영",summary:"AI 활용 기본 정보  관련 프로젝트 공용 아트팀 생성자 정선영 생성 일자 2025-07-14   사용 툴 ChatGpt, Codia (Figma 애드온) 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 소요시간 단축 적용 효과 (예상 기대효과"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:379,title:"[AID TF] 7월 1차 - AI 사용 사례 (GLI 인증관련 프로젝트/아이콘/영상)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97020885/AID+TF+7+1+-+AI+GLI",space:"1107",date:"2025-11-04",author:"고수욱",summary:"AI 활용 기본 정보 관련 프로젝트 GLI 인증관련 프로젝트 아이디어 도출과 AI 툴 스터디 생성자 고수욱 생성 일자 2025-07-10  ~ 2025-07-17   사용 툴 GPT, Midjourney, Sora, Dzine, ideogram 예상 기대 효과 소요시간"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["Kling AI","Veo"],views:382,title:"[AID TF] Hailuo VS Kling VS Veo2 영상 AI 비교",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96960947/AID+TF+Hailuo+VS+Kling+VS+Veo2+AI",space:"1107",date:"2025-07-29",author:"유수봉 (Deactivated)",summary:"AI 활용 기본 정보 관련 프로젝트 생성자 유수봉 생성 일자 2025-07-17   사용 툴 Hailuo, Kling, Veo2 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 각 영상 AI툴 퀄리티 검증 및 적용 가능성 가늠 적용 효과 (예상"},
+  {team:"퍼플",types:["이미지생성"],tools:["Midjourney"],views:385,title:"[AID TF] 템플릿 복사용 페이지",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97005687/AID+TF",space:"1107",date:"2025-07-17",author:"장세준",summary:"- AI 활용 기본 정보  관련 프로젝트 - 생성자 장세준 생성 일자 2025-07-17   사용 툴 (미드저니, DALLE 등) 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상)  적용 효과 (예상 기대효과에 따른 결과 - 소요 시간 단축 / "},
+  {team:"블루",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney","Sora"],views:388,title:"[AID TF] 빙고 이벤트 ai사용 제작기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79938622/AID+TF+ai",space:"1109",date:"2025-07-29",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 포커 10월 추석 맞이 빙고 생성자 한주현 생성 일자 2025-07-17   사용 툴 미드저니, DALLE, Chat GPT, Sora 예상 기대 효과 소요 시간 단축   여러가지 스타일 제안 결과물 증가 예상 적용 효과 기존 대비"},
+  {team:"블루",types:["이미지생성"],tools:["Midjourney","Dzine"],views:391,title:"[AID TF] 토끼 누리 생성 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79989875/AID+TF",space:"1109",date:"2025-07-28",author:"황은미",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운홀덤 &gt; 추석 이벤트 &gt; 아바타 1종 제작 생성자 황은미 생성 일자 2025-07-16   사용 툴 주 : Midjourney / 부 : Dzine, Leonardo.Ai 예상 기대 효과 아바타 기본형 생성 : 미드"},
+  {team:"퍼플",types:["이미지생성"],tools:["Dzine"],views:394,title:"[AID TF] AI 사용 Perseus or Medusa 화면 전환 효과 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027628/AID+TF+AI+Perseus+or+Medusa",space:"1107",date:"2025-11-18",author:"이대엽",summary:"AI 활용 기본 정보  관련 프로젝트 Perseus or Mesusa slot 생성자 이대엽 생성 일자 2025-07-17    사용 툴 Dzine 예상 기대 효과 (80% 절감/ 적용 가능/ 퀄리티 업 예상) 적용 효과 (90% 제작시간 단축 및 제작 단가 감소) ,"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:397,title:"[AID TF] 250715_클래식 슬롯의 다양한 컨셉 인사이트를 얻어보자.",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97015181/AID+TF+250715_+.",space:"1107",date:"2025-09-08",author:"이지혜(퍼플스프린트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 트리플 와일드 세븐 슬롯  생성자 이지혜 생성 일자 2025-07-10   사용 툴 (미드저니, DALLE 등) 챗GPT, 드리미나, dzine 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 소요 시간 단"},
+  {team:"퍼플",types:["이미지생성"],tools:["Midjourney"],views:400,title:"[AID TFT] 26년 3월 1주 - 시퀀스 이미지 뷰어",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/161382628/AID+TFT+26+3+1+-",space:"1107",date:"2026-03-10",author:"정선영",summary:"AI 활용 기본 정보  관련 프로젝트 공용 아트팀 생성자 정선영 생성 일자 2025-07-11   사용 툴 (미드저니, DALLE 등) 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상)  작업 소요시간 단축 - 애니메이션 구상 및 적용시 시퀀스 "},
+  {team:"블루",types:["이미지생성"],tools:["나노바나나"],views:403,title:"[AID TF] 나노바나나 AI 이미지 +  3D 렌더링 이미지",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/160989663/AID+TF+AI+3D",space:"1109",date:"2026-03-13",author:"장은혜",summary:"AI 활용 기본 정보 관련 프로젝트 생성자 장은혜 생성 일자 2026.01.29 사용 툴 (나노바나나) 예상 기대 효과 시간 단축 3D 작업의 단순화 적용 효과 Ai로 만든 이미지로 3D 렌더링 이미지 리소스로 활용하여 완성도 고도화 리터칭 작업 시간 단축 �� 제작 "},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나"],views:406,title:"[AID TF] 뉴맞고_SNS_ 도리의 일주일 패션, 룩으로 기분 전환!!",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/160202962/AID+TF+_SNS_",space:"1122",date:"2026-02-26",author:"장혜진",summary:"관련 프로젝트  생성자 장혜진 생성 일자 2026/2/26 사용툴 제미나이, 나노바나나 예상 기대 효과 다양한 시안으로 성과 좋은 디자인 즉각 파악하고 반영 기대 컨텐츠 다변화 기대 제작 일정 및 기간 단축 기대 적용 효과 1.제작 리소스의 효율적 단축 2.시각적 초안"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["ChatGPT","나노바나나"],views:409,title:"[AID TF] - 2월 4주차 - 베틀쉽_연출_연출에 필요한 오브젝트 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/156372155/AID+TF+-+2+4+-+_+_",space:"1107",date:"2026-03-05",author:"서영은",summary:"관련 프로젝트 생성자 서영은 생성 일자 2026-02-25   사용 툴 chatgpt,  Nano Banana Pro 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 80% 적용 가능성 100% 결과물 증가 80% 프"},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","나노바나나","Dzine"],views:412,title:"[AID TF] 3월 2주차 - KL 백사선희(구 서련천년)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/156206136/AID+TF+3+2+-+KL",space:"1107",date:"2026-03-09",author:"김진우",summary:"프로젝트 KL 백사선희(구 서련천년) 생성자 김진우 생성 일자 2026-02-24  ~ 2026-03-09 사용 툴 dzine, Gemini, KREA, nano banana 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간"},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney","Kling AI"],views:415,title:"[AID TFT] 2월 4주차 AI활용 - 불빠타 파티 원화제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/156339262/AID+TFT+2+4+AI+-",space:"1107",date:"2026-02-24",author:"박주홍",summary:"관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 20260216 ~ 20260224 사용 툴 Chat GPT, Midjourney, nanobanana, Dzine, dreamina, krea, ideogram, kling 예상 기대 효과 하이퀄리티 슬롯아트"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","KREA"],views:418,title:"[AID TF] 2월 4주차 : 헨젤과 그레텔 - 심볼 프레임 디자인 변경하기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/156467416/AID+TF+2+4+-",space:"1107",date:"2026-02-24",author:"박채빈",summary:"AI 활용 기본 정보 관련 프로젝트 NEO팀 - Hansel&amp;Gretel 슬롯 생성자 박채빈 생성 일자 2026-02-19  ~ 2026-02-20   사용 툴 프롬프트 생성 : GPT  이미지 제작 1차 플랫폼 : Krea - Nodes 이미지 제작 모델 1차"},
+  {team:"퍼플",types:["자동화툴","리소스"],tools:["Google AI Studio"],views:421,title:"[AID TFT] 26년 2월 4주차 - 슬롯 이미지의 크기 및 위치값 전달 자동화",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/156205311/AID+TFT+26+2+4+-",space:"1107",date:"2026-02-24",author:"정선영",summary:"AI 활용 기본 정보  관련 프로젝트 공용 아트팀 생성자 정선영 생성 일자 2026-02-24   사용 툴 Google AI Studio 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 이미지 사이즈 및 위치의 수동 체크 및 전달 시간 제거, "},
+  {team:"레드",types:["영상","이미지생성"],tools:["나노바나나"],views:424,title:"[AID TF] 3월 갤럭시 프로모션 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/156336270/AID+TF+3",space:"1122",date:"2026-02-24",author:"장혜진",summary:"지라  담당자 장혜진 기획서 https://olympos.pages.nwz.cloud/red/docs/proposal/Matgo/2026/202603/RED_sale_sport PSD  관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2026/2/24 사용툴 나노바나나 "},
+  {team:"퍼플",types:["영상","UI디자인"],tools:["Kling AI"],views:427,title:"[AID TFT] 2월 4주차 AI 활용 - 하단 UI 연출 레퍼런스 활용",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/156368907/AID+TFT+2+4+AI+-+UI",space:"1107",date:"2026-02-24",author:"장세준",summary:"관련 프로젝트 X1939_백사선희(가제) 생성자 장세준 생성 일자 2026-02-24  사용 툴 Kling Ai 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 소요 시간 단축 20% / 적용 가능성 5% / 결과물 예상 10% 적용 효과 (예"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["ChatGPT","Higgsfield"],views:430,title:"[AID TF] 돈코하우스 화풍 도출 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/153716504/AID+TF",space:"1107",date:"2026-02-26",author:"채하늘",summary:"관련 프로젝트 Pet Story 생성자 채하늘 생성 일자 2026-02-23   사용 툴  Dizen, higgsfield 예상 기대 효과 기존 대비 소요 시간 단축 (30% 이상) 적용 효과   소요 시간 단축 퀄리티 향상 프롬프트 Gpt 프롬포트 사용 붓터치감이 살"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Dzine","Whisk"],views:433,title:"[AID TF] 260223_캐릭터 디자인을 통해 다양한 움직임을 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/153879865/AID+TF+260223_",space:"1107",date:"2026-02-23",author:"이지혜(퍼플스프린트팀)",summary:"관련 프로젝트 FIRE WHACK PARTY 10000 (이하 &#39;불빠따 파티&#39;)슬롯 생성자 이지혜 생성 일자 2026-02-12   사용 툴 챗 GPT, 제미나이, 힉스필드, dzine, whisk, deepl 예상 기대 효과 (소요 시간 단축 / 적용 "},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["ChatGPT"],views:436,title:"[AID TF] 2026 2월 4주차  3d ai studio R&D- 작성중",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/153814025/AID+TF+2026+2+4+3d+ai+studio+R+D-",space:"1107",date:"2026-02-25",author:"김경민(퍼플아트팀)",summary:"관련 프로젝트 3D scene를 이용한 영상 생성 R&amp;D . 생성자 김경민 생성 일자 2026-02-12   사용 툴 chat GPT / 3d ai studio 예상 기대 효과 애니메이션 시간 단축 모델링 시간단축 영상생성 시간 단축 - 원하는 구도와 요소를 직"},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나"],views:439,title:"[AID TF]시즌 오픈 세일즈 뉴스레터 및 효력 아이템",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/153617029/AID+TF",space:"1122",date:"2026-02-25",author:"장혜진",summary:"지라  담당자 장혜진 기획서 https://olympos.pages.nwz.cloud/red/docs/proposal/Matgo/2026/202603/RED_sale_sport PSD 관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2026/2/23 사용툴 나노바나나 예"},
+  {team:"퍼플",types:["사운드","이미지생성"],tools:["Suno","ElevenLabs"],views:442,title:"[AID TFT] Night Rush 10000 빅윈사운드",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/153911485/AID+TFT+Night+Rush+10000",space:"1107",date:"2026-02-23",author:"김택희",summary:"관련 프로젝트 스프린트팀 Night Rush 10000 생성자 김택희 생성 일자 2026-02-16   사용 툴 Suno, ElevenLabs 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 적용 가능성 결과물 증가 "},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","Midjourney","Google AI Studio"],views:445,title:"[AID TF] Lollypop Plinko 월드컵 컨셉 리스킨",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/153944127/AID+TF+Lollypop+Plinko",space:"1235",date:"2026-02-23",author:"배태환",summary:"관련 프로젝트 Lollypop Plinko 월드컵 컨셉 리스킨 생성자 배태환 생성 일자 2026-02-23   사용 툴 Google ai studio, Gemini, Midjourney, Dzine 예상 기대 효과 시즌성 이벤트 대응 속도 향상 월드컵, 올림픽 등 단기"},
+  {team:"레드",types:["이미지생성"],tools:["Weavy"],views:448,title:"[ArtCraft][섯다] Weavy AI를 사용하여 인게임 이모티콘 리소스 생성하기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/152404814/ArtCraft+Weavy+AI",space:"1122",date:"2026-03-13",author:"최강",summary:"프로젝트 [ArtCraft][섯다] 인게임 이모티콘 리소스 생성하기 생성자 최강 생성일자 2026/02/20 사용툴 Weavy AI 예상 기대 효과 섯다 이모티콘 상품 8종을 빠르게 제작 가능한지 확인 적용 효과 그록과 Weavy AI를 8종을 빠르게 생성 가능 개별 "},
+  {team:"레드",types:["이미지생성"],tools:["ChatGPT"],views:451,title:"[AID TF] 바둑_로그인 팝업 시안",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/152110312/AID+TF+_",space:"1122",date:"2026-02-24",author:"김인옥",summary:"로그인 팝업 구성 초안 기획 의도 -게스트 플레이 / 로그인 플레이 구분 필요 -웹 바둑 페이지의 피망 로그인 디자인 유지 쳇GPT 점검 ✅ 잘된 점 1️⃣ 선택 구조는 명확함 게스트 vs 로그인 플레이 구분이 분명 SNS 로그인도 바로 보임 아이디/비번 찾기 접근성 "},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","Midjourney","Google AI Studio"],views:454,title:"[AID TF] Nine knights world cup 리스킨 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/152043809/AID+TF+Nine+knights+world+cup",space:"1235",date:"2026-02-20",author:"배태환",summary:"관련 프로젝트 Nine knights world cup 리스킨 작업 생성자 배태환 생성 일자 2026-02-20   사용 툴 Google ai studio, Gemini, Midjourney 예상 기대 효과 시즌성 이벤트 대응 속도 향상 월드컵, 올림픽 등 단기 이벤트"},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","나노바나나","Dzine"],views:457,title:"[AID TF] 2월 4주차 - 백사선희(KL)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/151257393/AID+TF+2+4+-+KL",space:"1107",date:"2026-02-23",author:"김진우",summary:"프로젝트 백사선희 생성자 김진우 생성 일자 2026-02-11  ~ 2026-02-23   사용 툴 dzine, Gemini, KREA, nano banana 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 - 50%"},
+  {team:"블루",types:["자동화툴","R&D·비교"],tools:["Midjourney"],views:460,title:"[AID TF] Google Antigravity 기능테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/149656231/AID+TF+Google+Antigravity",space:"1109",date:"2026-02-13",author:"한주현",summary:"AI 활용 기본 정보 관련 프로젝트  생성자 한주현 생성 일자 2026.02.13 사용 툴 (미드저니, DALLE 등) 예상 기대 효과 바이브 코딩 –&gt; 실제 웹 사이트 연결까지 적용 효과 웹 앱 만들기 (자동) 서버 연결하기 (결제-카드 등록은 인간의 도움이 필"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:463,title:"[AID TF] Suno AI를 활용한 서련천년 RUÌ FÚ QÍNG SHĒN(瑞戀千年) 슬롯 음악(Hold and Spin1, 2)작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/149684412/AID+TF+Suno+AI+RU+F+Q+NG+SH+N+Hold+and+Spin1+2",space:"1107",date:"2026-02-13",author:"박은송",summary:"AI 활용 기본 정보 관련 프로젝트 퍼플 팀드래곤 서련천년 RUÌ FÚ QÍNG SHĒN(瑞戀千年) 생성자 박은송 생성 일자 2026-02-11   사용 툴 Suno 예상 기대 효과 결과물 퀄리티 증가 예상 작업 시간 단축 예상 적용 효과 기존 대비 소요 시간 단축 결"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:466,title:"[AID TF] Suno AI를 활용한 서련천년 RUÌ FÚ QÍNG SHĒN(瑞戀千年) 슬롯 음악(Paid)작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/149520459/AID+TF+Suno+AI+RU+F+Q+NG+SH+N+Paid",space:"1107",date:"2026-02-13",author:"박은송",summary:"AI 활용 기본 정보 관련 프로젝트 퍼플 팀드래곤 서련천년 RUÌ FÚ QÍNG SHĒN(瑞戀千年) 생성자 박은송 생성 일자 2026-01-28   사용 툴 Suno 예상 기대 효과 결과물 퀄리티 증가 예상 작업 시간 단축 예상 적용 효과 기존 대비 소요 시간 단축 다"},
+  {team:"레드",types:["영상","R&D·비교"],tools:["Midjourney"],views:469,title:"[AID TF] 쇼다운홀덤 토너먼트 사이트 비주얼 영상 제작 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/149160026/AID+TF",space:"1033",date:"2026-02-12",author:"송행숙",summary:"AI 활용 기본 정보 관련 프로젝트 쇼다운홀덤 토너먼트 사이트 상단 비주얼 영상 제작 생성자 송행숙 생성 일자 2026-02-12   사용 툴 미드저니, 애프터이펙트 예상 기대 효과 제작 소요시간 단축, 라이브 적용, 다양한 결과물, 목표에 정확히 도달, 퀄리티 확보,"},
+  {team:"퍼플",types:["영상","리소스"],tools:["Kling AI","Higgsfield"],views:472,title:"[AID TF] - 2월 2주차 - Battle Of the Ocean 심볼 작업 활용",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/148963758/AID+TF+-+2+2+-+Battle+Of+the+Ocean",space:"1107",date:"2026-02-12",author:"장세준",summary:"AI 활용 기본 정보 관련 프로젝트 X1324_BusyBunnyBonanza 생성자 장세준 생성 일자 2026-01-26  사용 툴 Kling Ai , higgsfield 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 소요 시간 단축 70% "},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney","Kling AI"],views:475,title:"[AID TFT] 2월 2주차 AI 활용 - 배틀쉽 팝업류 원화2",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/148799705/AID+TFT+2+2+AI+-+2",space:"1107",date:"2026-02-12",author:"박주홍",summary:"관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 20260126 ~ 20260212 사용 툴 Chat GPT, Midjourney, nanobanana, Dzine, dreamina, krea, ideogram, kling 예상 기대 효과 하이퀄리티 슬롯아트"},
+  {team:"블루",types:["이미지생성"],tools:["Gemini","ChatGPT","Google AI Studio"],views:478,title:"[AID TF] 이미지 톺아보기 (Google AI Studio)",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/148832366/AID+TF+Google+AI+Studio",space:"1109",date:"2026-02-12",author:"한주현",summary:"AI 활용 기본 정보 관련 프로젝트   생성자 한주현 생성 일자 2026.02.12 사용 툴 Google AI Studio, Gpt, Gemini 예상 기대 효과 인간-AI 공동 창작 적용 효과 고부가가치 창작 워크플로우 프롬프트 Google AI Studio 사용하기"},
+  {team:"레드",types:["영상","포토샵"],tools:["Midjourney"],views:481,title:"[AID TF] 화투 민화 II - 공간 디자인용 이미지 업스케일",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/147294734/AID+TF+II+-",space:"1033",date:"2026-02-12",author:"오선화",summary:"AI 활용 기본 정보 관련 프로젝트 뉴맞고 팝업 스토어 공간 디자인 생성자 오선화 생성 일자 2026-02-11   사용 툴 제미나이, 미드저니, 토파즈, 힉스필드 예상 기대 효과 온라인으로만 사용 가능한 해상도를 인쇄 가능한 해상도 적용이 가능하도록 스케일업 적용 효"},
+  {team:"블루",types:["자동화툴","이미지생성"],tools:["Gemini"],views:484,title:"[Art Craft] 로컬 PSD 폰트를 글로벌로 자동변환",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/147391050/Art+Craft+PSD",space:"1109",date:"2026-04-20",author:"양창숙",summary:"AI 활용 기본 정보 관련 프로젝트 쇼다운 홀덤 HOP 생성자 양창숙  생성 일자 2026-02-11  사용 툴 Gemini 예상 기대 효과 수 시간이 걸리던 단순 반복 업무를 스크립트 실행 한 번(초 단위)으로 단축 사람이 눈으로 확인하며 발생할 수 있는 폰트 누락 "},
+  {team:"퍼플",types:["자동화툴","리소스"],tools:["Gemini"],views:487,title:"[Art Craft] 26년 2월 1차 - AI 이미지 앵글 생성기 PRO 버전으로 업그레이드",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/146670238/Art+Craft+26+2+1+-+AI+PRO",space:"1107",date:"2026-03-24",author:"고수욱",summary:"AI 활용 기본 정보 관련 프로젝트  강원랜드 서련천련 슬롯 공용으로 사용할 빅윈 디자인 생성자 고수욱 생성 일자 2026-01-12  ~  사용 툴 Gemini, 구글 ai 스튜디오, ideogram 예상 기대 효과 타 ai에서 생성된 이미지를 원하는 카메라 각도와 "},
+  {team:"퍼플",types:["이미지생성"],tools:["Google AI Studio"],views:490,title:"[AID TF] Google AI Studio로 파츠분리앱 (개인화)",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/146506032/AID+TF+Google+AI+Studio",space:"1235",date:"2026-02-11",author:"전진영",summary:"AI 활용 기본 정보 관련 프로젝트 Epic Strike: Tower of Zeus Mini 생성자 전진영 생성 일자 2026-02-11   사용 툴 Google AI Studio 예상 기대 효과 스파인 파츠 분리 작업 시간 절감 (수작업 마스킹/레이어 분리 단계 축소"},
+  {team:"레드",types:["영상","이미지생성"],tools:["Weavy"],views:493,title:"[AID TF] 피망 바둑 이미지 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/144638351/AID+TF",space:"1033",date:"2026-02-10",author:"한시내",summary:"관련 프로젝트 이미지 제작 생성자 한시내 생성 일자 2026-02-10   사용 툴 Weavy 예상 기대 효과 제작 시간 단축, 적용 가능성 여부 확인 적용 효과 제작 시간 단축에 효율적, 다양한 시안 제작을 한번에 확인하기에 용이함, 이미지&gt;영상 제작 시 일관성"},
+  {team:"블루",types:["영상","이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:496,title:"[AID TF] AI로 쉽게 일하기 vs 사람이 어렵게 일하기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/145196520/AID+TF+AI+vs",space:"1109",date:"2026-02-10",author:"한주현",summary:"AI 활용 기본 정보 관련 프로젝트 생성자 한주현 생성 일자 2026-02-10   사용 툴 미드저니, GPT, Gemini, sora 예상 기대 효과 소요 시간 단축 적용 효과 기존 대비 소요 시간 단축 프롬프트 아래 기술  최근 AI 툴의 발전으로 이미지 제작 과정"},
+  {team:"블루",types:["R&D·비교","이미지생성"],tools:["Gemini","ChatGPT","Google AI Studio"],views:499,title:"[Art Craft] 쇼다운 홀덤 HOP 글로벌 폰트 테스트 툴 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/145196336/Art+Craft+HOP",space:"1109",date:"2026-04-20",author:"양창숙",summary:"AI 활용 기본 정보 관련 프로젝트 쇼다운 홀덤 모바일 HOP  생성자 양창숙  생성 일자 2026-02-10  사용 툴 Gemini, GPT, Google AI Studio 예상 기대 효과 글로벌 폰트 전환 과정의 리스크 최소화 네모니2 기준으로 설계된 국내 UI를 "},
+  {team:"브라운",types:["이미지생성"],tools:["Gemini","ChatGPT","Dzine"],views:502,title:"[02.10][AID TF][H5] 포커 스타디움 정식버전 - 최고 금액 특수 칩",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/144607038/02.10+AID+TF+H5+-",space:"1234",date:"2026-03-19",author:"이민영 (Deactivated)",summary:"AI 활용 기본 정보 관련 프로젝트 포커 스타디움 생성자 이민영 생성 일자 2026-02-10   사용 툴 Gemini, ChatGPT, Weavy AI, Dzine 예상 기대 효과 소요 시간 50% 단축 결과물 증가 예상 적용 효과 소요 시간 50% 단축 결과물 증가"},
+  {team:"블루",types:["영상","포토샵"],tools:["Gemini","ChatGPT","Midjourney"],views:505,title:"[AID TF] 포토샵 쓰지 않고 프로모션 페이지 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/145261570/AID+TF",space:"1109",date:"2026-02-10",author:"한주현",summary:"AI 활용 기본 정보 관련 프로젝트  생성자 한주현 생성 일자 2026-02-10   사용 툴 미드저니, GPT, Gemini, sora 예상 기대 효과 소요시간 단축 적용 효과 기존 대비 소요 시간 단축 포토샵 구매비용 예산 절감 프롬프트 아래 기술 포토샵을 쓰지 않"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["ChatGPT","KREA","Higgsfield"],views:508,title:"[AID TF] Dizen Vs. Krea Vs. Higgsfield 이미지 참조 실험",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/143459833/AID+TF+Dizen+Vs.+Krea+Vs.+Higgsfield",space:"1107",date:"2026-02-09",author:"채하늘",summary:"관련 프로젝트 Pet Story 생성자 채하늘 생성 일자 2026-02-09   사용 툴 Krea,Dizen,higgsfield 예상 기대 효과 기존 대비 소요 시간 단축 (50% 이상) 적용 효과   소요 시간 단축 퀄리티 향상 프롬프트 Gpt 프롬포트 사용 새 프로"},
+  {team:"퍼플",types:["자동화툴","포토샵"],tools:["Gemini"],views:511,title:"[AID TFT] 26년 2월 2주 로컬 텍스트 자동 변환 포토샵 스크립트 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/142771689/AID+TFT+26+2+2",space:"1107",date:"2026-02-11",author:"정선영",summary:"AI 활용 기본 정보 관련 프로젝트 공용 아트팀 생성자 정선영 생성 일자 2025-07-11   사용 툴 Gemini Pro 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) PSD 파일에 이미지로 구성되어있는 특정 언어의 로컬 텍스트 변환시 공"},
+  {team:"레드",types:["자동화툴","R&D·비교"],tools:["Weavy"],views:514,title:"[AID TF] Weavy 토너먼트 컨셉 디자인 도출 자동화 - 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/141427522/AID+TF+Weavy+-",space:"1033",date:"2026-03-05",author:"송행숙",summary:"AI 활용 기본 정보 관련 프로젝트 Aid TF 생성자 송행숙 생성 일자 2026-03-05   사용 툴 Weavy 예상 기대 효과 Weavy 노드방식으로 토너먼트 온라인 소재 컨셉 도출 자동화 적용 효과 루틴한 컨셉도출 AI툴로 시간 단축, 퀄리티 유지, 효율적 도출"},
+  {team:"브라운",types:["R&D·비교","이미지생성"],tools:["Weavy"],views:517,title:"[26.02.06][AID TF][뉴베가스] 2026 봄 시즌 이벤트 - 출석보너스",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/141164586/26.02.06+AID+TF+2026+-",space:"1234",date:"2026-02-09",author:"박중신",summary:"AI 활용 기본 정보 관련 프로젝트 [뉴베가스] 2026 봄 시즌 이벤트 - 출석보너스 생성자 박중신 생성 일자 2026-02-06   사용 툴 Weavy AI 예상 기대 효과 이미지 제작 시간 40% 단축 적용 효과 여러가지 AI를 한번에 추출해서 여러 시간을 비교 "},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나"],views:520,title:"[AID TF] 뉴맞고_나들이 세일즈 곰도리 프로필 및 나들이 액자 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/139985095/AID+TF+_",space:"1122",date:"2026-02-13",author:"장혜진",summary:"관련 프로젝트   생성자 장혜진 생성 일자 2026/2/12 사용툴 나노바나나 예상 기대 효과  빠르고 효율적으로 작업 기간 단축/다양한 컨셉 빠르게 확인 적용 효과 판매용 상품에 빠르게 컨셉 적용 가능성 확인, 작업 기간 단축 프롬프트 봄 나들이 컨셉으로, 놀이동산에"},
+  {team:"레드",types:["사운드","영상"],tools:["Suno","Higgsfield"],views:523,title:"[AID TF] 섯다. 빛베리 UA 영상 소재 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/140182278/AID+TF+.+UA",space:"1033",date:"2026-02-05",author:"이종민(AB디자인팀)",summary:"관련 프로젝트  생성자 이종민 생성 일자 2026-02-05   사용 툴 comfy ui, Grock, higgsfield, Suno Ai 예상 기대 효과 애니메이션 및 연출 필요한 제작 기간 단축 고 퀄리티 영상  적용 효과  실제 제작 시 영상 1개당. 5D 이상 "},
+  {team:"레드",types:["자동화툴","이미지생성"],tools:["나노바나나","위비"],views:526,title:"[AID TF] 뉴맞고_SNS_장면 생성기로 '클로버밭 도리' 피드 만들어 보기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/137167691/AID+TF+_SNS_",space:"1122",date:"2026-02-11",author:"장혜진",summary:"관련 프로젝트  생성자 장혜진 생성 일자 2026/2/11 사용툴 구글 스튜디오, 지피티, 나노바나나, 위비, 하이루오 예상 기대 효과 다양한 시안으로 성과 좋은 디자인 즉각 파악하고 반영 기대 컨텐츠 다변화 기대 제작 일정 및 기간 단축 기대 적용 효과 1.제작 리소"},
+  {team:"퍼플",types:["R&D·비교","이미지생성"],tools:["ChatGPT","Dreamina","Weavy"],views:529,title:"[AID TF] AI 이미지 생성 플랫폼 비교: Weavy vs. Dreamina",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/137134442/AID+TF+AI+Weavy+vs.+Dreamina",space:"1107",date:"2026-02-03",author:"채하늘",summary:"관련 프로젝트  Pet Story 생성자 채하늘 생성 일자 2026-02-03   사용 툴 Weavy, Dreamina 예상 기대 효과 기존 대비 소요 시간 단축 (30% 이상) 적용 효과   소요 시간 단축 퀄리티 향상 프롬프트 Gpt 프롬포트 사용 먼저 저는 다음 "},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["ChatGPT","Kling AI","Google AI Studio"],views:532,title:"[AID TF] AI 영상 생성 간단한 분석: Kling 2.6 vs. Veo 3",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/137035799/AID+TF+AI+Kling+2.6+vs.+Veo+3",space:"1107",date:"2026-02-03",author:"채하늘",summary:"관련 프로젝트 생성자 채하늘 생성 일자 2026-02-03   사용 툴 Google Ai studio, higgsfield 예상 기대 효과 기존 대비 소요 시간 단축 (30% 이상) 적용 효과   소요 시간 단축 퀄리티 향상 프롬프트 Gpt 프롬포트 사용 ��️ AI "},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["Weavy"],views:535,title:"[AID TF] Weavy 테스트 보고서",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/136315200/AID+TF+Weavy",space:"1235",date:"2026-02-03",author:"전진영",summary:"AI 활용 기본 정보 관련 프로젝트 Weavy 테스트 보고서 / 연출 디자이너 관점 (스파인 애니메이션/모션 중심) 생성자 전진영 생성 일자 2026-02-03   사용 툴 Weavy (브라우저 기반 크리에이티브 플랫폼) 예상 기대 효과 이미지 및 영상 제작 공정에서 "},
+  {team:"퍼플",types:["포토샵","R&D·비교"],tools:["Midjourney","Google AI Studio","Weavy"],views:538,title:"[AID TF] Weavy AI 사용성 및 실무 적합성 평가 보고서",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/135758206/AID+TF+Weavy+AI",space:"1235",date:"2026-02-03",author:"배태환",summary:"AI 활용 기본 정보 관련 프로젝트 Weavy 사용기 생성자 배태환 생성 일자 2026-02-03   사용 툴 [비교대상] Weavy google ai studio Midjourney 본 보고서는 Weavy AI를 실제 디자인 업무 환경에 적용하여 사용해보고, 기존에 "},
+  {team:"레드",types:["R&D·비교","이미지생성"],tools:["Weavy"],views:541,title:"[AID TF] Weavy AI로 섯다 캐릭터 패배 표정 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/133993437/AID+TF+Weavy+AI",space:"1122",date:"2026-02-03",author:"최강",summary:"프로젝트 Weavy AI R&amp;D 생성자 최강 생성일자 2026/02/03 사용툴 Weavy AI 예상 기대 효과 섯다 신규 상품의 패배 이미지를 빠르게 제작 적용 효과 리소스가 배경분리까지 되어서 Export까지 잘 됨을 확인 비노출 이미지로 다양한 표정의 리소"},
+  {team:"브라운",types:["리소스","이미지생성"],tools:["ChatGPT","Weavy"],views:544,title:"[26.02.02][AID TF] [뉴베가스] 2026 봄 시즌 이벤트 - 이벤트 페이지/ 팝업",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/134645043/26.02.02+AID+TF+2026+-",space:"1234",date:"2026-03-04",author:"박중신",summary:"AI 활용 기본 정보 관련 프로젝트 [뉴베가스] 2026 봄 시즌 이벤트 - 이벤트 페이지/ 팝업 생성자 박중신 생성 일자 2026-02-02   사용 툴 Weavy AI, Chat GPT 예상 기대 효과 소요시간 40% 단축 적용 효과 리소스 제작 시간을 줄일 수 있"},
+  {team:"블루",types:["포토샵","이미지생성"],tools:["Weavy"],views:547,title:"[AID TF] Weavy AI 도입 검토",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/134022444/AID+TF+Weavy+AI",space:"1109",date:"2026-02-02",author:"이신우",summary:"Weavy AI 도입 검토  목적: 실제 디자인 실무에서 Weavy AI를 사용한 결과를 기반으로, 도입 적합성 및 활용 가능 범위를 검토하기 위함 1. Weavy AI 개요 Weavy AI는 단일 이미지를 즉시 생성하는 결과 중심의 AI 툴이라기보다, 여러 AI 모델"},
+  {team:"퍼플",types:["영상","리소스"],tools:["Gemini","ChatGPT","Midjourney"],views:550,title:"[AID TF] 2026 1월 2주차 -boxoffice 심볼 영상 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96888296/AID+TF+2026+1+2+-boxoffice",space:"1107",date:"2026-01-13",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 Box Office Riches 생성자 김경민 생성 일자 2026-01-05   사용 툴 Dzine/ Higgsfield  / Gemini / chatGPT /midjourney 예상 기대 효과 원화 분리 &amp; 스파인 작업 시"},
+  {team:"퍼플",types:["포토샵","R&D·비교"],tools:["Gemini","나노바나나","Dzine"],views:553,title:"[AID TF] - 1월 2주차 (2/2) 서련천년, Qwen-Image-Layered(로컬) 테스트 등",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97024374/AID+TF+-+1+2+2+2+Qwen-Image-Layered",space:"1107",date:"2026-01-20",author:"김진우",summary:"관련 프로젝트 서련천년 생성자 김진우 생성 일자 2025-12-24  ~ 2026-01-12   사용 툴 dzine, Gemini, KREA, nano banana, ComfyUI, ... 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 "},
+  {team:"퍼플",types:["R&D·비교","이미지생성"],tools:["AI 이미지"],views:556,title:"[AID TF] 단일 이미지를 레이어로 분리하는 AI 모델 Qwen_Image_Layered 사용기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97031780/AID+TF+AI+Qwen_Image_Layered",space:"1107",date:"2026-01-20",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트  생성자 박채빈 생성 일자 2025-12-22  ~2025-12-26   사용 툴 Qwen-Image-Layered (데모):  https://huggingface.co/spaces/Qwen/Qwen-Image-Layered 레이어"},
+  {team:"브라운",types:["이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:559,title:"[25.12.23][AID TF][H5] 멀티플라이어 바카라 - BI,썸네일,로딩",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113941745/25.12.23+AID+TF+H5+-+BI",space:"1234",date:"2025-12-23",author:"박문수",summary:"AI 활용 기본 정보  관련 프로젝트 [H5] 멀티플라이어 바카라 -  BI, 로딩, 썸네일 생성자 박문수 생성 일자 2025-12-12   사용 툴 ideagram, 미드저니, ChatGPT, Gemini 예상 기대 효과 BI 제작 시간 50% 단축 적용 효과 단기간"},
+  {team:"공용",types:["이미지생성"],tools:["나노바나나","Google AI Studio"],views:562,title:"AID TFT",url:"https://neowiz.atlassian.net/wiki/spaces/1192/pages/101405686/AID+TFT",space:"1192",date:"2026-03-09",author:"권준원",summary:"개요 Google AI Studio 에서 Nano Banana Pro 사용을 위해 API Key 를 설정하는 방법에 대해 설명합니다. 권한 부여 대상 AID TFT(NWZ)_정형성  그룹스에 대해 API Key 사용 가능하도록 권한 부여하였습니다. 따라서 해당 그룹스에"},
+  {team:"퍼플",types:["영상","포토샵"],tools:["Weavy"],views:565,title:"[AID TF] 2026 1월 4주차  WEAVY AI R&D",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97031732/AID+TF+2026+1+4+WEAVY+AI+R+D",space:"1107",date:"2026-01-26",author:"김경민(퍼플아트팀)",summary:"세미나로 진행했던 내용을 weavy ai를 통해 워크플로우로 만든 예시입니다. 이 작업은 제가 이미 과정을 숙지하였고 만들어 놓은 예시가  있으므로 빠르게 구성이 가능하였습니다.  하지만 이와 같이 복잡한 워크플로우 (이미지생성--&gt;영상생성과 편집)가 필요한 경우"},
+  {team:"브라운",types:["이미지생성"],tools:["AI 이미지"],views:568,title:"[25.12.19][AID TF][HOB/P/S] 2026년 이벤트링 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113938508/25.12.19+AID+TF+HOB+P+S+2026",space:"1234",date:"2025-12-19",author:"박중신",summary:"링크 PSD, PNG｜https://drive.google.com/drive/folders/1Sq5Z0m6c-TfeACUSWX1xZv7buUnc2ZMr AI 활용 기본 정보  관련 프로젝트 [HOB/P/S] 2026년 이벤트링 제작 생성자 박중신 생성 일자 2025-1"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT"],views:571,title:"[AID TF] Battle ship Slot_ 심볼 AI 도출 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97024382/AID+TF+Battle+ship+Slot_+AI",space:"1107",date:"2025-12-19",author:"채하늘",summary:"관련 프로젝트 Battle Ship 생성자 채하늘 생성 일자 2025-12-19 사용 툴 Seedream 3.0, 4.0, 4.5 예상 기대 효과 50% 일정 단축 예상 적용 효과 시간 단축 및 빠르게 시안 및 실제 리소스 확보 프롬프트 챗gpt 이용  먼저 기획서를 "},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Gemini","Kling AI"],views:574,title:"[AID TF] ai로 만든 아이템 영상, 스프라이트로 활용하기",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103714382/AID+TF+ai",space:"1235",date:"2025-12-18",author:"전진영",summary:"AI 활용 기본 정보  관련 프로젝트 Dragon &amp; Wizard: Fly2Win 생성자 전진영 생성 일자 2025-12-11   사용 툴 Gemini (이미지 생성) Kling AI (이미지 → 영상 생성) 예상 기대 효과 소형 모션 아이템 제작 시간 대폭 단"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["ChatGPT"],views:577,title:"[AID TF] - 12월 3주차 - 호선헌서_연출_이펙트생성_2_영상업스케일",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97030945/AID+TF+-+12+3+-+_+_+_2_",space:"1107",date:"2025-12-18",author:"서영은",summary:"관련 프로젝트 [연출] X1937_Huxian_EnchantedTails_AnimationSpecList_머신용 생성자 서영은 생성 일자 2025-12-18   사용 툴 chatgpt, Topaz Video 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상"},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini"],views:580,title:"[AID TF] Interstellar Plinko 팝업 그래픽 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103714380/AID+TF+Interstellar+Plinko",space:"1235",date:"2025-12-18",author:"전진영",summary:"AI 활용 기본 정보  관련 프로젝트 Interstellar Plinko 생성자 전진영 생성 일자 2025-12-17   사용 툴 Ideogram Gemini Mixboard 예상 기대 효과 Win Popup 그래픽 제작 공정 단축 로고·텍스처·그래픽 요소 분업 없이 "},
+  {team:"퍼플",types:["R&D·비교","이미지생성"],tools:["AI 이미지"],views:583,title:"[AID TF] Meta AI SAM Audio demo",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97021332/AID+TF+Meta+AI+SAM+Audio+demo",space:"1107",date:"2025-12-18",author:"김택희",summary:"AI 활용 기본 정보  관련 프로젝트 데모 사용기 생성자 김택희 생성 일자 2025-07-11   사용 툴 Meta AI SAM Audio demo 예상 기대 효과 작업 활용도 증가 적용 효과 기존 대비 소요 시간 단축 적용 가능성 프롬프트 (*사용된 주요 프롬프트 기"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:586,title:"[AID TF] Super Card Rush 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103715047/AID+TF+Super+Card+Rush",space:"1235",date:"2025-12-18",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Super card rush 제작 생성자 배태환 생성 일자 2025-12-18   사용 툴 Midjourney, chatgpt, Cursor, Gemini, Kling ai 예상 기대 효과 제작 리드타임 단축 기존 4주 소요 예상 "},
+  {team:"레드",types:["리소스","이미지생성"],tools:["ChatGPT"],views:589,title:"[AID TF] 쇼다운 홀덤 2026 TMT 19 키비주얼 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106782005/AID+TF+2026+TMT+19",space:"1033",date:"2025-12-17",author:"한시내",summary:"AI 활용 기본 정보 관련 프로젝트 [피망 쇼다운홀덤]  2026 TMT 19 키비주얼 제작 생성자 한시내 생성 일자 2025-12-17   사용 툴 chat GPT 예상 기대 효과 리소스 및 이미지 제작 시간 단축 예상 적용 효과 리소스 제작 시간 단축으로 이미지 전"},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney","Kling AI"],views:592,title:"[AID TF] 12월 3주차 AI 활용 - 버니 슬롯 수정, 퍼플실 월간게임 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97032508/AID+TF+12+3+AI+-",space:"1107",date:"2025-12-17",author:"박주홍",summary:"AI 활용 기본 정보  관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 2025124 ~ 20251217 사용 툴 Chat GPT, Midjourney, Dzine, dreamina, krea, ideogram, kling 예상 기대 효과 하이퀄리티 슬롯아트"},
+  {team:"블루",types:["포토샵","이미지생성"],tools:["AI 이미지"],views:595,title:"[Art Craft] 이미지 자동 조합 툴",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79938636/Art+Craft",space:"1109",date:"2026-04-20",author:"양창숙",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운 홀덤 상품 자동 제작 툴 만들어 보기 생성자 양창숙 생성 일자 2025-12-16   사용 툴 구글 AI 스튜디오 예상 기대 효과 비용 및 인력 효율화유료 프로그램(포토샵) 비용 절감. 디자이너 인력을 고부가가치 디자인 업무"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["AI 이미지"],views:598,title:"9 > [AID TFT] Meshy (3D 모델링ai 프로그램)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027488/9+AID+TFT+Meshy+3D+ai",space:"1107",date:"2026-01-20",author:"강준모",summary:"2025-12-01  고양이 케익 자르는 영상 AI 활용 기본 정보 관련 프로젝트 X 생성자 강준모 생성 일자 2025-12-16   사용 툴 meshy 예상 기대 효과 3D 모델링 및 에니메이션에 필요한 시간을 절약할 수 있을 것 같습니다. 적용 효과 프롬프트 �� "},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","나노바나나"],views:601,title:"[AID TF] 12월 2차 : 헨젤과 그레텔 로딩화면 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97025027/AID+TF+12+2",space:"1107",date:"2026-01-26",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트 NEO팀 - 헨젤과 그레텔 슬롯 생성자 박채빈 생성 일자 2025-12-04  ~2025-12-05   사용 툴 프롬프트 생성 : GPT  이미지 제작 모델 : Seedream 4.5 , Nano Banana Pro 예상 기대 효과"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["ChatGPT","Veo"],views:604,title:"[AID TF] - 12월 3주차 - 호선헌서_연출_이펙트생성_1",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97023201/AID+TF+-+12+3+-+_+_+_1",space:"1107",date:"2026-01-09",author:"서영은",summary:"관련 프로젝트 [연출] X1937_Huxian_EnchantedTails_AnimationSpecList_머신용 생성자 서영은 생성 일자 2025-12-17   사용 툴 chatgpt, Veo 3.1 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 "},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Dzine","KREA"],views:607,title:"[AID TF] 251216_제미나이, GPT로 다양한 작업을 빠르게 해결해보자. (부제 : [AI / ME] 서로 학습당하기)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97024860/AID+TF+251216_+GPT+.+AI+ME",space:"1107",date:"2025-12-16",author:"이지혜(퍼플스프린트팀)",summary:"관련 프로젝트 Night Rush 10000 슬롯 생성자 이지혜 생성 일자 2025-12-11   사용 툴 (챗 GPT, 제미나이, , dzine, higgsfield, krea) 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 소요 시간 단축"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["Gemini","Dzine"],views:610,title:"[AID TF] 12월 2차 - 강원랜드 머신 슬롯 - 서련천련 BIG WIN 만들기 - 1",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97025351/AID+TF+12+2+-+-+BIG+WIN+-+1",space:"1107",date:"2025-12-16",author:"고수욱",summary:"AI 활용 기본 정보 관련 프로젝트  강원랜드 머신슬롯 - 서련천련에 들어가는 BIG WIN 팝업 - 4K 추후 웹용으로도 사용할 수 있게 대응 필요 생성자 고수욱 생성 일자 2025-12-15  ~  사용 툴 Gemini, Dzine, ideogram, Firefly"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["ChatGPT","나노바나나","Higgsfield"],views:613,title:"[AID TF] 2025 12월 3주차 Battleship - Ocean's Dominion 배 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97023740/AID+TF+2025+12+3+Battleship+-+Ocean+s+Dominion",space:"1107",date:"2025-12-23",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 Battleship - Ocean&#39;s Dominion 생성자 김경민 생성 일자 2025-12-15   사용 툴 seedream4.5 / chatGPT / nano Banana Pro / higgsfield 예상 기대 효과 모"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:616,title:"[AID TF] - 1월 2주차 (1/2) 서련천년 등",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96999223/AID+TF+-+1+2+1+2",space:"1107",date:"2026-01-20",author:"김진우",summary:"*문서의 여백을 클릭하면 문서 최상위로 점프하는 버그가 지속되고 있어서 문서를 분리합니다. 관련 프로젝트 서련천년 생성자 김진우 생성 일자 2025-12-15  ~ 2025-12-24   사용 툴 dzine, midjourney, dreamina, chatgpt, kr"},
+  {team:"브라운",types:["이미지생성"],tools:["ChatGPT","Midjourney"],views:619,title:"[25.12.12][AID TF][HOB/P] 2026년 트로피 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113935874/25.12.12+AID+TF+HOB+P+2026",space:"1234",date:"2025-12-12",author:"박중신",summary:"AI 활용 기본 정보  관련 프로젝트 [HOB/P/S] 2026년 트로피 제작 생성자 박중신 생성 일자 2025-12-12   사용 툴 미드저니, 제미나이, CHAT GPT 예상 기대 효과 시간 단축 60% 단축 적용 효과 3D 그래픽으로 트로피 제작.  프롬프트 “C"},
+  {team:"퍼플",types:["이미지생성"],tools:["Google AI Studio"],views:622,title:"[AID TF] 게임 썸네일 AI 자동툴 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103714377/AID+TF+AI",space:"1235",date:"2025-12-11",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 게임 썸네일 AI 자동툴 제작 (링크 ) 생성자 배태환 생성 일자 2025-12-11   사용 툴 Google ai studio, Cursor, Perplexity 예상 기대 효과 마케팅 에셋 확장성 데이터 기반 A/B 테"},
+  {team:"블루",types:["이미지생성"],tools:["Gemini","나노바나나"],views:625,title:"[AID TF] 7일 출석이벤트 : Mob / PC 대응 리뉴얼 방향",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/80005319/AID+TF+7+Mob+PC",space:"1109",date:"2025-12-11",author:"황은미",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운 홀덤 Mob / PC 생성자 황은미 생성 일자 2025-12-11   사용 툴 Gemini Canvas, Nano Banana 예상 기대 효과 디바이스 대응성 향상 : 모바일·PC 양쪽에서 동일한 몰입감과 가독성 제공 리소스"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","나노바나나"],views:628,title:"[AID TF] 2025 12월 2주차 서련천년 심볼 시안 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97025587/AID+TF+2025+12+2",space:"1107",date:"2025-12-12",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 서련천년 RUÌ FÚ QÍNG SHĒN(瑞戀千年) 생성자 김경민 생성 일자 2025-12-08   사용 툴 seedream4.5 / chatGPT / nano Banana Pro 예상 기대 효과  적용 효과  프롬프트  심볼 변경으"},
+  {team:"퍼플",types:["이미지생성"],tools:["Google AI Studio"],views:631,title:"[AID TF] AI기반 이미지 생성툴 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103714387/AID+TF+AI",space:"1235",date:"2025-12-05",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 AI기반 이미지 생성툴 제작 생성자 배태환 생성 일자 2025-12-05   사용 툴 Cursor, Google ai studio 예상 기대 효과 AI 기반 이미지 조정의 가능성 검증 이미지 생성 구조의 요구사항 명확화 Vibe C"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["AI 이미지"],views:634,title:"[AID TF] Maqic Arena 소개 및 실험 (나는 어떤 이미지 모델을 사용하면 좋을까?)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97032256/AID+TF+Maqic+Arena",space:"1107",date:"2025-12-05",author:"채하늘",summary:"https://aigcarena.com/?mode=prompt&amp;modality=image_gen&amp;source=seedream4_5 1. 뭐 하는 사이트야? 간단히 말하면: 여러 이미지·영상 생성 AI 모델을 한 번에 불러다가, 같은 프롬프트로 생성시키고,"},
+  {team:"브라운",types:["이미지생성"],tools:["ChatGPT","Midjourney"],views:637,title:"[25.12.04][AID TF][뉴베가스] 추천게임 개편 (패밀리게임)",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113936173/25.12.04+AID+TF",space:"1234",date:"2025-12-05",author:"박중신",summary:"AI 활용 기본 정보  관련 프로젝트 [뉴베가스] 추천게임 개편 (패밀리게임) 생성자 박중신 생성 일자 2025-12-04   사용 툴 미드저니, GPT 예상 기대 효과 소요 시간 70% 단축 결과물 증가 적용 효과 소요 시간 30% 단축 텍스트에 대한 텍스쳐 효과 적"},
+  {team:"레드",types:["영상","R&D·비교"],tools:["Midjourney"],views:640,title:"[Aid TF] 피망홈 추천게임 스틸이미지 모션적용 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106786238/Aid+TF",space:"1033",date:"2025-12-03",author:"오선화",summary:"AI 활용 기본 정보 관련 프로젝트 플랫폼기획팀 생성자 오선화 생성 일자 2025-07-10   사용 툴 미드저니, 애프터이펙트 예상 기대 효과 정적인 섬네일을 동적 UI용 모션으로 모션을 추가하여  간결하지만 신규게임, 추천게임 등의 주목성와 클릭률을 높일 수 있음 "},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney","Kling AI"],views:643,title:"[AID TF] ai 이미지 생성 -> 영상화 (미드저니, 클링) Sprite Animation 연출 리소스 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103714375/AID+TF+ai+-+Sprite+Animation",space:"1235",date:"2025-12-03",author:"전진영",summary:"AI 활용 기본 정보  관련 프로젝트 Interstellar Plinko  생성자 전진영 생성 일자 2025-12-03   사용 툴 Midjourney, ChatGPT, kling 예상 기대 효과 연출 컨셉 결정 속도 향상: 다양한 조명 패턴과 발광 형태를 AI로 빠르"},
+  {team:"레드",types:["포토샵","이미지생성"],tools:["AI 이미지"],views:646,title:"[AID TF] Adobe photoshop Beta 활용하여 이미지 리소스 스케일업",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106785396/AID+TF+Adobe+photoshop+Beta",space:"1033",date:"2026-01-14",author:"송행숙",summary:"AI 활용 기본 정보  관련 프로젝트 피망섯다 - 스토어 신규 스크린샷, 피망베가스 - UA소재제작 생성자 송행숙 생성 일자 2025-07-11   사용 툴 Adobe Photoshop Beta 예상 기대 효과 캐릭터, 이미지 리소스를 요청, 제작, 커뮤니케이션 시간 "},
+  {team:"레드",types:["리소스","이미지생성"],tools:["Gemini","ChatGPT"],views:649,title:"[AID TF] 피망섯다 앱내 이벤트 (신규 캐릭터 뮤즈) 리소스 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106785975/AID+TF",space:"1033",date:"2025-12-03",author:"한시내",summary:"AI 활용 기본 정보 관련 프로젝트 [피망섯다] 앱내이벤트 -신규 캐릭터 뮤즈  생성자 한시내 생성 일자 2025-12-03   사용 툴 Gemini , chat GPT 예상 기대 효과 캐릭터 리소스의 리터칭 및 리소스 제작 시간 단축, 이미지 퀄리티 업 적용 효과 리"},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:652,title:"[AID TF] 게임 컨셉선정_Super Card Rush",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103714362/AID+TF+_Super+Card+Rush",space:"1235",date:"2025-12-03",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 게임 컨셉선정_Super Card Rush 생성자 배태환 생성 일자 2025-12-03   사용 툴 Midjourney, Cursor, ChatGPT, Gemini 예상 기대 효과 컨셉 선정 속도 향상: 다양한 후보를 빠르게 생성해"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Dzine"],views:655,title:"[AID TF] 썸네일(타이틀) 5종 리뉴얼 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103714360/AID+TF+5",space:"1235",date:"2025-12-03",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 썸네일(타이틀) 5종 리뉴얼 작업 생성자 배태환 생성 일자 2025-12-03   사용 툴 Ideogram, Chatgpt, Dzine 예상 기대 효과 비주얼 상승: 최신 3D 타이틀 스타일로 전체 게임 썸네일의 품질이 향상됨. 아"},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney","Kling AI"],views:658,title:"[AID TF] 12월 1주차 AI 활용 - Thunder 제우스 수정, 슬롯 공모전 이미지, 버니 슬롯 수정",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97018817/AID+TF+12+1+AI+-+Thunder",space:"1107",date:"2025-12-03",author:"박주홍",summary:"AI 활용 기본 정보  관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 20251124 ~ 20251203 사용 툴 Chat GPT, Midjourney, Dzine, dreamina, krea, ideogram, kling 예상 기대 효과 하이퀄리티 슬롯아"},
+  {team:"레드",types:["영상","이미지생성"],tools:["나노바나나","Kling AI"],views:661,title:"[AID TF] 장혜진_sns 해파리 수면법 숏폼",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83893080/AID+TF+_sns",space:"1122",date:"2025-12-03",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/12/3 사용툴 나노바나나, 챗 지피티, 클링, 디진,캡컷 예상 기대 효과 뉴맞고 sns 제안 및 숏폼 컨텐츠 제작시 빠른 결과물 기대. 영상 업무 영역 확장. ip 및 브랜드 영역 확장 적용 효과 2D 숏폼 영상"},
+  {team:"브라운",types:["영상","이미지생성"],tools:["Midjourney","Kling AI","KREA"],views:664,title:"[25.12.02][AID TF][H5] 멀티플라이어 바카라 - Fx",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113936012/25.12.02+AID+TF+H5+-+Fx",space:"1234",date:"2025-12-02",author:"안형수",summary:"AI 활용 기본 정보  관련 프로젝트 H5 멀티플라이어 바카라 생성자 안형수 생성 일자 2025-12-02   사용 툴 Kling, Krea, midjourney 예상 기대 효과 소요 시간 80% 단축 시퀀스 추출에 용이한 AI툴로 퀄러티있고 효율적인 작업 방식 결과물"},
+  {team:"브라운",types:["영상","이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:667,title:"[25.12.02][AID TF][H5] 멀티플라이어 바카라 - 연출 및 플로우",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113936010/25.12.02+AID+TF+H5+-",space:"1234",date:"2026-01-20",author:"이민영 (Deactivated)",summary:"AI 활용 기본 정보  관련 프로젝트 멀티플라이어 바카라 생성자 이민영 생성 일자 2025-12-02   사용 툴 Gemini, Chat GPT, Midjourney, After Effect 예상 기대 효과 소요 시간 80% 단축 결과물 증가 적용 효과 소요 시간 80"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Dzine"],views:670,title:"[AID TF] 251202_슬롯 게임 원화 개발의 특성에 맞춘 효율화 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97010556/AID+TF+251202_",space:"1107",date:"2025-12-01",author:"이지혜(퍼플스프린트팀)",summary:"관련 프로젝트 Night Rush 10000 슬롯 생성자 이지혜 생성 일자 2025-11-26   사용 툴 (챗 GPT, 제미나이, deepl, dzine) 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 소요 시간 단축 퀄리티 향상  적용 효"},
+  {team:"블루",types:["UI디자인","이미지생성"],tools:["Gemini"],views:673,title:"[AID TF] 출석부 PC 해상도 대응 UX 구조 개편",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79991935/AID+TF+PC+UX",space:"1109",date:"2025-12-09",author:"황은미",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운 홀덤 PC 생성자 황은미 생성 일자 2025-12-01   사용 툴 Gemini 예상 기대 효과 빠르게 해상도 대응 Design Exploration 구조적 타당성을 검증할 수 있는 기획 가이드 적용 효과 PC 환경에 최적화"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Midjourney"],views:676,title:"[AID TF] 12월 1주차 - Hansel And Gretel 작업에 사용해본 영상 AI",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97005672/AID+TF+12+1+-+Hansel+And+Gretel+AI",space:"1107",date:"2025-12-01",author:"장세준",summary:"AI 활용 기본 정보  관련 프로젝트 X2003_Hansel &amp; Gretel 생성자 장세준 생성 일자 2025-11-28    사용 툴 (미드저니, DALLE 등) 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 소요 시간 단축 30% "},
+  {team:"퍼플",types:["R&D·비교","리소스"],tools:["나노바나나","Midjourney","FLUX"],views:679,title:"[AID TF] 12월 1차 - Nano Banana Pro - Midjourney v7 - Flux.2 AI 비교와 슬롯 게임 아트 파이프라인 포지션",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96892992/AID+TF+12+1+-+Nano+Banana+Pro+-+Midjourney+v7+-+Flux.2+AI",space:"1107",date:"2025-11-28",author:"고수욱",summary:"AI 활용 기본 정보 관련 프로젝트 Nano Banana Pro - Midjourney v7 - Flux.2의 성능, 특장점을 비교 만약 3대 ai를 이용하여 슬롯 아트를 만든다면 적합한 파이프라인, 포지션 예상. AI 스터디 &amp; 궁금증 해소. 생성자 고수욱 생"},
+  {team:"레드",types:["영상","이미지생성"],tools:["Gemini","Midjourney","Kling AI"],views:682,title:"[AID TF] 정윤주_뉴맞고 신규컨텐츠 소개 ASO 영상제작 (2)",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83888637/AID+TF+_+ASO+2",space:"1122",date:"2025-11-27",author:"정윤주",summary:"관련 프로젝트 뉴맞고 생성자 정윤주 생성 일자 2025.11.27 사용툴 Midjourney, Nanobanana, Gemini, Kling, Krea, Dzine 예상 기대 효과 업무 영역 확대(영상) 적용 효과 업무 영역 확대(영상) 프롬프트 - ✍️제작중간과정 공"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Dzine"],views:685,title:"[AID TF] 2025 11월 4주차 - AI 영상 생성 모델 특성 분석 및 제작 워크플로우 효율화 보고서",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97031634/AID+TF+2025+11+4+-+AI",space:"1107",date:"2025-11-26",author:"김경민(퍼플아트팀)",summary:"3개의 영상작업 후에 여러모델로 생성해보면서 느껴지는 바가 있어 이를 토대로 제미나이 프로를 통해 정리한  , 개인의 경험을 바탕으로 한 정리임을 밝힙니다. 주로 dzine 플랫폼 안의 모델이므로 모델의 버젼명이 다를수 있습니다. AI 영상 생성 모델 특성 분석 및 제"},
+  {team:"퍼플",types:["이미지생성"],tools:["Google AI Studio"],views:688,title:"[AID TFT] 11월 4주차_AI를 이용한 프리뷰 및 홍보용 이미지 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96986399/AID+TFT+11+4+_AI",space:"1107",date:"2025-12-01",author:"정선영",summary:"AI 활용 기본 정보  관련 프로젝트 공용 아트팀 생성자 정선영 생성 일자 2025-11-20   사용 툴 Google AI Studio 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 이미지 리소스의 정적인 배치 화면 대신 구동했을때의 느낌과"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Gemini","Dzine"],views:691,title:"[AID TF] 2025 11월 4주차 -Busy Bunny Bonanza 전환연출 영상 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97031525/AID+TF+2025+11+4+-Busy+Bunny+Bonanza",space:"1107",date:"2026-02-25",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 Busy Bunny Bonanza 생성자 김경민 생성 일자 2025-11-25   사용 툴 Gemini 2.5 pro / dzine (wan 2.5)  예상 기대 효과 화면 전환 영상 생성 - 4일 예상  스파인 작업 없이 영상으로"},
+  {team:"브라운",types:["UI디자인","이미지생성"],tools:["Gemini","ChatGPT","Google AI Studio"],views:694,title:"[25.11.21][AID TF][H5] 멀티플라이어 바카라 시안",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113935812/25.11.21+AID+TF+H5",space:"1234",date:"2025-12-22",author:"박문수",summary:"AI 활용 기본 정보  관련 프로젝트 [H5] 멀티플라이어 바카라 시안 생성자 박문수 생성 일자 2025-11-21   사용 툴 Google AI Studio, Google Gemini, ChatGPT 예상 기대 효과 UI/UX 제작시간 30% 단축 적용 효과 기획서를"},
+  {team:"레드",types:["이미지생성"],tools:["Midjourney","Grok"],views:697,title:"[AID TF] 정윤주_피망웹바둑 호구로봇 프로필 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83886900/AID+TF+_",space:"1122",date:"2025-11-21",author:"정윤주",summary:"관련 프로젝트 AI 바둑 생성자 정윤주 생성 일자 2025.11.27 사용툴 Midjourney, Nanobanana, Grok 예상 기대 효과 적용 효과 프롬프트 상세 설명에 서술 ��아이데이션 Midjourney, Nanobanana, Grok을 사용하여 바둑 AI"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["AI 이미지"],views:480,title:"[AID TF] [아트] THOR- GOD OF THE VIKINGS 슬롯 - AI를 활용한 심볼 이미지 제작 사례",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97026261/",space:"1107",date:"2025-06-26",author:"고수욱",summary:"THOR- GOD OF THE VIKINGS 기존 심볼 이미지를 AI를 활용하여 제작하여 교체 심볼 스타일 확정 및 시안 단계까지 투입시간 대폭 축소"},
+  {team:"퍼플",types:["영상"],tools:["Upscayl"],views:482,title:"[AID TF] [연출] Spine 해상도 변경 _ Upscayl",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96997146/",space:"1107",date:"2025-06-24",author:"서영은",summary:"Upscayl 활용 최소한의 노력으로 FHD Spine 리소스를 4K로 변경 소요시간 단축 30%"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["ChatGPT","Segment Anything"],views:484,title:"[AID TF] 연출AI활용 R&D_1. 이미지 분할_2트",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96997181/",space:"1107",date:"2025-06-18",author:"서영은",summary:"GPT Segment Anything 활용 파츠 분할 시간 단축 80% 목표 실패 사례"},
+  {team:"퍼플",types:["리소스"],tools:["Whisk"],views:486,title:"[AID TF] [공통] Whisk를 활용한 초!! 스피드 슬롯 아이디어 구체화",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97026271/",space:"1107",date:"2025-06-17",author:"고수욱",summary:"Google Whisk AI 복잡한 프롬프트 없이 직관적으로 슬롯 아이디어 구체화"},
+  {team:"퍼플",types:["리소스"],tools:["ChatGPT","Midjourney","Dzine"],views:488,title:"[AID TF] TDQ 파생 게임 2종(THUNDER - REALM OF LIGHTNING, DRAGON - REALM OF LONGJIE)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96941173/",space:"1107",date:"2025-06-12",author:"김진우",summary:"dzine midjourney dreamina chatgpt 심볼 약 50% 시간 단축"},
+  {team:"퍼플",types:["영상","리소스"],tools:["Kling AI"],views:490,title:"[AID TF] 슬롯 배경 연출에 활용한 AI 영상",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96939215/",space:"1107",date:"2025-06-12",author:"장세준",summary:"Kling AI 자연 물리 구현과 캐릭터 페이셜 애니메이션 80% 작업 단축"},
+  {team:"퍼플",types:["자동화툴","영상"],tools:["ChatGPT"],views:492,title:"[AID TF] 연출AI활용 R&D_1. 이미지 분할_1트",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96966124/",space:"1107",date:"2025-05-26",author:"서영은",summary:"GPT 활용 Spine 파츠 분할 자동화 시도 실패 사례"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT"],views:494,title:"[AID TF] 픽셀 게임 리소스 제작에 활용한 AI",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97014693/",space:"1107",date:"2025-05-19",author:"장세준",summary:"Chat GPT 픽셀 리소스 이미지 제작 소요시간 약 10% 단축"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:496,title:"[AID TF] LT2 狐仙献瑞 ENCHANTED TAILS",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96941610/",space:"1107",date:"2025-05-15",author:"김진우",summary:"dzine midjourney dreamina chatgpt 심볼 캐릭터 배경 약 50% 시간 단축"},
+  {team:"레드",types:["자동화툴"],tools:["Gemini"],views:498,title:"[AID TF] 최강_5월2주_바이브 코딩(Gemini)으로 화투패 부루마불 만들어 보기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83907800/",space:"1122",date:"2025-05-15",author:"최강",summary:"Gemini 바이브 코딩으로 화투패 부루마불 게임 제작"},
+  {team:"퍼플",types:["포토샵","R&D·비교"],tools:["ComfyUI","FLUX"],views:500,title:"[AID TF] ComfyUI, ComfyUI+FLUX 사용 노트 및 LT2 캐릭터 R&D",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027116/",space:"1107",date:"2025-04-07",author:"김진우",summary:"StableDiffusion ComfyUI FLUX LT2 캐릭터 R&D"},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나"],views:502,title:"[ArtCraft] 4월 1주_2_SNS_대한민국맥주박람회 간단하게 소개하는 포스트",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/210370806/ArtCraft+4+1+_2_SNS_",space:"1122",date:"2026-04-14",author:"정윤주",summary:"프로젝트 및 지라 [ArtCraft] 대한민국맥주박람회 소개하기  작성자 정윤주 작성날짜 2026-04-01  사용된 AI툴 및 적용부분 자체 제작 웹앱, 제미나이 나노바나나3 PSD 경로 4월 1주_2번째 게시물 : 제 7회 대한민국맥주박람회 소개하는 인스타그램 포스"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:504,title:"[ArtCraft] 4컷 인스타툰 이미지 자동 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/210109693/ArtCraft+4",space:"1122",date:"2026-04-01",author:"김인옥",summary:"프로젝트 및 지라 [ArtCraft] 4컷 인스타툰 이미지 생성 작성자 김인옥 작성날짜 2026-04-01  사용툴 구글AI스튜디오, 제미나이 예상기대효과 주기적으로 개시 할 4컷 인스타툰 자동 생성하여 작업 시간 단축 적용 효과 콘티만 올리면 자동 이미지 생성, 앵글"},
+  {team:"브라운",types:["이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:506,title:"[ArtCraft] AI UX/UI Design 세미나 자료",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/212140154/ArtCraft+AI+UX+UI+Design",space:"1234",date:"2026-04-01",author:"박중신",summary:"프로젝트 및 지라 Three Card Poker 작성자 박중신 작성날짜 2026-04-02  사용된 AI툴 및 적용부분 Claude AI, Gemini, Nanobanana, Midjourney, Chat GPT PSD 경로 - AI 툴을 활용하면서, 우연히 한 번씩 "},
+  {team:"블루",types:["UI디자인","이미지생성"],tools:["AI 이미지"],views:508,title:"[ArtCraft] AI 기술을 활용한 유니티 UI 디자인 최적화 위한 리스트업+",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/212500820/ArtCraft+AI+UI",space:"1109",date:"2026-05-14",author:"양창숙",summary:"작성배경 유니티(Unity) 엔진은 강력한 범용성을 제공하나,UI디자인 실무 측면에서는 반복적인 설정 작업과 리소스 최적화 관점에서 기술적 공백이 존재합니다.  본 리스트업은 시각적 완성도 향상을 넘어,  기존의 제작 방식을 효율적으로 재편하고 리소스 소모를 최소화 하"},
+  {team:"레드",types:["R&D·비교","이미지생성"],tools:["AI 이미지"],views:510,title:"[ArtCraft] 이미지 자동 분절 프로그램 테스트 후기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/214434854/ArtCraft",space:"1122",date:"2026-04-03",author:"정윤주",summary:"프로젝트 및 지라 [ArtCraft] 이미지 자동 분절 프로그램 테스트 후기 작성자 정윤주 작성날짜 2026-04-03  사용툴 파이썬?? (시키는대로 그냥 하였음..) 예상기대효과 스파인 2D에 필요한 리소스 분절 시간 단축 적용 효과 스파인 2D에 필요한 리소스 분"},
+  {team:"레드",types:["포토샵","Figma"],tools:["AI 이미지"],views:512,title:"[Art Craft] 피망쇼다운홀덤 웹홈 토너먼트 배너 업데이트 피그마 템플릿화",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/214698677/Art+Craft",space:"1033",date:"2026-04-03",author:"송행숙",summary:"AI 활용 기본 정보 관련 프로젝트 피망쇼다운홀덤 웹홈 토너먼트 배너 업데이트 생성자 송행숙 생성 일자 2026-04-03 사용 툴 피그마, Photoshop 예상 기대 효과 텍스트 수정 소요 시간, 커뮤니케이션 코스트, 리소스 단축 적용 효과 라이브 적용 효율화, 텍"},
+  {team:"퍼플",types:["영상","리소스"],tools:["나노바나나","Higgsfield"],views:514,title:"[Art Craft] BusyBunnyBonanza 인트로 연출 보강을 위한 이미지 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/214436759/Art+Craft+BusyBunnyBonanza",space:"1107",date:"2026-04-03",author:"이대엽",summary:"AI 활용 기본 정보 관련 프로젝트 BusyBunnyBonanza 생성자 이대엽 생성일자 2026-04-03  사용툴 HiggsField (Nano Banana pro) 예상기대효과 원화가 도움 없이 연출 보강 적용효과 시퀀스 작업이 아닌 이미지 보강을 통한 최적화 증"},
+  {team:"퍼플",types:["이미지생성"],tools:["Google AI Studio"],views:516,title:"[Art Craft] 디자이너 AI 통합 플랫폼 AI Tools 앱 등록 목록",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/216171386/Art+Craft+AI+AI+Tools",space:"1107",date:"2026-04-06",author:"박채빈",summary:"AI Tools 앱 레지스트리 — 초기 등록 목록 메타 정보 항목 내용 기반 자료 Google AI Studio 툴 사용성 조사 (Purple 12명, AB 4명, Brown 4명, Red 1팀, Blue 5명) 목적 플랫폼 Phase 1 구축 시 초기 등록할 앱 목록"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:518,title:"[Artcraft] 4월 1주차 AI활용 - 불빠따파티 빅윈 팝업제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/216236657/Artcraft+4+1+AI+-",space:"1107",date:"2026-04-07",author:"박주홍",summary:"관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 20260323 ~ 20260403 사용 툴 Chat GPT, Midjourney, nanobanana, Dzine, dreamina, krea 빅윈 연출에서는 기존의 플렛한 아트스타일과 다르게 입체감 있고 묘"},
+  {team:"레드",types:["사운드","영상"],tools:["Suno","Grok","Veo"],views:520,title:"[ArtCraft] 쇼다운 홀덤 PFGT 5월 대회 영상 제작기. with Grok",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/217448460/ArtCraft+PFGT+5+.+with+Grok",space:"1033",date:"2026-04-08",author:"이종민(AB디자인팀)",summary:"관련 프로젝트  생성자 이종민 생성 일자 2026-04-08   사용 툴 GROCK, FREEFIK, Veo3, 힉스필드, SunoAi, 나노 바나나 최근에 캐릭터 생성에 관해서 타 팀에서 문의를 해주신 분이 있어 겸사 겸사 제작 과정을 올립니다. 왠만하면 다들 아시는"},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","나노바나나","Dzine"],views:522,title:"[Art Craft] 4월 4주차 - WOLVES Choose your path 등",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/216237829/Art+Craft+4+4+-+WOLVES+Choose+your+path",space:"1107",date:"2026-04-20",author:"김진우",summary:"프로젝트 WOLVES - Choose your path 생성자 김진우 생성 일자 2026-04-06  ~ 2026-04-20   사용 툴 dzine, Gemini, KREA, nano banana, … PSD경로  참고사항 - 해당 경로 PSD에는 이 문서의 내용이 적"},
+  {team:"브라운",types:["이미지생성"],tools:["AI 이미지"],views:524,title:"[26.04.06][ArtCraft][H5] 캐쉬 포뮬러 시안 모음",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/216696042/26.04.06+ArtCraft+H5",space:"1234",date:"2026-04-06",author:"안형수",summary:"프로젝트 및 지라 [H5] 캐쉬 포뮬러 시안 제작자 박문수,박중신,안형수 작성날짜 2026-04-06 Cash Formula Wireframe 기획서&gt; 와이어플레임 내용&gt; 디자인 시안 핵심 키워드 친숙하고 캐주얼한 스타일 Match-3 게임에서 유래한 캐주얼"},
+  {team:"브라운",types:["이미지생성"],tools:["ChatGPT","Midjourney","Google AI Studio"],views:526,title:"[ArtCraft][H5] 캐쉬 포뮬러 시안 #1",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/216172532/ArtCraft+H5+1",space:"1234",date:"2026-04-06",author:"박문수",summary:"프로젝트 및 지라 [H5] 캐쉬 포뮬러 시안 작성자 박문수 작성날짜 2026년 4월 6일 사용된 AI툴 및 적용부분 Google AI Studio, Midjourney, ChatGPT PSD 경로  광산 보석 채굴 컨셉 컨셉 광산에서 수식들을 풀어 보석을 채굴하는 광부"},
+  {team:"브라운",types:["이미지생성"],tools:["Gemini","Claude"],views:528,title:"[ArtCraft][H5] 캐쉬 포뮬러 시안 #2",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/218005805/ArtCraft+H5+2",space:"1234",date:"2026-04-06",author:"박중신",summary:"프로젝트 및 지라 [H5] 캐쉬 포뮬러 시안 #2 작성자 박중신 작성날짜 2026-04-06  사용된 AI툴 및 적용부분 Claude, Gemini, Nanobanana PSD 경로 네온 젤리피쉬 컨셉 네온, 해파리,바다, 버블 세로모드 가로모드 작업과정 Claude를"},
+  {team:"브라운",types:["이미지생성"],tools:["Gemini","Claude"],views:530,title:"[ArtCraft][H5] 캐쉬 포뮬러 시안 #3",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/216761723/ArtCraft+H5+3",space:"1234",date:"2026-04-06",author:"박중신",summary:"프로젝트 및 지라 [H5] 캐쉬 포뮬러 시안 #4 작성자 박중신 작성날짜 2026-04-06  사용된 AI툴 및 적용부분 Claude, Gemini, Nanobanana PSD 경로 Under the Sea 컨셉 바다속, 바다생물, 물 세로모드 가로모드 작업과정 Cla"},
+  {team:"브라운",types:["이미지생성"],tools:["ChatGPT","나노바나나","Midjourney"],views:532,title:"[ArtCraft][H5] 캐쉬 포뮬러 시안 #4",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/217973013/ArtCraft+H5+4",space:"1234",date:"2026-04-06",author:"안형수",summary:"프로젝트 및 지라 [H5] 캐쉬 포뮬러 시안 작성자 안형수 작성날짜 2026-04-06 사용된 AI툴 및 적용부분 미드저니, Nano Banana3, ChatGpt PSD 경로   스위트 캔디 판타지 컨셉 캔디/디저트 모티프를 전면에 내세운 판타지풍 비주얼 핑크, 블루"},
+  {team:"퍼플",types:["사운드","자동화툴"],tools:["Gemini","ChatGPT","Google AI Studio"],views:534,title:"[AID TF] 사운드리스트 자동화 툴_Sound List Automation Tool",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/216173316/AID+TF+_Sound+List+Automation+Tool",space:"1107",date:"2026-04-07",author:"박은송",summary:"관련 프로젝트 [ArtCraft] 사운드리스트 자동화 툴_생성기 생성자 박은송  생성 일자 2026-03-26  ~ 2026-03-27    사용 툴 프롬프트 생성: ChatGPT, Gemini 개발툴: Google AI Studio_ (Model:Gemini 3.1 "},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:536,title:"[Artcraft] 260407 - 캐릭터 컨셉 제작하기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/219119661/Artcraft+260407+-",space:"1107",date:"2026-04-20",author:"이지혜(퍼플스프린트팀)",summary:"관련 프로젝트 X1336_GUILLOTINE SLASH (길로틴 슬롯) 생성자 이지혜 생성 일자 2025-03-27   사용 툴 gpt, 제미나이, KREA, dzine, 힉스필드, 미드저니 프롬프트 (*사용된 주요 프롬프트 기술) (18세기 가상의 고딕도시의 왕, 7"},
+  {team:"블루",types:["R&D·비교","이미지생성"],tools:["Midjourney"],views:538,title:"[ArtCraft] 픽앤고 머신 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/219250704/ArtCraft",space:"1109",date:"2026-04-21",author:"한주현",summary:"AI 활용 기본 정보 관련 프로젝트 픽앤고 머신 생성자 한주현   장은혜  생성 일자 2026-04-07 사용 툴 미드저니, 제미나이, 구글 플로우, 소라 예상 기대 효과 결과물 증가 예상 적용 효과 결과물 증가 실패 사례 프롬프트 �� 제작 과정 게임에 어울리는 픽앤"},
+  {team:"퍼플",types:["Figma","이미지생성"],tools:["나노바나나"],views:540,title:"[Art Craft] Dark Horse 게임 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/219316370/Art+Craft+Dark+Horse",space:"1235",date:"2026-04-07",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Dark Horse 게임 제작 생성자 배태환 생성 일자 2026-04-07   사용 툴 나노바나나 pro(힉스필드), Figma, 예상 기대 효과 제작 리드타임 단축 — 기존 3주 소요 예상 작업을 1주로 단축하여 약 67% 이상의"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Kling AI","Dzine"],views:542,title:"14 > [Artcraft] Pet_Story_Dad_didn't_Want_a_Dog",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/218759976/14+Artcraft+Pet_Story_Dad_didn+t_Want_a_Dog",space:"1107",date:"2026-04-07",author:"강준모",summary:"AI 활용 기본 정보 관련 프로젝트 X2101_Pet_Story_Dad_didn&#39;t_Want_a_Dog 생성자 강준모 생성 일자 2026-04-07   사용 툴 Dzine에 있는 여러 영상 생성 모델 (Kling 위주로 사용함) 예상 기대 효과 연출 플로우 고민"},
+  {team:"퍼플",types:["영상","리소스"],tools:["나노바나나","Kling AI"],views:544,title:"[Art Craft] Pachi Plinko 슬롯 연출 제작 (제작중)",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/219218471/Art+Craft+Pachi+Plinko",space:"1235",date:"2026-04-07",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Pachi Plinko 슬롯 연출 제작 생성자 배태환 생성 일자 2026-04-07   사용 툴 Kling AI, After Effects, 나노바나나2 예상 기대 효과 제작 리드타임 단축 — 기존 1주 소요 예상 작업을 3일로 단"},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:546,title:"[Art Craft] 일관성 앱(크래프트캠프) 사용방법_응용편",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/218923700/Art+Craft+_",space:"1107",date:"2026-04-22",author:"채하늘",summary:"https://aistudio.google.com/apps/5906a4ce-d937-4400-ae68-0b87698a6eab?showPreview=true&amp;showAssistant=true 더 이상 일관성 없는 이미지와 씨름하지 마세요. 안녕하세요, 퍼플 Neo"},
+  {team:"퍼플",types:["자동화툴"],tools:["AI 이미지"],views:548,title:"[Art Craft] 배너 사이즈 베리에이션 자동화 툴 V2",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/219218598/Art+Craft+V2",space:"1107",date:"2026-04-07",author:"박채빈",summary:"https://ai.studio/apps/95e9e23e-3d93-40d7-b716-0bfb7470a6e5?fullscreenApplet=true      1. 개요 기존 버전에서 개선하고자 했던 내용을 바탕으로 배너 사이즈 베리에이션 자동화 툴 V2를 제작해보았습니다"},
+  {team:"레드",types:["자동화툴","이미지생성"],tools:["AI 이미지"],views:550,title:"[ArtCraft] 3월 4주_한강에서 라면 먹기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/220102747/ArtCraft+3+4+_",space:"1122",date:"2026-04-07",author:"최강",summary:"프로젝트 및 지라 [ArtCraft] 3월 4주_한강에서 라면 먹기 작성자 최강 작성날짜 2026-03-27  사용된 AI툴 및 적용부분 구글 AI 스튜디오, 에피소드 생성기로 만화생성 PSD 경로"},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini"],views:552,title:"[Art Craft] 이미지 일관성 유지 앱: Firebase 연동 기술 스택 설명",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/222134574/Art+Craft+Firebase",space:"1107",date:"2026-04-10",author:"채하늘",summary:"이미지 일관성 유지 앱 - 아키텍처 설계 핵심 개념: 3단계 파이프라인 기술 스택 프레임워크: Next.js 14+ (App Router) + TypeScript AI SDK: @google/genai (Google Gemini API) 모델: Gemini 2.5 Fl"},
+  {team:"블루",types:["리소스","이미지생성"],tools:["Dzine"],views:554,title:"[ArtCraft] 쇼다운 홀덤 대표아바타 라이브러리",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/223314111/ArtCraft",space:"1109",date:"2026-04-21",author:"황은미",summary:"AI 활용 기본 정보 관련 프로젝트 쇼다운 홀덤 생성자 황은미  생성 일자 2026-04-08  사용 툴 쇼다운 아바타 스튜디오 ,  , Dzine 예상 기대 효과 대표 아바타 비주얼 시스템 및 라이브러리 구축 적용 효과 대표 아바타 활용성 증대 리소스 제작 및 관리 "},
+  {team:"레드",types:["UI디자인"],tools:["AI 이미지"],views:556,title:"[ArtCraft] 바둑_마이그레이션 UI",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/223446587/ArtCraft+_+UI",space:"1122",date:"2026-04-10",author:"김인옥",summary:"프로젝트 및 지라 [ArtCraft] 바둑_마이그레이션 UI  작성자 김인옥 작성날짜 2026-04-08  사용툴 구글ai스튜디오 앱 예상기대효과 UI 구성 작업 시간 단축 적용 효과 초안 UI 고도화 프롬프트 작업 과정에 상세 기술 UI 초안 작업 작업 시간이 충분치"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:558,title:"[ArtCraft][섯다] 맥심 모델 채솔 일러스트화 #1",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/223216639/ArtCraft+1",space:"1122",date:"2026-04-23",author:"최강",summary:"프로젝트 및 지라 [ArtCraft][섯다] 맥심 모델 채솔 일러스트화 #1  작성자 최강 작성날짜 2026-04-08  사용된 AI툴 및 적용부분 PixAI를 사용하여 일러스트 제작 1. 채솔 사진 선정 2. 모델 및 로라선정 모델 : Letters, 모델 XL XL"},
+  {team:"레드",types:["포토샵","UI디자인"],tools:["AI 이미지"],views:560,title:"[ArtCraft]_시즌패스 팝업 UI 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/224559411/ArtCraft+_+UI",space:"1122",date:"2026-04-28",author:"장혜진",summary:"프로젝트 및 지라 [ArtCraft]  작성자 장혜진 작성날짜 2026-04-10  사용된 AI툴 및 적용부분 팝업에 나오는 캐릭터 이미지 PSD 경로 뉴맞고 피드 메이커로 캐릭터 이미지 출력하여 팝업에 작업해 봄. 선택한 이미지 포토샵에서 배경제거 구매 팝업 보상 지"},
+  {team:"브라운",types:["이미지생성"],tools:["나노바나나","Claude"],views:562,title:"[26.04.09][ArtCraft][뉴베가스] VIP 시스템 리뉴얼 - VIP 등급 아이콘",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/225444208/26.04.09+ArtCraft+VIP+-+VIP",space:"1234",date:"2026-04-10",author:"박중신",summary:"프로젝트 및 지라  작성자 안형수, 박중신 작성날짜 2026-04-09  사용된 AI툴 및 적용부분 grmini, nano banana, claude PSD 경로  뉴베가스 vip 시스템 리뉴얼을 위한 일반등급 과 vip등급 8개, 총 9개의 아이콘 제작하였습니다. 심"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:564,title:"[ArtCraft][섯다] 맥심 지면광고 5월호",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/225445533/ArtCraft+5",space:"1122",date:"2026-04-09",author:"최강",summary:"프로젝트 및 지라 [ArtCraft][섯다] 맥심 지면광고 5월호  작성자 최강 작성날짜 2026-04-09  사용된 AI툴 및 적용부분 PixAI PSD 경로"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:566,title:"[ArtCraft] 뉴맞고 피드 메이커로 프로필 3종 작업하기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/226885689/ArtCraft+3",space:"1122",date:"2026-04-16",author:"장혜진",summary:"프로젝트 및 지라 [ArtCraft]  작성자 장혜진 작성날짜 2026-04-13  사용된 AI툴 및 적용부분 피드 메이커로 프로필 이미지 3종 PSD 경로 시즌패스 보상 피드메이커로 프로필 3종 이미지 제작 https://aistudio.google.com/apps/"},
+  {team:"레드",types:["Figma","이미지생성"],tools:["Claude"],views:568,title:"[Art Craft] Figma MCP + Claude 연동해서 일시키기",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/226951306/Art+Craft+Figma+MCP+Claude",space:"1033",date:"2026-04-10",author:"송행숙",summary:"AI 활용 기본 정보 관련 프로젝트 [피망쇼다운홀덤] 토너먼트 안내페이지 생성자 송행숙 생성 일자 2026-04-10 사용 툴  Claude, Figma 예상 기대 효과 소요 시간 단축 / 파일 실시간 적용 적용 효과 소요 시간 단축 / 파일 실시간 적용 / 프롬프트 "},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:570,title:"[ArtCraft] 레드 사업실 디자인 AI 툴 통합 제작 진행중",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/226657154/ArtCraft+AI",space:"1122",date:"2026-04-17",author:"장혜진",summary:"젝트 및 지라 [ArtCraft] 레드사업실 통합 툴 작성자 장혜진 작성날짜 2026-04-10  사용툴 제미나이, 커서, 클로드 예상기대효과 적용 효과 프롬프트 작업 과정 참고 작성중입니다. 이미지만 일단 첨부합니다. 참고로, 제가 만든 앱만 제작중입니다. 올림푸스 "},
+  {team:"블루",types:["이미지생성"],tools:["Midjourney"],views:572,title:"[ArtCraft] 26년 새틀라이트 아바타 생성 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/227705162/ArtCraft+26",space:"1109",date:"2026-04-21",author:"황은미",summary:"AI 활용 기본 정보 관련 프로젝트 쇼다운 홀덤 생성자 황은미  생성 일자 2026-04-10  사용 툴 Midjourney / ShowDown Avatar Studio 예상 기대 효과 제작 시간 단축 적용 효과 리소스 추출 시간 단축 및 포즈 제작을 통한 배너 활용도"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:574,title:"[ArtCraft] 4월 2주_2_튤립축제 추천하는 포스트",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/227508788/ArtCraft+4+2+_2_",space:"1122",date:"2026-04-10",author:"최강",summary:"프로젝트 및 지라 [ArtCraft] 4월 2주_2_튤립축제 추천하는 포스트 작성자 최강 작성날짜 2026-04-10  사용된 AI툴 및 적용부분 구글 AI 스튜디오 제작과정"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:576,title:"[ArtCraft] 제미나이및 아이콘 메이커로 트랙 아이콘 12종 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/227246570/ArtCraft+12",space:"1122",date:"2026-04-14",author:"장혜진",summary:"프로젝트 및 지라 [ArtCraft]  작성자 장혜진 작성날짜 2026-04-13  사용툴 제미나이 예상기대효과 디자인 일관성 확보 리소스 및 비용 절감 적용 효과  프롬프트 작업 과정에 참고 뉴맞고 시즌 패스 작업에 트랙 보상 아이콘 12종이 필요하여 제미나이와 작업"},
+  {team:"레드",types:["Figma","이미지생성"],tools:["Claude"],views:578,title:"[Art Craft] PC 해상도 디자인으로 Mobile 적용",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/227870596/Art+Craft+PC+Mobile",space:"1033",date:"2026-04-14",author:"오선화",summary:"AI 활용 기본 정보 관련 프로젝트 다음 채널링 종료 이관 페이지 생성자 오선화 생성 일자 2026-04-10 사용 툴 Figma, Claude 예상 기대 효과 모바일 화면 제작 시간 단축 및 페이지 구조 정리 적용 효과 페이지의 구조 검증  2. 페이지 제작 시간 단"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:580,title:"[ArtCraft]시즌패스 보상 프레임 이미지 3종 프레임 컨셉 메이커로 제작하기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/229343562/ArtCraft+3",space:"1122",date:"2026-04-22",author:"장혜진",summary:"프로젝트 및 지라 [ArtCraft] 작성자 장혜진 작성날짜 2026-04-16 사용된 AI툴 및 적용부분 구글 ai 스튜디오 프레임 메이커로 프레임 만들기 PSD 경로 시즌패스 프레임 3종 이미지 제작 프레임 컨셉 메이커로 프레임 이미지 제작 과정 직접 만든 프레임 "},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:582,title:"[AID TF] Suno AI를 활용한 FIRE WHACK PARTY 10000 슬롯 음악 WIN BGM 5종 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/230327948/AID+TF+Suno+AI+FIRE+WHACK+PARTY+10000+WIN+BGM+5",space:"1107",date:"2026-04-14",author:"박은송",summary:"관련 프로젝트 퍼플 스프린트팀  FIRE WHACK PARTY 10000 생성자 박은송 생성 일자 2026-04-02   사용 툴 Suno 예상 기대 효과 결과물 퀄리티 증가 예상 작업 시간 단축 예상 적용 효과 기존 대비 소요 시간 단축 다양한 결과물로 선택의 폭이 "},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["ChatGPT","Seedance"],views:584,title:"[Art Craft] 4월 3주차 - KL 백사선희_이펙트 추출",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/232161541/Art+Craft+4+3+-+KL+_",space:"1107",date:"2026-04-23",author:"서영은",summary:"프로젝트 백사선희  생성자 서영은  생성 일자 2026-04-14  사용 툴 GPT , Seedance2.0   프롬프트 결과물 Use the provided image as the base. A vertical, straight column of golden smok"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:586,title:"[ArtCraft][섯다X맥심] 채솔 적용안",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/231310200/ArtCraft+X",space:"1122",date:"2026-04-14",author:"최강",summary:"프로젝트 및 지라 [ArtCraft][섯다X맥심] 채솔 적용안  작성자 최강 작성날짜 2026-04-14  사용된 AI툴 및 적용부분 PixAI, 그록"},
+  {team:"브라운",types:["영상","포토샵"],tools:["ChatGPT","Google AI Studio","Weavy"],views:588,title:"[26.04.15][ArtCraft][H5] Cash Formula 최종안",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/233439546/26.04.15+ArtCraft+H5+Cash+Formula",space:"1234",date:"2026-04-17",author:"박문수",summary:"프로젝트 및 지라  작성자 박문수 작성날짜 2026-04-15  사용된 AI툴 및 적용부분 ChatGPT(프롬프팅), Google AI Studio(이미지생성,편집), Weavy AI(테스트영상, 이미지생성편집) PSD 경로   최종안 1.심볼 수정 [수정사항] 심볼("},
+  {team:"레드",types:["이미지생성"],tools:["Gemini","ChatGPT"],views:590,title:"[ArtCraft] Pix Ai - 모델 & LoRA 종류",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/236782243/ArtCraft+Pix+Ai+-+LoRA",space:"1122",date:"2026-05-20",author:"고수욱",summary:"프로젝트 및 지라 [ArtCraft] Pix Ai - 모델 &amp; LoRA 종류 이미지 생성을 위한 사전 준비 작성자 고수욱 작성날짜 2026. 4. 16 사용툴 Pix AI, GPT, Gemini 예상기대효과 맥심콜라보 이미지 생성에 사용할 수 있는 Pix AI의"},
+  {team:"퍼플",types:["리소스"],tools:["AI 이미지"],views:592,title:"[Art Craft] Slot Agent Studio — 버튼 하나로 완성되는 AI 슬롯 에이전트",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/237306784/Art+Craft+Slot+Agent+Studio+AI",space:"1107",date:"2026-04-27",author:"채하늘",summary:"�� Slot Agent Studio — 버튼 하나로 완성되는 AI 슬롯게임 안녕하세요, 퍼플 Neo팀의 채하늘입니다. 강준구(퍼플NEO팀)  님께서 &#39;Paper Clip&#39; 직원을 고용해 개발하시는 모습을 보고, 아이디어를 얻어, 과거 Google AI "},
+  {team:"레드",types:["UI디자인"],tools:["AI 이미지"],views:594,title:"[ArtCraft]  섯다 황금패 카드 UI 분석",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/238911767/ArtCraft+UI",space:"1122",date:"2026-04-16",author:"정윤주",summary:"프로젝트 및 지라 [ArtCraft] 섯다 황금패 카드 UI 분석  작성자 정윤주 작성날짜 2026-04-06  사용된 AI툴 및 적용부분 제미나이 PSD 경로 일반황금패와 레어패 디자인 공유 첫줄 : 황금패 (일반) 아랫줄 : 오로라패 (레어) 황금패 디자인 UI 분"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:596,title:"[ArtCraft] 미션 님스 아이콘 6종",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/238911850/ArtCraft+6",space:"1122",date:"2026-04-16",author:"장혜진",summary:"프로젝트 및 지라 [ArtCraft]  작성자 장혜진 작성날짜 2026-04-16  사용툴 제미나이 예상기대효과 디자인 일관성 확보 리소스 및 비용 절감 적용 효과  프롬프트 작업 과정에 참고 뉴맞고 시즌 패스 작업에 미션 님스 아이콘 6종 작업 적용 과정 콘텐츠, 플"},
+  {team:"레드",types:["자동화툴","UI디자인"],tools:["AI 이미지"],views:598,title:"[ArtCraft] 핫딜 배너 디자인 자동화 작업중_ver.1",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/241532929/ArtCraft+_ver.1",space:"1122",date:"2026-04-17",author:"장혜진",summary:"젝트 및 지라 [ArtCraft] 뉴맞고 ui 핫딜 배너 작업 자동화 작성자 장혜진 작성날짜 2026-04-17  사용툴 제미나이, ai 스튜디오 예상기대효과 뉴맞고 배너 자동화로 리드타임 단축 요구 사항 반영 정확도 향상 제작 일정 및 기간 단축 기대 적용 효과 프롬"},
+  {team:"레드",types:["R&D·비교","이미지생성"],tools:["Weavy"],views:600,title:"[AID TF] Weavy 사용성 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/134086933/AID+TF+Weavy",space:"1033",date:"2026-02-02",author:"오선화",summary:"AI 활용 기본 정보 관련 프로젝트 Aid TF 생성자 오선화 생성 일자 2026-02-02   사용 툴 Weavy 예상 기대 효과 Weavy의 사용성 테스트를 통한 업무 생산성과 효과 측정 적용 효과 전통적 방식의 제작 방식에서 보다 직관적이고 협업이 가능한 구조 툴"},
+  {team:"레드",types:["R&D·비교","이미지생성"],tools:["나노바나나","Claude","Weavy"],views:602,title:"[AID TF] Weavy AI 처음 써보고 작성하는 후기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/134578369/AID+TF+Weavy+AI",space:"1122",date:"2026-02-02",author:"정윤주",summary:"프로젝트 Weavy AI R&amp;D 생성자 정윤주 생성일자 2026/02/02 사용툴 Weavy AI, Claude AI, 제미나이 프로 나노바나나 예상 기대 효과 복잡한 작업의 고속 처리 자주 쓰는 AI 프로그램이 한 데 있어 작업 용이 적용 효과 이제 처음 사용"},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나","위비"],views:604,title:"[AID TF] 뉴맞고_시즌레이스 루루 프로필 ai로 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/134382074/AID+TF+_+ai",space:"1122",date:"2026-02-05",author:"장혜진",summary:"관련 프로젝트  생성자 장혜진 생성 일자 2026/2/5 사용툴 위비, 나노바나나 예상 기대 효과  빠르고 효율적으로 작업 기간 단축/다양한 컨셉 빠르게 확인 적용 효과 판매용 상품에 빠르게 컨셉 적용 가능성 확인, 작업 기간 단축 프롬프트 로맨틱한 분위기의 상황에서 "},
+  {team:"퍼플",types:["자동화툴","R&D·비교"],tools:["Gemini","ChatGPT","나노바나나"],views:606,title:"[AID TF] 배너 사이즈 베리에이션 자동화 툴 (테스트버전)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/169050294/AID+TF",space:"1107",date:"2026-03-11",author:"박채빈",summary:"관련 프로젝트 AI Agent 생성자 박채빈 생성 일자 2026-03-04  ~ 2026-03-05   사용 툴 프롬프트 생성 : GPT , Gemini 이미지 제작 모델 : Nano Banana Pro 개발툴: Google AI Studio 예상 기대 효과 배너이미지"},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:608,title:"[Art Craft] 설문결과 - AI 이미지 생성 워크플로우 디자이너 설문 심층 분석",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/168887738/Art+Craft+-+AI",space:"1107",date:"2026-04-06",author:"박채빈",summary:"자료 분석 리포트:  AI 이미지 생성 워크플로우 디자이너 설문 심층 분석 메타 정보 분석 일시: 2026-03-04 주제: AI 이미지 생성 워크플로우 디자이너 설문 심층 분석 및 Agent 플랫폼 설계 제안 프리젠테이션 목적: 제안 — 설문 분석을 통한 Agent "},
+  {team:"레드",types:["이미지생성"],tools:["Gemini","ChatGPT"],views:610,title:"[AID TF] 섯다 UA이미지 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/173048990/AID+TF+UA",space:"1033",date:"2026-03-06",author:"한시내",summary:"관련 프로젝트 이미지 제작 생성자 한시내 생성 일자 2026-03-06   사용 툴 chat GPT, gemini 예상 기대 효과 제작 시간 단축, 적용 가능성 여부 확인 적용 효과 리소스 실무 사용, 노출 수위 조정, 업무 시간 단축에 효율적, 다양한 시안 제작에 용"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Google AI Studio"],views:612,title:"[AID TF] 구글 AI 스튜디오로 개발한 앱을 수정할때 팁",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/173936045/AID+TF+AI",space:"1107",date:"2026-03-09",author:"채하늘",summary:"관련 프로젝트  Pet Story 생성자 채하늘 생성 일자 2026-02-03   사용 툴 Google AI Studio 예상 기대 효과 기존 대비 소요 시간 단축 (30% 이상) 적용 효과   소요 시간 단축 퀄리티 향상 프롬프트 Gpt 프롬포트 사용 안녕하세요. 퍼"},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나","Midjourney"],views:614,title:"[AID TF] 정윤주_이미지생성형 AI로 뉴스팝업배너 배경 및 캐릭터 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83910281/AID+TF+_+AI",space:"1122",date:"2025-11-19",author:"정윤주",summary:"관련 프로젝트 뉴맞고 생성자 정윤주 생성 일자 2025.11.03 사용툴 미드저니, 나노바나나 예상 기대 효과 작업 속도 단축, 업무 영역 확대(배경) 적용 효과 작업 속도 단축, 업무 영역 확대(배경), 작업시간 30% 단축 프롬프트 상세 설명에 서술 1. 뉴스팝업배"},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney","Kling AI"],views:616,title:"[AID TF] 10월 2차 AI 활용 - 에어쇼 컨셉 제안용 이미지 제작, 렉스 라이엇 화면전환연출 영상, 아기돼지 삼형제 짚단 리소스 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97021024/AID+TF+10+2+AI+-",space:"1107",date:"2025-11-04",author:"박주홍",summary:"AI 활용 기본 정보  관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 20251020 ~ 20251031 사용 툴 Chat GPT, Midjourney, Dzine, dreamina, krea, ideogram, kling 예상 기대 효과 하이퀄리티 슬롯아"},
+  {team:"블루",types:["이미지생성"],tools:["Midjourney"],views:618,title:"[AID TF] 주사위 이벤트 AI사용 제작기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79989780/AID+TF+AI",space:"1109",date:"2025-11-04",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 26년 주사위 이벤트  생성자 한주현 생성 일자 2025-11-04   사용 툴 제미나이, 소라, 미드저니, 달리 예상 기대 효과 소요 시간 단축 적용 효과 기존 대비 소요 시간 단축 프롬프트  �� 제작 과정 2026년은 붉은 말"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["AI 이미지"],views:620,title:"[AID TF] 10월 2차 AI 활용 - Three Little Pigs 캐릭터 리소스 활용",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97020872/AID+TF+10+2+AI+-+Three+Little+Pigs",space:"1107",date:"2025-11-04",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트 NEO팀 - Three Little Pigs 슬롯 생성자 박채빈 생성 일자 2025-10-24   사용 툴 ai studio app  예상 기대 효과 소요 시간 단축 적용 효과  기존 대비 소요 시간 단축 (약 50% 이상) 프롬프"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:622,title:"[AID TF] 251104_다이내믹한 각도의 철조망을 자연스럽게 만들어보자.",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97021254/AID+TF+251104_+.",space:"1107",date:"2025-11-04",author:"이지혜(퍼플스프린트팀)",summary:"관련 프로젝트 Night Rush 10000 슬롯 생성자 이지혜 생성 일자 2025-11-03   사용 툴 (챗 GPT, Whisk, Ideogram, 제미나이, krea, deepl, midjourney, dzine) 예상 기대 효과 (소요 시간 단축 / 적용 가능성"},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나","Midjourney"],views:624,title:"[AID TF] 장혜진_Ai사용하여 뉴맞고 판매용 상품 아이템 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83910304/AID+TF+_Ai",space:"1122",date:"2025-11-21",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/11/04 사용툴 챗지피티/미드저니/나노바나나 예상 기대 효과 뉴맞고 상품에 ai적용하기 적용 효과 판매용 상품에 빠르게 컨셉 적용 가능성 확인, 작업 기간 단축 프롬프트 과정에 설명 탐험가 화투패 및 프로필 결과"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:626,title:"[AID TF] 김인옥_Dizne으로 뉴맞고 흑광이 캐릭터 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83910312/AID+TF+_Dizne",space:"1122",date:"2025-11-04",author:"김인옥",summary:"관련 프로젝트 뉴맞고 생성자 김인옥 생성 일자 11/04 사용툴 Dizne 예상 기대 효과 캐릭터의 ai 제작 활용 확인 적용 효과 캐릭터 컨셉 시각화, 작업 시간 단축 프롬프트 뉴맞고 액션팩 오광에 사용 할 흑마술사 흑광이 제작 제작 방향 : 마법진에서 광 5개가 나"},
+  {team:"퍼플",types:["이미지생성"],tools:["Dreamina"],views:628,title:"[AID TF] 11월 1주차 Dreamina 모델별 특징과 주관적인 평가 2탄",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97021179/AID+TF+11+1+Dreamina+2",space:"1107",date:"2025-11-04",author:"채하늘",summary:"사본 Dreamina 이미지 AI 모델 별 특징과 주관적인 평가     → 5월에 쓴 1탄 관련 프로젝트 생성자 채하늘 생성 일자 2025-11-04 사용 툴 Dreamina 예상 기대 효과 3~50% 일정 단축 예상 적용 효과 시간 단축 및 빠르게 시안 및 실제 리소"},
+  {team:"블루",types:["영상","이미지생성"],tools:["Google AI Studio"],views:630,title:"[AID TF] 프로모션 일자 변경 툴 feat.구글ai스튜디오",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79989753/AID+TF+feat.+ai",space:"1109",date:"2025-11-26",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 자동 레이어 분리 툴  생성자 한주현 생성 일자 2025-11-04   사용 툴 google ai studio 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 적용 가능성 프롬프트"},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:632,title:"[AID TF] Particle Simulator+AI",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718719/AID+TF+Particle+Simulator+AI",space:"1235",date:"2025-11-04",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Particle Simulator+AI (링크 ) 기존 파티클 시뮬레이터에 AI 기반 자연어 명령 기능을 추가하여,  디자이너가 수치 조정 없이도 자연어로 원하는 파티클 효과를 자동 생성할 수 있도록 고도화 생성자 배태환 생성 일자"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Gemini","Midjourney","Kling AI"],views:634,title:"[AID TF] 2025 11월 2주차 나이트러쉬 캐스케이딩 전환연출",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97026404/AID+TF+2025+11+2",space:"1107",date:"2025-11-17",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 Night Rush 10000  생성자 김경민 생성 일자 2025-10-30   사용 툴 Dzine (seedream4.0) / Gemini / kling /midjourney 예상 기대 효과 영상 ai를 활용한 캐스케이딩 전환연출"},
+  {team:"레드",types:["영상","R&D·비교"],tools:["Kling AI"],views:636,title:"[AID TF] 캐릭터 리소스화 및 영상 제작 활용 효율성 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106784741/AID+TF",space:"1033",date:"2025-11-21",author:"한시내",summary:"관련 프로젝트 피망포커 유튜브 생성자 한시내 생성 일자 11/04 사용툴 kling 예상 기대 효과 2D캐릭터에 움직임 부여  적용 효과 AI 기반 리소스 제작을 통해 작업 가능성 및 효율성 향상 기대 프롬프트 리소스 별 상이함 1. 테스트 목적 2D 리소스의 정적인 "},
+  {team:"레드",types:["이미지생성"],tools:["Grok"],views:638,title:"[AID TF] 최강_Grok Imagine을 활용하여 섯다 SNS용 이미지 제작기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83895704/AID+TF+_Grok+Imagine+SNS",space:"1122",date:"2025-11-05",author:"최강",summary:"관련 프로젝트 섯다 생성자 최강 생성 일자 2025/11/04 사용툴 Grok Imagine 예상 기대 효과 섯다에 사용될 성인향 일러스트 제작 적용 효과 기존 생성형 AI에서 가이드 위반으로 제작이 불가한 이미지들의 제작 프롬프트 과정에 설명 1. 들어가며 섯다 SN"},
+  {team:"레드",types:["영상","UI디자인"],tools:["Midjourney","Kling AI"],views:640,title:"[AID TF] 쇼다운홀덤 웹 게임홈 브랜드영역/START버튼 모션 생성 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106785552/AID+TF+START",space:"1033",date:"2025-11-19",author:"송행숙",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운홀덤 웹 게임 홈 디자인 생성자 송행숙 생성 일자 2025-11-04   사용 툴 미드저니, Kling 예상 기대 효과 영상제작 공수 축소, 작업시간 단축, 모션으로 인한 UI 주목성 향상 적용 효과 소요시간 단축, 모션효과 "},
+  {team:"레드",types:["이미지생성"],tools:["Midjourney"],views:642,title:"[AID TF] 쇼다운홀덤 웹 게임홈 SATRT버튼의 CHIP이미지 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106785574/AID+TF+SATRT+CHIP",space:"1033",date:"2025-11-05",author:"송행숙",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운홀덤 웹 게임 홈 디자인 생성자 송행숙 생성 일자 2025-11-04   사용 툴 미드저니 예상 기대 효과 제작 시간 단축 적용 효과 레퍼런스 참고 프롬프트 a 3d refractive glass [casino chip] ic"},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:644,title:"[AID TF] 효과적이고 빠르게 시안용 디자인 바리에이션 제작하기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97023156/AID+TF",space:"1107",date:"2025-11-07",author:"채하늘",summary:"관련 프로젝트 Hengel &amp; Gretl 생성자 채하늘 생성 일자 2025-11-07 사용 툴 Dreamia, Dizen(시드림4.0) 예상 기대 효과 40% 일정 단축 적용 효과 시안단계에서 빠르게 아이디어 도출 프롬프트 디즈니풍, 3D, 캐주얼 프롬포트 사용"},
+  {team:"블루",types:["이미지생성"],tools:["Google AI Studio"],views:646,title:"[AID TF] 포커 아바타 자동 슬라이스 툴",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79985606/AID+TF",space:"1109",date:"2025-11-10",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 포커 이미지 자동 슬라이스 툴 생성자 한주현 생성 일자 2025-11-10   사용 툴 google ai studio 예상 기대 효과 기존 대비 소요 시간 단축 (약 90%)  30분 → (로딩포함) 10초 적용 효과 적용 가능성 "},
+  {team:"블루",types:["영상","이미지생성"],tools:["Google AI Studio"],views:648,title:"[AID TF] AI 프로모션 제안 툴",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79994798/AID+TF+AI",space:"1109",date:"2025-11-11",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 AI 프로모션 제안툴 생성자 한주현 생성 일자 2025-11-11   사용 툴 google ai studio 예상 기대 효과 기본 구조나 템플릿, 예시 데이터를 제공함으로써 접근성을 높이고 초기 진입 장벽을 낮추는 방향으로 기획되었"},
+  {team:"레드",types:["R&D·비교","이미지생성"],tools:["AI 이미지"],views:650,title:"[AID TF] 장혜진_AI스튜디오로 뉴맞고 프레임, 스플래시 컨셉 생성 앱 만들고 실제 상품에 적용해 본 후기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83910452/AID+TF+_AI",space:"1122",date:"2026-01-20",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/11/18 사용툴 챗지피티/Ai 스튜디오 예상 기대 효과 뉴맞고 상품 및 이미지 컨셉 제작 앱을 통해서, 빠르게 컨셉 생성하고 디자인팀 전체가 사용함으로써 디자인 효율을 높일 수 있도록 제작해 보았습니다. 적용 효"},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney","Kling AI"],views:652,title:"[AID TF] 11월 2주차 AI 활용 - 박스오피스 심볼, 렉스라이엇 uibg 수정",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027351/AID+TF+11+2+AI+-+uibg",space:"1107",date:"2025-11-18",author:"박주홍",summary:"AI 활용 기본 정보  관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 20251103 ~ 20251114 사용 툴 Chat GPT, Midjourney, Dzine, dreamina, krea, ideogram, kling 예상 기대 효과 하이퀄리티 슬롯아"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["AI 이미지"],views:654,title:"[AID TF] Sugar Whisper 인트로 리소스 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027563/AID+TF+Sugar+Whisper",space:"1107",date:"2025-11-18",author:"이대엽",summary:"AI 활용 기본 정보 관련 프로젝트 SugarWhisper 슬롯 생성자 이대엽 생성 일자 2025-11-17   사용 툴 Dizine, Spine 예상 기대 효과 (90% 절감)/ 적용 가능/퀄리티 업 예상 적용 효과 (90% 제작시간 단축 및 제작 단가 감소) , 시"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:656,title:"[AID TF] Suno AI를 활용한 Air Show Wonders 슬롯 음악작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97026361/AID+TF+Suno+AI+Air+Show+Wonders",space:"1107",date:"2025-11-17",author:"선종길",summary:"AI 활용 기본 정보 관련 프로젝트 스프린트팀 Air Show Wonders 생성자 선종길 생성 일자 2025-09-04   사용 툴 Suno 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 적용 가능성 결과물 증가 "},
+  {team:"블루",types:["영상","포토샵"],tools:["AI 이미지"],views:658,title:"[AID TF] 세미나 UI / AI × Emotion Design",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/80003205/AID+TF+UI+AI+Emotion+Design",space:"1109",date:"2025-11-19",author:"장은혜",summary:"AI 활용 기본 정보  관련 프로젝트  +  [AID TF] 쇼다운 홀덤 대표 아바타 만들기  + [AID TF] 세미나 아바타 SD 이모티콘 만들기 생성자 AI 테스트 + 이모티콘 테스트 편집 작업: 장은혜 쇼다운 홀덤 대표 아바타 컨셉 영상 작업 : !-@5d357"},
+  {team:"블루",types:["자동화툴","이미지생성"],tools:["ChatGPT"],views:660,title:"[AID TF] 유니티 스크립트 - RectToTransformConverter",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79996782/AID+TF+-+RectToTransformConverter",space:"1109",date:"2025-12-10",author:"장은혜",summary:"AI 활용 기본 정보  관련 프로젝트  쇼다운 홀덤,  생성자 장은혜 생성 일자 2025-12-10   사용 툴 chat GPT 예상 기대 효과 RectTransform에 만들어진 키를 Transform으로 카피하기 적용 효과 시간 단축   애니메이션 키 복사, 생성 "},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney"],views:662,title:"[AID TF] AI를 활용한 신규게임 컨셉이미지 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027105/AID+TF+AI",space:"1107",date:"2025-11-18",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트 NEO팀 - 신규 슬롯 생성자 박채빈 생성 일자 2025-10-24   사용 툴 프롬프트 생성 : GPT  이미지 제작 모델 : Seedream 4.0 영상 제작 모델 : Midjourney  예상 기대 효과 소요 시간 단축 적용 "},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:664,title:"[AID TF] mixboard를 활용하여 캐릭터+배경 혼합 및 다양한 구도의 컨셉아트 출력",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718721/AID+TF+mixboard",space:"1235",date:"2025-11-18",author:"전진영",summary:"AI 활용 기본 정보 관련 프로젝트 Nine Knights 생성자 전진영 생성 일자 2025-11-18   사용 툴 google mixboard 예상 기대 효과 제작 소요시간: 기준 7일 → 예상 1일 (85.7% 단축) 적용 효과 제작시간 : 기존 7일 → 예상 1일"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["AI 이미지"],views:666,title:"[AID TF] Sugar Whisper 발사체 리소스 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027571/AID+TF+Sugar+Whisper",space:"1107",date:"2025-11-18",author:"이대엽",summary:"AI 활용 기본 정보 관련 프로젝트 SugarWhisper 슬롯 생성자 이대엽 생성 일자 2025-11-18   사용 툴 Dizine, Spine 예상 기대 효과 (90% 절감)/ 적용 가능/퀄리티 업 예상 적용 효과 (90% 제작시간 단축) , 시각적 효과 프롬프트 "},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Dzine","KREA"],views:668,title:"[AID TF] 251118_빠른 아트리소스 작업의 여러가지.",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027496/AID+TF+251118_+.",space:"1107",date:"2025-11-18",author:"이지혜(퍼플스프린트팀)",summary:"관련 프로젝트 Night Rush 10000 슬롯 생성자 이지혜 생성 일자 2025-11-13   사용 툴 (챗 GPT, Whisk, Ideogram, 제미나이, LM Arena, krea, deepl, dzine) 예상 기대 효과 (소요 시간 단축 / 적용 가능성 /"},
+  {team:"퍼플",types:["R&D·비교","이미지생성"],tools:["Gemini","ChatGPT","Google AI Studio"],views:670,title:"[AID TF] 11월 2차 - Gemini vs. ChatGPT",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027312/AID+TF+11+2+-+Gemini+vs.+ChatGPT",space:"1107",date:"2025-11-18",author:"고수욱",summary:"AI 활용 기본 정보 관련 프로젝트 AI 스터디 &amp; 궁금증 해소 &amp; 핵심 기능 요약 생성자 고수욱 생성 일자 2025-11-17  ~  사용 툴 Gemini, Google AI Studio 등 예상 기대 효과 요즘 구글의 AI가 빠르게 성장하고 시장의 지"},
+  {team:"브라운",types:["영상","이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:672,title:"[25.11.18][AID TF][H5] 멀티플라이어 바카라 - 멀티플라이어 릴 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113946629/25.11.18+AID+TF+H5+-",space:"1234",date:"2025-11-19",author:"이민영 (Deactivated)",summary:"AI 활용 기본 정보  관련 프로젝트 멀티플라이어 바카라 생성자 이민영 생성 일자 2025-11-17   사용 툴 chat GPT, gemini, Dzine, Midjourney, AI studio 예상 기대 효과 제작 시간 단축 이미지 대량 바리에이션 이미지 업스케일"},
+  {team:"레드",types:["이미지생성"],tools:["AI 이미지"],views:674,title:"[AID TF] 김인옥_Dizne으로 맞고대회 스폰서쉽 업비트 도리 캐릭터 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83910507/AID+TF+_Dizne",space:"1122",date:"2025-11-18",author:"김인옥",summary:"관련 프로젝트 뉴맞고 생성자 김인옥 생성 일자 11/10 사용툴 Dizne 예상 기대 효과 캐릭터의 ai 제작 활용 확인 적용 효과 캐릭터 컨셉 시각화, 작업 시간 단축 (70%) 프롬프트 빗썸 캐릭터를 베이스로 스폰서쉽 제안용 업비트 도리 캐릭터 제작 &lt;기존 빗"},
+  {team:"레드",types:["영상","이미지생성"],tools:["AI 이미지"],views:676,title:"[AID TF] 김인옥_Dizne으로 뉴맞고 흑광이 연출 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83910509/AID+TF+_Dizne",space:"1122",date:"2025-11-18",author:"김인옥",summary:"관련 프로젝트 뉴맞고 생성자 김인옥 생성 일자 11/11 사용툴 Dizne 예상 기대 효과 ai 제작 활용 확인 적용 효과 작업 시간 단축 (40%) 프롬프트 흑광이 액션팩 초단 연출 중 축하 깃발 작업 초단 연출에 필요한 축하 깃발 효과를 구현하기 위해 AI 영상 생"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Midjourney","Kling AI"],views:678,title:"[AID TF] Fortune Ball Plinko",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718724/AID+TF+Fortune+Ball+Plinko",space:"1235",date:"2025-11-20",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Fortune Ball Plinko 생성자 배태환 생성 일자 2025-11-19   사용 툴 Midjourney, Cursor AI, Kling AI 예상 기대 효과 제작 소요시간: 과거기준 14일 → 변화 5일 (-64.3% 단축"},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나","Midjourney"],views:680,title:"[AID TF] 장혜진_탐험가 핫딜UI에  AI적용",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83910523/AID+TF+_+UI+AI",space:"1122",date:"2025-11-21",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/11/18 사용툴 나노바나나, 미드저니, 챗 지피티 예상 기대 효과 빠르고 효율적으로 작업 기간 단축  적용 효과 판매용 상품 UI에 빠른 적용으로 일정 40퍼센트 단축 프롬프트 탐험가 컨셉에 맞는 옛지도를 그려줘"},
+  {team:"레드",types:["영상","이미지생성"],tools:["Gemini","Midjourney","Kling AI"],views:682,title:"[AID TF] 정윤주_뉴맞고 신규컨텐츠 소개 ASO 영상제작 (1)",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83910525/AID+TF+_+ASO+1",space:"1122",date:"2025-11-27",author:"정윤주",summary:"관련 프로젝트 뉴맞고 생성자 정윤주 생성 일자 2025.11.18 사용툴 Midjourney, Nanobanana, Gemini, Kling, Krea, Dzine 예상 기대 효과 업무 영역 확대(영상) 적용 효과 업무 영역 확대(영상) 프롬프트 상세 설명에 서술 ��"},
+  {team:"레드",types:["영상","UI디자인"],tools:["ChatGPT","Midjourney"],views:684,title:"[AID TF] 쇼다운홀덤 웹 게임홈 브랜드영역/START버튼 모션 최종",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106783135/AID+TF+START",space:"1033",date:"2025-11-20",author:"송행숙",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운홀덤 웹 게임 홈 디자인 생성자 송행숙 생성 일자 2025-11-18   사용 툴 챗GPT, 미드저니, 하이루오 예상 기대 효과 영상제작 공수 축소, 작업시간 단축, 모션으로 인한 UI 주목성 향상 적용 효과 UXUI 시각적 "},
+  {team:"퍼플",types:["자동화툴","Figma"],tools:["AI 이미지"],views:686,title:"[AID TF] UI/UX WEB Prototype 자동화_테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718726/AID+TF+UI+UX+WEB+Prototype+_",space:"1235",date:"2025-11-20",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 UI/UX WEB Prototype 자동화_테스트 생성자 배태환 생성 일자 2025-11-19   사용 툴 Cursor AI, Figma Make, Perplexity 예상 기대 효과 사전 설명·작업 의도 전달 필요성 최소화 디자인"},
+  {team:"레드",types:["R&D·비교","이미지생성"],tools:["KREA"],views:688,title:"[AID TF] Krea 이미지 생성 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106785932/AID+TF+Krea",space:"1033",date:"2025-11-19",author:"오선화",summary:"AI 활용 기본 정보 관련 프로젝트 겨울 소재용 배경 이미지 제작 테스트 생성자 오선화 생성 일자 2025-11-19   사용 툴 Krea ai 예상 기대 효과 이미지 생성 효율성 증가 50%이상 예상 적용 효과 Realtime 기능을 이용하여 이미지 생성을 빠르고 손"},
+  {team:"블루",types:["R&D·비교","이미지생성"],tools:["Dzine"],views:690,title:"[AID TF] 1주년 캐릭터 덕질하기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/80001742/AID+TF+1",space:"1109",date:"2025-11-19",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 1주년 이벤트  생성자 한주현 생성 일자 2025-11-19   사용 툴 제미나이, Dzine 예상 기대 효과 적용 가능성 결과물 증가 예상 적용 효과 결과물 증가 캐릭터 서사 부여 캐릭터 테스트 프롬프트  �� 제작 과정 장은혜 "},
+  {team:"레드",types:["이미지생성"],tools:["Midjourney","Dzine"],views:692,title:"[AID TF] 정윤주_이미지생성형 AI로 배경 생성과 아이콘 생성",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83910532/AID+TF+_+AI",space:"1122",date:"2025-11-19",author:"정윤주",summary:"관련 프로젝트 뉴맞고 생성자 정윤주 생성 일자 2025.11.03 사용툴 Midjourney, Dzine 예상 기대 효과 작업 속도 단축, 업무 영역 확대(배경) 적용 효과 작업 속도 단축, 업무 영역 확대(배경), 작업시간 30% 단축 프롬프트 상세 설명에 서술 1."},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Gemini","Midjourney","Kling AI"],views:694,title:"[AID TF] 2025 11월 3주차-나이트러쉬 오프닝영상",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97030376/AID+TF+2025+11+3+-",space:"1107",date:"2025-11-24",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 Night Rush 10000  생성자 김경민 생성 일자 2025-11-19   사용 툴 Dzine (seedance) / Gemini / kling /midjourney / flow  예상 기대 효과 영상 ai를 활용한 오프닝 영"},
+  {team:"블루",types:["UI디자인","이미지생성"],tools:["나노바나나","Midjourney","Dzine"],views:696,title:"[AID TF] 세미나 UI / 쇼다운홀덤 아바타-> SD 이모티콘 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/80003230/AID+TF+UI+-+SD",space:"1109",date:"2025-11-19",author:"장은혜",summary:"AI 활용 기본 정보  관련 프로젝트  쇼다운 홀덤, AID TF 세미나 생성자 장은혜 생성 일자 2025-11-07   사용 툴 미드저니. Nano Banana, Dzine, AfterEffect 예상 기대 효과 쇼다운홀덤 아바타 대표 아바타 : SD 이모티콘 세트 "},
+  {team:"레드",types:["R&D·비교","리소스"],tools:["AI 이미지"],views:698,title:"[AID TF] 피망 고객센터의 챗봇 위젯 플로팅 배너 제작 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106785956/AID+TF",space:"1033",date:"2025-11-19",author:"한시내",summary:"관련 프로젝트 피망 고객센터 챗봇  생성자 한시내 생성 일자 11/19 사용툴 Hailio 예상 기대 효과 적용 가능성 테스트 결과물 증가 예상 적용 효과 실무 리소스 적용 가능성 기대 리소스 제작 시간 단축 기대 프롬프트 리소스 별 상이함 �� 제작 과정 피망 고객센"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:700,title:"[AID TF] Suno AI를 활용한 Three Little Pigs 슬롯 4종의 윈 음악(WIN BGM)작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97028725/AID+TF+Suno+AI+Three+Little+Pigs+4+WIN+BGM",space:"1107",date:"2025-11-20",author:"박은송",summary:"AI 활용 기본 정보 관련 프로젝트 퍼플 NEO팀 Three Little Pigs 생성자 박은송 생성 일자 2025-10-23   사용 툴 Suno 예상 기대 효과 작업 시간 단축 예상 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 적용 가능성 결"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:702,title:"[AID TF] Suno AI를 활용한 Hansel and Gretel 슬롯 음악(Paid)작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97023174/AID+TF+Suno+AI+Hansel+and+Gretel+Paid",space:"1107",date:"2026-01-13",author:"박은송",summary:"AI 활용 기본 정보 관련 프로젝트 퍼플 NEO팀 Hansel and Gretel 생성자 박은송 생성 일자 2025-11-19   사용 툴 Suno 예상 기대 효과 결과물 퀄리티 증가 예상 작업 시간 단축 예상 적용 효과 기존 대비 소요 시간 단축 결과물 퀄리티 증가 "},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나","Midjourney"],views:704,title:"[AID TF] 장혜진_블랙프라이데이 기부이벤트 뉴스배너2종 에 AI이미지 적용하기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83886734/AID+TF+_+2+AI",space:"1122",date:"2025-11-21",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/11/21 사용툴 나노바나나, 미드저니, 챗 지피티 예상 기대 효과 빠르고 효율적으로 작업 기간 단축  적용 효과 뉴스배너에 빠른 적용으로 일정 30퍼센트 단축 프롬프트 작업 과정에 기술 결과물 1. 개요  “블랙"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["Google AI Studio"],views:706,title:"[AID TF] 슬롯게임 프로토타이핑 앱 (디자인 확인용)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97029496/AID+TF",space:"1107",date:"2025-11-21",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트 NEO팀 - 신규 슬롯 생성자 박채빈 생성 일자 2025-11-21   사용 툴 Google AI Studio App 예상 기대 효과 소요 시간 단축 적용 효과  슬롯 게임 UI가 실제 게임 환경에서 어떻게 보일지 즉시 확인 가능 "},
+  {team:"레드",types:["이미지생성"],tools:["나노바나나","Midjourney"],views:708,title:"[AID TF] 장혜진_Ai사용하여 새해 화투패 2종 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83886893/AID+TF+_Ai+2",space:"1122",date:"2025-11-21",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/11/04 사용툴 챗지피티/미드저니/나노바나나 예상 기대 효과 뉴맞고 새해세일즈 화투패 상품에 ai적용하기 적용 효과 판매용 상품에 빠르게 컨셉 적용 가능성 확인, 작업 기간 30퍼센트 단축 프롬프트 과정에 설명 "},
+  {team:"블루",types:["영상","이미지생성"],tools:["ChatGPT","Dzine"],views:710,title:"[AID TF] 세미나 아바타 립싱크",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79994012/AID+TF",space:"1109",date:"2026-01-20",author:"장은혜",summary:"AI 활용 기본 정보  관련 프로젝트 AI 세미나 아바타 립싱크 영상 제작 생성자 립싱크 제작 : 장은혜  (아바타 제작 : 황은미  ) 생성 일자 2025-08-27   사용 툴 립싱크 대본  : Chat GPT AI 립싱크 :    Dzine,  Ai 보이스 :  "},
+  {team:"블루",types:["포토샵","R&D·비교"],tools:["나노바나나"],views:712,title:"[AID TF] 나노바나나 기능 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79996397/AID+TF",space:"1109",date:"2025-09-03",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 나노바나나 ai 기능 테스트 생성자 한주현 생성 일자 2025-09-02   사용 툴 나노바나나 https://lmarena.ai/ 예상 기대 효과 신규 ai 기능 테스트  적용 효과 일관성 유지하며 합성에 특화 한글, 자연어 키워"},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","ChatGPT","Dzine"],views:714,title:"[AID TF] 2509 2주차 아기돼지 삼형제 집 3종 (측면 이미지 생성)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97018844/AID+TF+2509+2+3",space:"1107",date:"2025-09-09",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 아기돼지 삼형제 집 3종 생성자 김경민 생성 일자 2025-09-09    사용 툴 chat GPT /Gemini /nanp Banana/ Dzine /Blender 예상 기대 효과 모델링 시간단축  적용 효과 모델링 시간단축 (1"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:716,title:"[AID TF] Suno AI를 활용한 NIGHT RUSH 10000 슬롯 음악(Paid, Free)작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97018551/AID+TF+Suno+AI+NIGHT+RUSH+10000+Paid+Free",space:"1107",date:"2025-09-03",author:"박은송",summary:"AI 활용 기본 정보 관련 프로젝트 스프린트팀 NIGHT RUSH 10000 생성자 박은송 생성 일자 2025-09-02   사용 툴 Suno, RipX 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 적용 가능성 결"},
+  {team:"레드",types:["이미지생성"],tools:["Gemini","KREA"],views:718,title:"[AID TF] 최강_Gemini 2.5 플래시 이미지(나노 바나나)를 활용한 섯다 SNS 이미지 제작기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909585/AID+TF+_Gemini+2.5+SNS",space:"1122",date:"2025-09-04",author:"최강",summary:"관련 프로젝트 섯다, 섯다 SNS 운영 생성자 최강 생성 일자 9/3 사용툴 Gemini 2.5 플래시 이미지(나노 바나나), Krea 일부 사용 예상 기대 효과 Gemini 2.5 플래시 이미지를 활용하여 스토리 라인이 있는 이미지 제작 여부 확인 적용 효과 기존에 "},
+  {team:"퍼플",types:["Figma","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:720,title:"[AID TF] Lollypop Plinko 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718676/AID+TF+Lollypop+Plinko",space:"1235",date:"2025-09-09",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Lollypop Plinko 디자인 생성자 배태환 생성 일자 2025-09-04   사용 툴 Chatgpt, Midjourney, Dzine, Figma 예상 기대 효과 제작 소요시간: 과거기준 8일 → 예상 4일 (50% 단축) "},
+  {team:"브라운",types:["영상","포토샵"],tools:["ChatGPT","Kling AI","ElevenLabs"],views:722,title:"[25.09.04][AID TF][뉴베가스] AI 영상 활용 UA소재 #2",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113935814/25.09.04+AID+TF+AI+UA+2",space:"1234",date:"2026-01-20",author:"박중신",summary:"AI 활용 기본 정보  관련 프로젝트  [뉴베가스] AI 영상 활용 UA 소재 편집 생성자 박중신, 이민영 생성 일자 2025-09-04   사용 툴 ElevenLabs, kling, veo, chatGPT 예상 기대 효과 소요시간 80% 단축, 적용 가능성 100% "},
+  {team:"블루",types:["R&D·비교","이미지생성"],tools:["나노바나나","Midjourney"],views:724,title:"[AID TF] 쇼다운 홀덤 굿즈 아이디어 AI 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79954319/AID+TF+AI",space:"1109",date:"2025-09-10",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운 홀덤 굿즈 아이디어  생성자 한주현 생성 일자 2025-09-04   사용 툴 미드저니, 나노바나나, 제미나이 예상 기대 효과 AI 이용한 굿즈 아이디어 수집 굿즈 제작 전 디자인 및 콘셉트의 시각적 확인 실제 제작에 앞서 "},
+  {team:"브라운",types:["영상","포토샵"],tools:["Gemini","ChatGPT","Midjourney"],views:726,title:"[25.09.04][AID TF][뉴베가스] AI 영상 활용 UA 소재 #1",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945856/25.09.04+AID+TF+AI+UA+1",space:"1234",date:"2026-01-20",author:"박문수",summary:"AI 활용 기본 정보  관련 프로젝트 AI 영상 활용 UA 소재 편집 - #1 - RB마케팅팀 생성자 박문수 생성 일자 2025-09-04   사용 툴 미드저니, ChatGPT, Gemini, Kling AI, Premiere pro 예상 기대 효과 소요시간 50% 단"},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini"],views:728,title:"[AID TF] Ideogram으로 캐릭터 일관성있게 뽑아내기 (Ideogram VS Gemini)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97016103/AID+TF+Ideogram+Ideogram+VS+Gemini",space:"1107",date:"2025-09-08",author:"채하늘",summary:"관련 프로젝트 Hansel and Gretel  생성자 채하늘 생성 일자 2025-09-05 사용 툴 Ideoqram,  Gemini 예상 기대 효과 60% 일정 단축 적용 효과 시간 단축 및 빠르게 시안 및 실제 리소스 확보 프롬프트 *&quot;A half-body"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Dzine","FLUX"],views:730,title:"[AID TF] Three Little Pigs 슬롯 - SCATTER 심볼 제작 (기존 디자인 일관성 유지)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97017747/AID+TF+Three+Little+Pigs+-+SCATTER",space:"1107",date:"2025-09-09",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트 NEO팀 - Three Little Pigs 슬롯 생성자 박채빈 생성 일자 2025-07-07   사용 툴 프롬프트 작성 : GPT 이미지 생성 : Dzine - Flux.1 Kontext 예상 기대 효과 소요 시간 단축 적용 효과"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["AI 이미지"],views:732,title:"[AID TF] AI 사용 SugarWhisper 심볼 연출 실패기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97008773/AID+TF+AI+SugarWhisper",space:"1107",date:"2025-09-09",author:"이대엽",summary:"AI 활용 기본 정보  관련 프로젝트 SugarWhisdper 슬롯 생성자 이대엽 생성 일자 2025-09-08   사용 툴 Dizine 예상 기대 효과 (70% 절감/ 적용 가능/ 퀄리티 업 예상) 적용 효과 적용 불가 , 짧은 연출 시간 및 원하는 특징의 애니메이션"},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney","Kling AI"],views:734,title:"[AID TF] 8월 4주 ~ 9월 1주 AI 활용 (외주 피드백 활용, 원화제작, 프롬프트 작성 활용)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97001887/AID+TF+8+4+~+9+1+AI",space:"1107",date:"2025-09-08",author:"박주홍",summary:"AI 활용 기본 정보  관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 20250827~20250905 사용 툴 Chat GPT, Midjourney, Dzine, dreamina, krea, ideogram, kling 예상 기대 효과 하이퀄리티 슬롯아트 "},
+  {team:"레드",types:["R&D·비교"],tools:["AI 이미지"],views:736,title:"[AID TF] 장혜진_글로벌 콘텐츠 컨퍼런스 세미나 참석 후기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909655/AID+TF+_",space:"1122",date:"2025-09-08",author:"장혜진",summary:"&lt;현장사진&gt; 오후 세션부터 참가해서 그 중에 가장 기억에 남는 세션을 기록하고 나머지 세션은 사진으로 첨부했습니다. 1. 글롯벌 숏폼 플랫폼 전략 : 틱톡  주요 주제 - 틱톡의 데이터 생태계와 콘텐츠 파트너십 - 엔터테인먼트 분야에서의 틱톡의 역할과 중요성"},
+  {team:"레드",types:["Figma","이미지생성"],tools:["AI 이미지"],views:738,title:"[AID TF] 피그마 MCP",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106782884/AID+TF+MCP",space:"1033",date:"2025-09-09",author:"오선화",summary:"AI 활용 기본 정보  관련 프로젝트 웹사이트 구축 생성자 오선화 생성 일자 2025-09-08   사용 툴 Figma, Cursor 예상 기대 효과 디자인을 직접 마크업 (직무 역량 확장) 적용 효과 MCP를 이용하여 구조 설계와 마크업 가능 / 일정 50%이상 감축"},
+  {team:"레드",types:["이미지생성"],tools:["Midjourney"],views:740,title:"[AID TF] 장혜진_Ai사용하여 뉴맞고 시즌 레이스 새해질주/손이꽁꽁 컨셉 빠르게 디자인하기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909670/AID+TF+_Ai",space:"1122",date:"2025-11-21",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/09/9 사용툴 챗지피티/미드저니/디자인 예상 기대 효과 뉴맞고 시즌레이스 두가지 컨셉 작업 효율성 증가 확인/뉴맞고 어울리는 톤 찾기 적용 효과 컨셉 아이데이션 확장 및 작업 기간 단축(WD12 → WD8), 뉴"},
+  {team:"레드",types:["이미지생성"],tools:["Dzine"],views:742,title:"[AID TF] 정윤주_Dzine 활용하여 웹바둑 프로필 생성하기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909685/AID+TF+_Dzine",space:"1122",date:"2025-11-21",author:"정윤주",summary:"관련 프로젝트 AI 바둑 생성자 정윤주 생성 일자 2025.09.09 사용툴 Dzine 예상 기대 효과 바둑 웹 프로필 이미지 제작 적용 효과 도트 스타일로 프로필 생성, 작업 속도 단축 프롬프트 상세내용 확인 �� 제작 컨셉 피망바둑 베타버전의 게스트 유저들에게 랜덤"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:744,title:"[AID TF] Suno AI를 활용한 오리지널곡에 대한 편곡 활용",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97014485/AID+TF+Suno+AI",space:"1107",date:"2025-09-23",author:"김택희",summary:"AI 활용 기본 정보 관련 프로젝트 팀드래곤 픽셀가디언 생성자 김택희 생성 일자 2025-09-09   사용 툴 Suno 예상 기대 효과 소요 시간 단축 적용 가능성 적용 효과 기존 대비 소요 시간 단축 (기존대비 80%이상) 적용 가능성 프롬프트 like coin p"},
+  {team:"퍼플",types:["포토샵","이미지생성"],tools:["ChatGPT","Dzine"],views:746,title:"[AID TF] 신규게임 5종 썸네일 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718682/AID+TF+5",space:"1235",date:"2025-09-10",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 신규게임 5종 썸네일 제작 생성자 배태환 생성 일자 2025-09-09   사용 툴 ideogram ,Chatgpt, Dzine, Photoshop 예상 기대 효과 소요시간: 7일(과거기준) → 예상 2일 (71.4% 단축) 적용 "},
+  {team:"퍼플",types:["영상","포토샵"],tools:["ChatGPT","Kling AI"],views:748,title:"[AID TF] Dragon & Wizard : Jump2Win 캐릭터및 아이템 프로토타입 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718684/AID+TF+Dragon+Wizard+Jump2Win",space:"1235",date:"2025-09-09",author:"전진영",summary:"AI 활용 기본 정보  관련 프로젝트 Dragon &amp; Wizard : Jump2Win 모션 디자인 프로토타입 제작 생성자 전진영 생성 일자 2025-09-09   사용 툴 Kling AI 2.1, ChatGPT, Photoshop, Figma 예상 기대 효과 제"},
+  {team:"레드",types:["영상","이미지생성"],tools:["Kling AI"],views:750,title:"[AID TF] 김인옥_Dizne, Kling으로 흑광이 캐릭터 애니메이션 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909711/AID+TF+_Dizne+Kling",space:"1122",date:"2025-11-14",author:"김인옥",summary:"관련 프로젝트 뉴맞고 액션팩 생성자 김인옥 생성 일자 9/9 사용툴 Dizne, Kiing 예상 기대 효과 액션팩 흑광이 캐릭터의 프레임 애니메이션 제작 활용 확인 적용 효과 y축 회전 연출 제작에 도움, 아이디어 시각화 프롬프트 뉴맞고 액션팩 흑광이 연출 제작 과정 "},
+  {team:"퍼플",types:["이미지생성"],tools:["Google AI Studio"],views:752,title:"[AID TF] Google AI Studio로 캐릭터 파츠분할하여 제작하기(안그려진 부분 그려달라하기), 레이어 분할 앱 추가",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97003082/AID+TF+Google+AI+Studio",space:"1107",date:"2025-09-12",author:"채하늘",summary:"관련 프로젝트 Hansel and Gretel  생성자 채하늘 생성 일자 2025-09-05 사용 툴 Google AI Studio 예상 기대 효과 80% 일정 단축 적용 효과 시간 단축 및 빠르게 시안 및 실제 리소스 확보 프롬프트 한글 명령어 사용 안녕하세요, 퍼플"},
+  {team:"레드",types:["R&D·비교"],tools:["AI 이미지"],views:754,title:"[AID TF] 최강_글로벌 숏폼 컨퍼런스 후기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909722/AID+TF+_",space:"1122",date:"2025-09-10",author:"최강",summary:"Part.1 : 무섭게 성장중인 중국의 마이크로 드라마 시장 1부는 크레이지 메이플 스튜디오의 부사장 난 야펑씨가 중국의 마이크로 드라마 시장에 대해서 얘기해 주셨다. 현재 중국에서 마이크로 드라마(숏폼 드라마)는 자국내에서 20조원에 다다르는 시장이 될 것으로 예측했"},
+  {team:"블루",types:["이미지생성"],tools:["ChatGPT","Midjourney","KREA"],views:756,title:"[AID TF] 11월 세일즈 아바타 생성 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79972854/AID+TF+11",space:"1109",date:"2025-09-10",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운홀덤 &gt; 11월 세일즈 &gt; 아바타 2종 제작 생성자 한주현 생성 일자 2025-09-10   사용 툴 미드저니, Chat GPT, Krea 예상 기대 효과 캐릭터 별  상황 얼굴 제작 시간 단축 5일 → 3일 적용 "},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT"],views:758,title:"[AID TF] 애드온 보완과 실제 사용 외 1건 - 25년 9월 1주차",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97012756/AID+TF+1+-+25+9+1",space:"1107",date:"2025-09-10",author:"김진우",summary:"관련 프로젝트 Mr. Fiat 생성자 김진우 생성 일자 2025-08-26  ~ 2025-09-08   사용 툴 chatgpt, ideogram 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 로고 수정 - 50% 이"},
+  {team:"퍼플",types:["포토샵","이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:760,title:"[AID TF] 2509 3-4주차_아기돼지 삼형제 집 파괴 -애니메이션 워크플로우 구축기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97008510/AID+TF+2509+3-4+_+-",space:"1107",date:"2025-09-23",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 아기돼지 삼형제  생성자 김경민 생성 일자 2025-09-23   사용 툴 midjourney / ChatGPT /Gemini / Claude / Google AI STUDIO /ComfyUI (Stable Diffusion 1.5"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:762,title:"[AID TF] - 9월 3주차",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97008712/AID+TF+-+9+3",space:"1107",date:"2026-01-20",author:"김진우",summary:"2025-09-09  ~ 2025-09-22   관련 프로젝트 MR.FIAT 생성자 김진우 생성 일자 2025-09-09   사용 툴 dzine, midjourney, dreamina, chatgpt, ... 예상 기대 효과 소요 시간 단축  적용 가능성 적용 예정 결"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:764,title:"[AID TF] - 10월 3주차(Mr. Fiat 등)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96878665/AID+TF+-+10+3+Mr.+Fiat",space:"1107",date:"2025-10-21",author:"김진우",summary:"2025-09-09  ~ 2025-10-21   관련 프로젝트 Mr. Fiat 생성자 김진우 생성 일자 2025-09-23   사용 툴 dzine, midjourney, dreamina, chatgpt, ... 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 "},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:766,title:"[AID TF] - 11월 1주차 - 瑞戀千年 작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97021226/AID+TF+-+11+1+-",space:"1107",date:"2025-11-04",author:"김진우",summary:"2025-10-21  ~ 2025-11-04   관련 프로젝트 Ruì Fú Qíng Shēn(瑞戀千年)  생성자 김진우 생성 일자 2025-10-21   사용 툴 KREA, dzine, midjourney, dreamina, chatgpt, ... 예상 기대 효과 소요"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:768,title:"[AID TF] - 11월 3주차 - 瑞戀千年 작업 (이어서)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97027151/AID+TF+-+11+3+-",space:"1107",date:"2026-01-20",author:"김진우",summary:"2025-11-04  ~ 2025-11-18   *프로젝트 진행시 필요하여 선공유합니다. 관련 프로젝트 瑞戀千年  생성자 김진우 생성 일자 2025-11-04   사용 툴 dzine, midjourney, dreamina, chatgpt, ... 예상 기대 효과 소요 "},
+  {team:"퍼플",types:["자동화툴","포토샵"],tools:["ChatGPT","Midjourney","Dzine"],views:770,title:"[AID TF] - 12월 1주차 - 서련천년 작업(이어서), 바이브 코딩 해보기 등",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97018753/AID+TF+-+12+1+-",space:"1107",date:"2026-01-20",author:"김진우",summary:"2025-11-18  ~ 2025-12-02   관련 프로젝트 서련천년 등 생성자 김진우 생성 일자 2025-11-18   사용 툴 krea, dzine, midjourney, dreamina, chatgpt, comfyui, ... 예상 기대 효과 소요 시간 단축  "},
+  {team:"퍼플",types:["포토샵","이미지생성"],tools:["AI 이미지"],views:772,title:"[AID TF] - 12월 3주차 - 서련천년 작업(이어서)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97025696/AID+TF+-+12+3+-",space:"1107",date:"2025-12-16",author:"김진우",summary:"2025-12-03  ~ 2025-12-15   nwiki에서 공백을 클릭하면 문서 최상단으로 점프하는 버그가 몇 달 동안 해결되지 않고 있습니다. 그래서 문서가 길어지면 편집이 어려워 분리합니다 관련 프로젝트 서련천년 생성자 김진우 생성 일자 2025-12-03  ~"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["Google AI Studio"],views:774,title:"[AID TF] Google AI Studio App 활용기: 캐릭터 일관성 해결하기 (나노 바나나 모델)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97003995/AID+TF+Google+AI+Studio+App",space:"1107",date:"2025-09-11",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트 NEO팀 - Three Little Pigs 슬롯 생성자 박채빈 생성 일자 2025-09-10   사용 툴 Google AI Studio 예상 기대 효과 소요 시간 단축 적용 효과  소요 시간 절감 효과가 100% 이상. 퀄리티: "},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","Google AI Studio"],views:776,title:"[AID TF] Google AI Studio로 레이어분할 앱 만들어보기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97004289/AID+TF+Google+AI+Studio",space:"1107",date:"2025-09-12",author:"채하늘",summary:"관련 프로젝트 Hansel and Gretel  생성자 채하늘 생성 일자 2025-09-05 사용 툴 Google AI Studio, Gemini 예상 기대 효과 50% 일정 단축 예상 적용 효과 시간 단축 및 빠르게 시안 및 실제 리소스 확보 프롬프트 한글 명령어 사"},
+  {team:"퍼플",types:["영상","R&D·비교"],tools:["Google AI Studio"],views:778,title:"[AID TF] 연출AI활용 R&D_1. 이미지 분할_3트",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96993648/AID+TF+AI+R+D_1.+_3",space:"1107",date:"2025-09-12",author:"서영은",summary:"관련 프로젝트 09. 狐仙献瑞 – Enchanted Tails / (X1936/X1937) 생성자 서영은 생성 일자 2025-09-12 사용 툴 Google AI Studio 예상 기대 효과 80% 일정 단축 적용 효과 실패 프롬프트 한글 명령어로 사용하다 실패하여 영"},
+  {team:"블루",types:["UI디자인","R&D·비교"],tools:["Gemini","ChatGPT","Dzine"],views:780,title:"[AID TF] HTML5 게임 프로토타입 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79988348/AID+TF+HTML5",space:"1109",date:"2025-09-17",author:"이신우",summary:"AI 활용 기본 정보  관련 프로젝트 HTML5 게임 프로토타입 제작 (게임 바로가기) 생성자 이신우 생성 일자 2025.09.12 사용 툴 GPT, GEMINI, DZINE 예상 기대 효과 UI/UX 요소를 실제 플레이 환경에서 실험 적용 효과 AI 활용 가능성과 게"},
+  {team:"블루",types:["이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:782,title:"[AID TF] 쇼다운 홀덤 대표 아바타 생성 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79979752/AID+TF",space:"1109",date:"2025-09-17",author:"장은혜",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운홀덤 &gt; 25년 쇼다운 홀덤 대표 아바타 생성자 장은혜 생성 일자 2025-09-15   사용 툴  Chat GPT, 미드저니, Dzine, GoogleGemini, Google Ai Studio 예상 기대 효과 캐릭터 "},
+  {team:"퍼플",types:["R&D·비교","이미지생성"],tools:["Gemini","Google AI Studio"],views:784,title:"[AID TF] 캐릭터 파츠 분할하기 gemini vs Google Ai studio vs 제작한 파츠분할앱 2차 실험",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97009370/AID+TF+gemini+vs+Google+Ai+studio+vs+2",space:"1107",date:"2025-09-17",author:"채하늘",summary:"관련 프로젝트 Hansel and Gretel  생성자 채하늘 생성 일자 2025-09-17 사용 툴 Google AI Studio, Gemini 예상 기대 효과 50% 일정 단축 예상 적용 효과 시간 단축 및 빠르게 시안 및 실제 리소스 확보 프롬프트 한글 명령어 사"},
+  {team:"블루",types:["이미지생성"],tools:["나노바나나","Dzine","KREA"],views:786,title:"[AID TF] SD 이모티콘 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79993457/AID+TF+SD",space:"1109",date:"2025-09-18",author:"황은미",summary:"AI 활용 기본 정보  관련 프로젝트 피망 포커 / 쇼다운 홀덤 생성자 황은미 생성 일자 2025-09-17   사용 툴 Krea.ai &gt; Nano Banana, Dzine 예상 기대 효과 포커 프로필 / 쇼다운홀덤 아바타 : SD 이모티콘 세트 상품 적용 효과 "},
+  {team:"블루",types:["UI디자인","이미지생성"],tools:["Gemini","ChatGPT"],views:788,title:"[AID TF] 쇼다운 홀덤 > PC기반 시스템 팝업의 최적화",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79994023/AID+TF+PC",space:"1109",date:"2025-09-18",author:"양창숙",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운 홀덤 PC 시스템 팝업 가이드 제작 생성자 양창숙 생성 일자 2025-09-16   사용 툴 쳇GPT, Google Gemini 예상 기대 효과 지속적 표준화 디바이스별(UI/UX) 가이드가 정착되면, 신규 프로젝트나 기능 "},
+  {team:"브라운",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney"],views:790,title:"[25.09.19][AID TF] 포커 스타디움 B2B 데모 버전 제작 -  로딩, 썸네일",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113946000/25.09.19+AID+TF+B2B+-",space:"1234",date:"2025-10-20",author:"박중신",summary:"AI 활용 기본 정보  관련 프로젝트 [H5] 포커 스타디움 B2B 데모 버전 제작 -  로딩, 썸네일 생성자 박중신 생성 일자 2025-09-19   사용 툴 미드저니, ChatGPT 예상 기대 효과 원화 제작 시간 80% 단축, 대규모의 경 적용 효과 대규모 경기장"},
+  {team:"브라운",types:["영상","이미지생성"],tools:["Midjourney"],views:792,title:"[25.09.19][AID TF] 영상 Ai 제작 과정 2차 세미나..",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113946005/25.09.19+AID+TF+Ai+2+..",space:"1234",date:"2026-01-20",author:"이종민(AB디자인팀)",summary:"AI 활용 기본 정보  관련 프로젝트 [AID TF] 영상 Ai 제작 과정 2차 세미나. 생성자 이종민 생성 일자 2025-09-19   사용 툴 미드저니, hailuo 예상 기대 효과 ai 사용으로 인한 95% 이상 시간 단축  적용 효과 씬 제작, 영상 제작 단축 "},
+  {team:"레드",types:["자동화툴","이미지생성"],tools:["AI 이미지"],views:794,title:"[AID TF] 장혜진_햄버거 쌓기 게임(Feat. 커서)",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909862/AID+TF+_+Feat.",space:"1122",date:"2025-11-21",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/09/22 사용툴 커서ai 예상 기대 효과 뉴맞고 점검시에  웹페이지로 이동시켜 단순한 미니게임을 제공함으로써, 유저 이탈을 막기 위한 목표로 단순한 미니게임을 바이브 코딩으로 만들어 봤습니다. 적용 효과 간단한 "},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["Google AI Studio"],views:796,title:"[AID TF] 9월 1차 - Google AI Studio 활용한 앱 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97020903/AID+TF+9+1+-+Google+AI+Studio",space:"1107",date:"2025-11-04",author:"고수욱",summary:"AI 활용 기본 정보 관련 프로젝트 케이스 1 : Google AI Studio 활용한 앱 - Mr.Fiat 슬롯에 활용 케이스 2 : Google AI Studio 활용한 앱 - 신규 슬롯 컨셉 아이디어를 도출하기 위한 활용 생성자 고수욱 생성 일자 2025-09-0"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:798,title:"[AID TF] Suno AI를 활용한 Mr.Fiat 슬롯 음악(Paid game)작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97014502/AID+TF+Suno+AI+Mr.Fiat+Paid+game",space:"1107",date:"2025-09-23",author:"박은송",summary:"AI 활용 기본 정보 관련 프로젝트 팀드래곤 Mr.Fiat 생성자 박은송 생성 일자 2025-09-12   사용 툴 Suno 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 적용 가능성 결과물 증가 프롬프트 Light"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Dzine"],views:800,title:"[AID TF] 9월 3~4주 AI 활용 내용",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97016824/AID+TF+9+3~4+AI",space:"1107",date:"2025-09-23",author:"장세준",summary:"AI 활용 기본 정보  관련 프로젝트 - 생성자 장세준 생성 일자 2025-09-23   사용 툴 Chat GPT, Dzine 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 약 30%의 이상의 시간 단축효과를 기대 적용 효과 (예상 기대효과에"},
+  {team:"퍼플",types:["이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:802,title:"[AID TF] Snowball Plinko 캐릭터 변경",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718693/AID+TF+Snowball+Plinko",space:"1235",date:"2025-09-23",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Snowball Plinko 생성자 배태환 생성 일자 2025-09-23   사용 툴 Chatgpt, Gemini, Dzine, Midjourney 예상 기대 효과 제작 소요시간: 기준 10일 → 예상 4일 (60% 단축) 적용 효"},
+  {team:"블루",types:["이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:804,title:"[AID TF] 1주년 곰돌이 생성 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79990036/AID+TF+1",space:"1109",date:"2025-09-24",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운 홀덤 &gt; 1주년 이벤트 &gt; 1주년 출석이벤트 생성자 한주현 생성 일자 2025-09-23   사용 툴 미드저니, Chat GPT, Dzine 예상 기대 효과 캐릭터 별  상황 얼굴 제작 시간 단축 3일 → 1.5일"},
+  {team:"블루",types:["이미지생성"],tools:["Gemini"],views:806,title:"[AID TF] 포커 기본 아바타 5종 제작과정",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79990275/AID+TF+5",space:"1109",date:"2025-09-24",author:"장은혜",summary:"AI 활용 기본 정보  관련 프로젝트 포커 프로필 정책 &gt;프로필 정책 변경 (아바타 시스템) 생성자 황은미 생성 일자 2025-09-24   사용 툴 이미지 : Mid Journey, Gemini 예상 기대 효과 그림체 변화 소요시간 단출 적용 효과 소요 시간 단"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT"],views:808,title:"[AID TF] 250923_Chat GPT의 '프로젝트 생성'과 '지침'(Instructions)을 활용하여 해외 외주 커뮤니케이션하기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97011331/AID+TF+250923_Chat+GPT+Instructions",space:"1107",date:"2025-09-23",author:"이지혜(퍼플스프린트팀)",summary:"**문서를 작성하는 중에 파일이 날라가서 스크린 샷으로 복구한 내용을 올립니다.        ols_디자인 aid_tf"},
+  {team:"브라운",types:["이미지생성"],tools:["Gemini","ChatGPT","Midjourney"],views:810,title:"[25.08.29][AID TF][H5] 포커 스타디움 - Chip 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945789/25.08.29+AID+TF+H5+-+Chip",space:"1234",date:"2025-09-01",author:"박중신",summary:"AI 활용 기본 정보  관련 프로젝트 피망베가스 포커 스타디움 생성자 박중신 생성 일자 2025-08-29   사용 툴 chat gpt, midjourney, krea, Gemini, flash 2.5 예상 기대 효과 많은 정보를 빠른시간에 수집. 소요시간 30% 단축"},
+  {team:"퍼플",types:["R&D·비교","이미지생성"],tools:["나노바나나","KREA"],views:812,title:"[AID TF] 이미지생성 세미나 2차",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96991125/AID+TF+2",space:"1107",date:"2025-09-15",author:"박주홍",summary:"목표  각 AI 서비스가 가진 고유한 강점을 살펴봅니다. 나노바나나를 활용한 연구를 통해 그 장점과 한계를 파악해 봅니다. Krea의 실시간 기능이 지닌 강점과, 이를 활용할 수 있는 구체적인 사용 예시를 탐구합니다. 세미나 2차 소개 다양한 이미지 생성 AI 서비스에"},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:814,title:"[AID TF] Ideoqgram Extend 기능을 이용하여 고퀄리티로 배경 쉽게 확장하기",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97016229/AID+TF+Ideoqgram+Extend",space:"1107",date:"2025-09-08",author:"채하늘",summary:"관련 프로젝트 Three little pigs  생성자 채하늘 생성 일자 2025-08-29 사용 툴 Ideoqram 예상 기대 효과 90% 일정 단축 적용 효과 시간 단축 및 빠르게 시안 및 실제 리소스 확보 프롬프트 &quot;A stylized 3D Disney-"},
+  {team:"레드",types:["이미지생성"],tools:["KREA"],views:816,title:"[AID TF] 최강_섯다 SNS에 올릴 이미지 제작기",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909476/AID+TF+_+SNS",space:"1122",date:"2025-09-01",author:"최강",summary:"관련 프로젝트 섯다, 섯다 SNS 운영 생성자 최강 생성 일자 8/27 사용툴 니지저니, Krea 예상 기대 효과 섯다 SNS에서 주인공이 옷을 벗는 컨텐츠 제작  적용 효과 섹슈얼한 컨셉의 이미지 제작은 윤리기준과 법적인 제약으로 이미지 생성이 쉽지 않은데 Krea에"},
+  {team:"레드",types:["영상","이미지생성"],tools:["Midjourney","Dzine"],views:818,title:"[AID TF] 장혜진_😲충격, 도리 욕쟁이로 밝혀져...(인스타용 도리 숏폼 제작)",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909468/AID+TF+_+...",space:"1122",date:"2026-01-20",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/08/27 사용툴 챗지피티/미드저니/dzine/캡컷 예상 기대 효과 브랜드 IP 강화 영상에 캐릭터 노출시키면서 피망 뉴맞고의 브랜드 이미지 강화 /뉴맞고 월드 및 세계관 확장/ 콘텐츠 후킹 유도 적용 효과 브랜드"},
+  {team:"레드",types:["영상","이미지생성"],tools:["Midjourney","Kling AI","Dzine"],views:820,title:"[AID TF] 정윤주_뉴맞고 ASO 영상 시안 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909470/AID+TF+_+ASO",space:"1122",date:"2025-11-20",author:"정윤주",summary:"관련 프로젝트 뉴맞고 생성자 정윤주 생성 일자 25.08.27 수 사용툴 Dzine, Midjourney, Kling, CapCut 예상 기대 효과 뉴맞고의 새로운 컨텐츠 파악하기 용이, 흥미 유발 적용 효과 - 프롬프트 아래 설명 부분에서 작성 �� 목적 사옥 엘레베"},
+  {team:"레드",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:822,title:"[AID TF] PFGT대회 캐릭터 생성 및 영상 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106782607/AID+TF+PFGT",space:"1033",date:"2025-08-26",author:"오선화",summary:"AI 활용 기본 정보  관련 프로젝트 PFGT대회 캐릭터 생성 및 영상 제작 생성자 오선화 생성 일자 2025-08-22   사용 툴 Midjourney, Dzine, chat GPT 예상 기대 효과 가상의 PFGTx피망 쇼다운 홀덤 대회 캐릭터들을 생성하여 모션을 입"},
+  {team:"퍼플",types:["Figma","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:824,title:"[AID TF] Random Crash_2 (가제)",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718674/AID+TF+Random+Crash_2",space:"1235",date:"2025-08-28",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Random Crash_2 (가제) 생성자 배태환 생성 일자 2025-08-26   사용 툴 Chatgpt, Midjourney, Dzine, Figma 예상 기대 효과 제작 소요시간: 기준 10일 → 예상 7일 (30% 단축) 적"},
+  {team:"레드",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney"],views:826,title:"[AID TF] 피망 웹상점 비주얼 영상 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106785625/AID+TF",space:"1033",date:"2025-08-26",author:"송행숙",summary:"AI 활용 기본 정보  관련 프로젝트 피망 웹상점 비주얼 영상 제작 생성자 송행숙 생성 일자 2025-08-14   사용 툴 Chat GPT, Midjourney, Hiluo AI 예상 기대 효과 &lt; Midjourney, Hiluo AI &gt; - 시간, 비용 "},
+  {team:"브라운",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney"],views:828,title:"[25.08.26][AID TF][H5] 포커 스타디움 - FX_승리",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945717/25.08.26+AID+TF+H5+-+FX_",space:"1234",date:"2026-01-20",author:"박문수",summary:"AI 활용 기본 정보  관련 프로젝트 [뉴베가스][H5] 포커 스타디움 B2B 데모 버전 제작 - FX_승리-  브라운디자인팀 생성자 박문수,안형수,이민영 생성 일자 2025-08-26   사용 툴 미드저니, ChatGPT, AfterEffect 예상 기대 효과 연출 "},
+  {team:"블루",types:["이미지생성"],tools:["Midjourney"],views:830,title:"[AID TF] 미드저니 Personalize 이용하여 3D 아바타 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79937778/AID+TF+Personalize+3D",space:"1109",date:"2025-08-27",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 미드저니 웹 Personalize 기능 이용하여 3D 아바타 만들기 생성자 한주현 생성 일자 2025-08-26   사용 툴 미드저니 웹  예상 기대 효과 동일한 화풍 유지하기 적용 효과 여러가지 키워드를 생략해도 유지되는 3D 아"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:832,title:"[AID TF] 250909_Dzine의 style중 'Mysterious Night' 활용기 -2편",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97009314/AID+TF+250909_Dzine+style+Mysterious+Night+-2",space:"1107",date:"2025-09-08",author:"이지혜(퍼플스프린트팀)",summary:"관련 프로젝트 CHARIOT OF HELIOS 슬롯 생성자 이지혜 생성 일자 2025-08-27   사용 툴 (챗 GPT, krea, deepl, whisk, midjourney, dzine, dreamina) 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과"},
+  {team:"퍼플",types:["Figma","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:834,title:"[AID TF] Fast Crash",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718672/AID+TF+Fast+Crash",space:"1235",date:"2025-08-26",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Fast Crash 생성자 배태환 생성 일자 2025-08-26   사용 툴 Chatgpt, Midjourney, Dzine, Figma 예상 기대 효과 제작 소요시간: 기준 10일 → 예상 5일 (50% 단축) 적용 효과 제작 소"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:836,title:"[AID TF] 250826_Dzine의 style중 'Mysterious Night' 활용기 -1편",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96994539/AID+TF+250826_Dzine+style+Mysterious+Night+-1",space:"1107",date:"2025-09-08",author:"이지혜(퍼플스프린트팀)",summary:"관련 프로젝트 YETI_SNOWBALL BLITZ 슬롯 생성자 이지혜 생성 일자 2025-08-20   사용 툴 미드저니, 챗GPT, 드리미나, dzine, deepl, krea, whisk 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 소요"},
+  {team:"퍼플",types:["영상","포토샵"],tools:["ComfyUI","Upscayl"],views:838,title:"[AID TF] 고퀄리티 업스케일링 간단 사용기 (ComfyUI-SUPIR)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96933440/AID+TF+ComfyUI-SUPIR",space:"1107",date:"2025-09-01",author:"박채빈",summary:"AI 활용 기본 정보  관련 프로젝트 NEO팀 - Three Little Pigs슬롯 생성자 박채빈 생성 일자 2025-08-19   사용 툴 업스케일 AI: Upscayl, ComfyUI-SUPIR, letsenhance 예상 기대 효과 결과물의 디테일, 퀄리티 향상"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT"],views:840,title:"[AID TF] 8월 3~4주 AI 활용 내용 (Amplify Shader 제작)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97005944/AID+TF+8+3~4+AI+Amplify+Shader",space:"1107",date:"2025-08-26",author:"장세준",summary:"AI 활용 기본 정보  관련 프로젝트 - 생성자 장세준 생성 일자 2025-08-25 사용 툴 Chat GPT 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 약 30%의 시간 단축효과를 기대 적용 효과 (예상 기대효과에 따른 결과 - 소요 시"},
+  {team:"블루",types:["영상","이미지생성"],tools:["Midjourney","Dzine","KREA"],views:842,title:"[AID TF] 세미나 아바타 만들기",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79991804/AID+TF",space:"1109",date:"2025-08-25",author:"황은미",summary:"AI 활용 기본 정보  관련 프로젝트 AI 세미나 영상용 아바타 제작 생성자 황은미   생성 일자 2025-08-25   사용 툴 Midjourney, Dzine, Krea.Ai, Leonardo.Ai 예상 기대 효과 실제 인물을 모델 삼아 아바타 생성 적용 효과 실제"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:844,title:"[AID TF] Suno AI를 활용한 Busy Bunny Bonanza 슬롯 음악(Paid, Free)작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97005732/AID+TF+Suno+AI+Busy+Bunny+Bonanza+Paid+Free",space:"1107",date:"2025-08-25",author:"박은송",summary:"관련 프로젝트 스프린트팀 Busy Bunny Bonanza 생성자 박은송 생성 일자 2025-08-25   사용 툴 Suno 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 적용 가능성 결과물 증가 프롬프트 &lt;P"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:846,title:"[AID TF] Suno AI를 활용한 Deep Dive Quest 슬롯 음악(Paid, Free)작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97000287/AID+TF+Suno+AI+Deep+Dive+Quest+Paid+Free",space:"1107",date:"2025-08-25",author:"박은송",summary:"관련 프로젝트 스프린트팀 Deep Dive Quest 생성자 박은송 생성 일자 2025-08-13   사용 툴 Suno, Moises 예상 기대 효과 소요 시간 단축 적용 가능성 결과물 증가 예상 적용 효과 기존 대비 소요 시간 단축 적용 가능성 결과물 증가 프롬프트 "},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:848,title:"[AID TF] 8월 2차 - Mr.Fiat 슬롯 - 영국테마 인물 AI 사용",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97020897/AID+TF+8+2+-+Mr.Fiat+-+AI",space:"1107",date:"2025-11-04",author:"고수욱",summary:"AI 활용 기본 정보 관련 프로젝트 Mr.Fiat 슬롯 제작 - 영국테마 인물 AI 사용 생성자 고수욱 생성 일자 2025-08-01  ~  사용 툴 GPT, Midjourney, Krea, Dzine 예상 기대 효과 Mr.Fiat 슬롯에 필요한 심볼 제작의 원화 파트"},
+  {team:"퍼플",types:["포토샵","이미지생성"],tools:["ChatGPT","나노바나나","Midjourney"],views:850,title:"[AID TF] lmarena.ai의 나노바나나를 사용한 이미지 편집/재생",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718669/AID+TF+lmarena.ai",space:"1235",date:"2025-08-25",author:"전진영",summary:"AI 활용 기본 정보 관련 프로젝트 Random Crash  생성자 전진영   생성 일자 2025-08-25   사용 툴 Chatgpt, Midjourney, lmarena (나노바나나) 예상 기대 효과 디자인 수정이나 요소 추가 시 빠르게 반영 결과물의 퀄리티가 향상"},
+  {team:"퍼플",types:["사운드","리소스"],tools:["Suno"],views:852,title:"[AID TF] Suno AI를 활용한 Sugar Whispers 슬롯 음악작업",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96989294/AID+TF+Suno+AI+Sugar+Whispers",space:"1107",date:"2025-08-25",author:"선종길",summary:"AI 활용 기본 정보 관련 프로젝트 스프린트팀 슬롯 Sugar Whispers 생성자 선종길 생성 일자 2025-08-25   사용 툴 SUNO AI 예상 기대 효과 소요 시간 단축 결과물 증가 예상 적용 효과 소요시간 단축 결과물 퀄리티 증가 프롬프트 PaidBgm:"},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT","Dzine","Tripo 3D"],views:854,title:"[AID TF] 2025 8월 5주차 아기돼지 삼형제",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96990151/AID+TF+2025+8+5",space:"1107",date:"2025-08-26",author:"김경민(퍼플아트팀)",summary:"AI 활용 기본 정보  관련 프로젝트 아기돼지 삼형제 돼지캐릭터 모델 생성자 김경민 생성 일자 2025-08-25    사용 툴 tripo ai  /chat GPT /substance Painter / blender /Dzine 예상 기대 효과 모델링 시간 단축 본셋팅"},
+  {team:"브라운",types:["이미지생성"],tools:["ChatGPT"],views:856,title:"[25.08.22][AID TF][H5] 포커 스타디움 - Asset_카드(축약)",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945689/25.08.22+AID+TF+H5+-+Asset_",space:"1234",date:"2025-08-25",author:"이종민(AB디자인팀)",summary:"AI 활용 기본 정보  관련 프로젝트 포커 스타디움 생성자 이종민 생성 일자 2025-08-22   사용 툴 GPT 예상 기대 효과 카드 뒷면,문양,JQK 디자인 시안 시간 단축 (50%)  적용 효과 여러가지 시안을 초기에 보여줌으로써 . 방향성에 대해서 빠르게 이야"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:858,title:"[AID TF] 8월 3~4주 AI 활용 (외주 피드백 활용, 원화제작, 프롬프트 작성 활용)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97006321/AID+TF+8+3~4+AI",space:"1107",date:"2025-08-24",author:"박주홍",summary:"AI 활용 기본 정보  관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 20250813~20250826 사용 툴 Chat GPT, Midjourney, Dzine, dreamina, krea, ideogram 예상 기대 효과 하이퀄리티 슬롯아트 제작, 외주사"},
+  {team:"블루",types:["영상","포토샵"],tools:["AI 이미지"],views:860,title:"[AID TF] 세미나 UI / UNITY AI",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79985073/AID+TF+UI+UNITY+AI",space:"1109",date:"2025-09-02",author:"장은혜",summary:"AI 활용 기본 정보  관련 프로젝트  +  [AID TF] 세미나 아바타 만들기  + [AID TF] 세미나 아바타 립싱크 생성자 AI 테스트 + 영상 편집 작업:         장은혜   아바타 생성 학습 + 애니메이션 :   황은미 생성 일자 2025-08-22 "},
+  {team:"퍼플",types:["이미지생성"],tools:["ChatGPT"],views:862,title:"[AID TF] 8월 4주차 AI 활용 기록(Dizen Seedream 이용을 위해 Gpt와 씨름하기)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97016133/AID+TF+8+4+AI+Dizen+Seedream+Gpt",space:"1107",date:"2025-09-08",author:"채하늘",summary:"관련 프로젝트 TDQ , The furious race 생성자 채하늘 생성 일자 2025-07-22 사용 툴 Dizen 예상 기대 효과 50% 일정 단축 적용 효과 시간 단축 및 빠르게 시안 및 실제 리소스 확보 프롬프트 &quot;A stylized 3D Disney"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Dzine","Seedance"],views:864,title:"[AID TF] X1323_RexRiotRampage 피쳐 팝업 연출",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/96941403/AID+TF+X1323_RexRiotRampage",space:"1107",date:"2025-09-01",author:"유수봉 (Deactivated)",summary:"AI 활용 기본 정보  관련 프로젝트 X1323_RexRiotRampage 생성자 유수봉 생성 일자 2025-08-19   사용 툴 Dzine에서 Seedance Lite 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 소요 시간 단축, 퀄리티"},
+  {team:"브라운",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:866,title:"[25.08.18][AID TF][H5] 포커 스타디움 - 이모티콘",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945603/25.08.18+AID+TF+H5+-",space:"1234",date:"2025-08-18",author:"박중신",summary:"AI 활용 기본 정보  관련 프로젝트 [뉴베가스][H5] Asset_이모티콘(10종) - 원화, 애니메이션 생성자 박중신 생성 일자 2025-08-18   사용 툴 Chat GPT, Midjourney, Dzine 예상 기대 효과 소요시간 72.5% 단축,적용수량 14"},
+  {team:"레드",types:["R&D·비교","이미지생성"],tools:["ChatGPT","나노바나나"],views:868,title:"[AID TF] nano banana 간단 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909305/AID+TF+nano+banana",space:"1122",date:"2025-08-18",author:"최강",summary:"이번 주말에 화제였던 nano banana를 잠깐 써 보았다. 자세한 링크는 여기 를 참고 테스트1 우선 일러스트 1장을 넣고 포커테이블에서 카드를 치는 모습을 부탁했다. nano-banana 음. 묘하게 그림체가 바뀐다. gpt-image-1 지피티는 뭔가 지피티만의"},
+  {team:"퍼플",types:["이미지생성"],tools:["Dzine","Dreamina"],views:870,title:"[AID TF] 일관된 캐릭터의 베리에이션 연구",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97014464/AID+TF",space:"1107",date:"2025-08-18",author:"박주홍",summary:"2d세미리얼 일러스트로 진행한 하나의 캐릭터의 다양한 포즈와 복장 적용 RND 목표- 일관된 하나의 캐릭터가 다양한 포즈와 다양한 코디를 소화 할 수 있어야함 사용 툴  dreamina (seedream3.0) - 캐릭터 이미지 생성 - 옷 갈아입히기 dzine - 캐"},
+  {team:"브라운",types:["이미지생성"],tools:["ChatGPT","Midjourney"],views:872,title:"[25.08.14][AID TF][H5] 포커 스타디움 - 엠블럼",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945575/25.08.14+AID+TF+H5+-",space:"1234",date:"2025-08-25",author:"이종민(AB디자인팀)",summary:"AI 활용 기본 정보  관련 프로젝트 포커 스타디움 생성자 이종민 생성 일자 2025-08-14   사용 툴 (미드저니, Hailuo, ChatGPT) 예상 기대 효과 미드저니로 엠블럼 제작. 미드저니와 Hailuo로 애니메이션 제작. 40% 시간 절약   적용 효과 "},
+  {team:"브라운",types:["영상","이미지생성"],tools:["ChatGPT","Midjourney","Kling AI"],views:874,title:"[25.08.14][AID TF][H5] 포커 스타디움 - BI",url:"https://neowiz.atlassian.net/wiki/spaces/1234/pages/113945569/25.08.14+AID+TF+H5+-+BI",space:"1234",date:"2025-09-15",author:"박문수",summary:"AI 활용 기본 정보  관련 프로젝트 피망베가스 포커 스타디움 생성자 박문수 생성 일자 2025-08-14   사용 툴 미드저니, ChatGPT ImageFX, Kling AI 예상 기대 효과 소요시간 30% 단축, 적용수량 50% 증가  적용 효과 다양한 BI 시안들"},
+  {team:"블루",types:["포토샵","R&D·비교"],tools:["ChatGPT"],views:876,title:"[AID TF] 쇼다운 홀덤 PC 와이어 프레임 시안",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79998204/AID+TF+PC",space:"1109",date:"2025-08-18",author:"양창숙",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운 홀덤 PC 와이어 프레임 시안 비교분석 생성자 양창숙 생성 일자 2025-08-14   사용 툴 Chat GPT 예상 기대 효과 1. 디자인 - 기획 - 사업팀 간 커뮤니케이션 효율성 향상 시안별 목적, 장단점, 기능 정합성"},
+  {team:"레드",types:["리소스","이미지생성"],tools:["Dzine"],views:878,title:"[AID TF] 김인옥_Dzine으로 도리 캐릭터 학습2",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909229/AID+TF+_Dzine+2",space:"1122",date:"2025-08-13",author:"김인옥",summary:"관련 프로젝트 뉴맞고 생성자 김인옥 생성 일자 8/12 사용툴 Dzine 예상 기대 효과 도리의 다양한 표정 베리에이션 적용 효과 도리 캐릭터 가치 상승 프롬프트 도리 학습2 학습 리소스 제작 &gt;캐릭터 생성&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;"},
+  {team:"레드",types:["영상","R&D·비교"],tools:["Midjourney"],views:880,title:"[AID TF] 장혜진_뉴맞고 '다함께 응원전' 세로용 영상 테스트😅",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909220/AID+TF+_",space:"1122",date:"2026-01-20",author:"장혜진",summary:"관련 프로젝트 뉴맞고 생성자 장혜진 생성 일자 2025/08/13 사용툴 챗지피티/미드저니/캡컷 예상 기대 효과 브랜드 IP 강화 영상에 캐릭터 노출시키면서 피망 뉴맞고의 브랜드 이미지 강화 /뉴맞고 월드 및 세계관 확장/ 콘텐츠 후킹 유도 적용 효과 브랜드 비주얼로 "},
+  {team:"레드",types:["R&D·비교","이미지생성"],tools:["Dzine"],views:882,title:"[AID TF] 최강_섯다 캐릭터 베리에이션 테스트 1",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909217/AID+TF+_+1",space:"1122",date:"2025-08-14",author:"최강",summary:"관련 프로젝트 섯다 생성자 최강 생성 일자 8/13 사용툴 니지저니, Dzine 예상 기대 효과 캐릭터 제작시 니지저니와 Dzine을 사용해서 다양한 표정과 포즈가 생성 가능함을 확인 적용 효과 섯다 신규캐릭터 판매시 다양한 표정과 포즈를 제공하여 판매상품의 밸류 증대"},
+  {team:"레드",types:["영상","R&D·비교"],tools:["Midjourney","Dzine"],views:884,title:"[AID TF] 정윤주_뉴맞고 캐릭터 베리에이션 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1122/pages/83909215/AID+TF+_",space:"1122",date:"2025-08-13",author:"정윤주",summary:"관련 프로젝트 뉴맞고 생성자 정윤주 생성 일자 25.08.13 수 사용툴 Dzine, Midjourney 예상 기대 효과 3D 아트 스타일 캐릭터 제작 적용 효과 3D 아트 스타일 캐릭터 제작 프롬프트 아래 설명 부분에서 작성 �� 목적 AI 영상 제작 시 기존 2D "},
+  {team:"퍼플",types:["Figma"],tools:["AI 이미지"],views:886,title:"[AID TF] 아이디어에서 최종 결과물까지, AI와 함께하는 워크플로우 (feat. 아기돼지삼형제)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97029488/AID+TF+AI+feat.",space:"1107",date:"2025-11-21",author:"박채빈",summary:"슬라이드 파일 경로 :  https://www.figma.com/deck/dKbABlwaYt3ywkdmHza737/20250813_AI%ED%99%9C%EC%9A%A9-%EC%9B%8C%ED%81%AC%ED%94%8C%EB%A1%9C%EC%9A%B0_%EB%B0%95%"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:888,title:"[AID TF] 8월 1~2주 AI 활용 (외주 피드백 활용, 원화제작, 프롬프트 작성 활용)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97011280/AID+TF+8+1~2+AI",space:"1107",date:"2025-08-12",author:"박주홍",summary:"AI 활용 기본 정보  관련 프로젝트 퍼플실 공용아트팀  생성자 박주홍 생성 일자 20250801~20250812 사용 툴 Chat GPT, Midjourney, Dzine, dreamina, krea, ideogram 예상 기대 효과 하이퀄리티 슬롯아트 제작, 외주사"},
+  {team:"블루",types:["이미지생성"],tools:["ChatGPT","Midjourney","KREA"],views:890,title:"[AID TF] 위너 아바타 생성 과정",url:"https://neowiz.atlassian.net/wiki/spaces/1109/pages/79987495/AID+TF",space:"1109",date:"2025-08-14",author:"한주현",summary:"AI 활용 기본 정보  관련 프로젝트 쇼다운 홀덤 &gt; TMCT 위너 아바타 2종 제작 생성자 한주현 생성 일자 2025-08-12   사용 툴 미드저니, Chat GPT, Krea 예상 기대 효과 캐릭터 별  상황 얼굴 제작 시간 단축 5일 → 3일 적용 효과 프"},
+  {team:"퍼플",types:["영상","이미지생성"],tools:["Seedance","Veo"],views:892,title:"[AID TF] X1323_RexRiotRampage 공룡 연출",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97029399/AID+TF+X1323_RexRiotRampage",space:"1107",date:"2025-11-21",author:"유수봉 (Deactivated)",summary:"AI 활용 기본 정보  관련 프로젝트 X1323_RexRiotRampage 생성자 유수봉 생성 일자 2025-08-06   사용 툴 Seedance, Veo2 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 퀄리티 상승 적용 효과 (예상 기대효"},
+  {team:"퍼플",types:["R&D·비교","리소스"],tools:["ChatGPT","Dzine","Whisk"],views:894,title:"[AID TF] 250812_외주 피드백의 효율을 올려보자. 2편_ (with. 실패 사례)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97015460/AID+TF+250812_+.+2+_+with.",space:"1107",date:"2025-09-08",author:"이지혜(퍼플스프린트팀)",summary:"관련 프로젝트 딥 다이브 퀘스트 슬롯  생성자 이지혜 생성 일자 2025-07-24   사용 툴 whisk, 챗GPT, 드리미나, dzine, deepl 예상 기대 효과 (소요 시간 단축 / 적용 가능성 / 결과물 증가 예상) 작업시간 소요 시간 단축/ 퀄리티 향상 /"},
+  {team:"퍼플",types:["R&D·비교","리소스"],tools:["KREA","Dreamina"],views:896,title:"[AID TF] Krea 학습 실험 ( Dizen Seedream 모델, Dreamina 모델 무한정 뽑기)",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97016311/AID+TF+Krea+Dizen+Seedream+Dreamina",space:"1107",date:"2025-09-08",author:"채하늘",summary:"AI 활용 기본 정보 관련 프로젝트 NEO팀 - The Three Little Pigs 슬롯 생성자 채하늘 생성 일자 2025-08-11   사용 툴 Krea 예상 기대 효과 기존 대비 소요 시간 단축 (60% 이상 적용 효과 소요 시간 단축 퀄리티 향상 프롬프트 Gp"},
+  {team:"퍼플",types:["리소스","이미지생성"],tools:["AI 이미지"],views:898,title:"[AID TF] Sugar Whisper 배경 리소스 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97011908/AID+TF+Sugar+Whisper",space:"1107",date:"2025-09-11",author:"이대엽",summary:"AI 활용 기본 정보  관련 프로젝트 SugarWhisdper 슬롯 생성자 이대엽 생성 일자 2025-08-11    사용 툴 Dizine 예상 기대 효과 (70% 절감/ 적용 가능/ 퀄리티 업 예상) 적용 효과 제작시간 단축 및 제작 단가 감소 , 시각적 효과 및 창"},
+  {team:"레드",types:["영상","포토샵"],tools:["ChatGPT","Midjourney"],views:900,title:"[AID TF] UA영상 소재 제작 테스트",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106785186/AID+TF+UA",space:"1033",date:"2025-08-08",author:"송행숙",summary:"AI 활용 기본 정보  관련 프로젝트 UA영상 소재 제작 테스트 생성자 송행숙 생성 일자 2025-08-08   사용 툴 Chat GPT, Midjourney, Hiluo AI 예상 기대 효과 기획, 디자인, 영상 편집 소요 시간 단축(소재 1건을 생성하는데 소요되는 "},
+  {team:"퍼플",types:["영상","리소스"],tools:["ChatGPT","Midjourney"],views:902,title:"[AID TF] 미드저니 Sprite Animation 리소스 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718575/AID+TF+Sprite+Animation",space:"1235",date:"2025-08-08",author:"전진영",summary:"관련 프로젝트 Tower Bonanza  생성자 전진영 생성 일자 2025-08-06   사용 툴 ChatGPT, Midjourney 예상 기대 효과 제작 소요시간 : 40% 감소 퀄리티 상승 적용 효과 제작 소요시간 :  하루 프롬프트 a glowing rune-sh"},
+  {team:"퍼플",types:["이미지생성"],tools:["AI 이미지"],views:904,title:"[AID TF] Ideoqram AI 로 타이틀을 쉽게 제작하기+ 꿀팁",url:"https://neowiz.atlassian.net/wiki/spaces/1107/pages/97016139/AID+TF+Ideoqram+AI",space:"1107",date:"2025-09-08",author:"채하늘",summary:"관련 프로젝트 TDQ , The furious race 생성자 채하늘 생성 일자 2025-07-22 사용 툴 Ideoqram 예상 기대 효과 80% 일정 단축 적용 효과 시간 단축 및 빠르게 시안 및 실제 리소스 확보 프롬프트 여러가지 프롬포트를 사용하여 규정하기 어렵"},
+  {team:"퍼플",types:["Figma","이미지생성"],tools:["ChatGPT","Midjourney","Dzine"],views:906,title:"[AID TF] Blitzcrown홈페이지 디자인",url:"https://neowiz.atlassian.net/wiki/spaces/1235/pages/103718566/AID+TF+Blitzcrown",space:"1235",date:"2025-08-07",author:"배태환",summary:"AI 활용 기본 정보  관련 프로젝트 Blitzcrown홈페이지 생성자 배태환 생성 일자 2025-08-07   사용 툴 Chatgpt / Figma AI / Midjourney / Dzine 예상 기대 효과 제작소요 시간 기존대비 : 약 50% 감소 업무 효율성 : "},
+  {team:"레드",types:["영상","이미지생성"],tools:["Midjourney"],views:908,title:"[AID TF] 섯다홈 게임스타트 버튼 제작",url:"https://neowiz.atlassian.net/wiki/spaces/1033/pages/106782871/AID+TF",space:"1033",date:"2025-08-12",author:"오선화",summary:"AI 활용 기본 정보  관련 프로젝트 섯다이관 생성자 오선화 생성 일자 2025-07-11   사용 툴 미드저니 예상 기대 효과 다양한 형태의 모션 시안 추출 및 선택 가능 적용 효과 빠른 시간 안(0.5 day)에 다양한 모션의 형태를 뽑아볼 수 있는 장점 프롬프트 "},
+];
+const seen=new Set();
+const UP=PAGES.filter(p=>{if(seen.has(p.url))return false;seen.add(p.url);return true;});
+let selTeams=new Set(),selTypes=new Set(),curSort="newest",curSearch="";
+
+function getFiltered(){
+  return UP.filter(p=>{
+    const tOk=selTeams.size===0||selTeams.has(p.team);
+    const tyOk=selTypes.size===0||[...selTypes].every(t=>(p.types||[]).includes(t));
+    const q=curSearch.toLowerCase();
+    const sOk=!q||p.title.toLowerCase().includes(q)||(p.summary||'').toLowerCase().includes(q)||(p.author||'').toLowerCase().includes(q)||(p.tools||[]).join(' ').toLowerCase().includes(q)||p.team.toLowerCase().includes(q)||(p.types||[]).join(' ').toLowerCase().includes(q);
+    return tOk&&tyOk&&sOk;
+  }).sort((a,b)=>{
+    if(curSort==='newest')return b.date.localeCompare(a.date);
+    if(curSort==='views')return(b.views||0)-(a.views||0);
+    return a.title.localeCompare(b.title,'ko');
+  });
+}
+
+function toggleTeam(team){
+  // 단일 선택: 같은 팀 다시 누르면 전체로
+  if(selTeams.size===1&&selTeams.has(team)||team==='ALL'){selTeams.clear();}
+  else{selTeams.clear();if(team!=='ALL')selTeams.add(team);}
+  // 검색어 초기화
+  curSearch='';
+  const si=document.querySelector('.srch input');
+  if(si) si.value='';
+  updateTeamUI();render();
+}
+
+function updateTeamUI(){
+  const teams=["레드","퍼플","블루","브라운","올림포스","공용"];
+  const allB=document.getElementById('tb-ALL');
+  if(selTeams.size===0){allB.classList.add('active');}
+  else{allB.classList.remove('active');allB.style.background='';allB.style.color='';}
+  teams.forEach(t=>{
+    const b=document.getElementById('tb-'+t);
+    const c=TC[t];
+    const cnt=b.querySelector('.sl-item-cnt');
+    if(selTeams.has(t)){b.style.background=c.p+'66';b.style.color=c.t;if(cnt){cnt.style.background=c.s;cnt.style.color='#fff';cnt.style.borderColor='transparent';}}
+    else{b.style.background='';b.style.color='';if(cnt){cnt.style.background='';cnt.style.color='';cnt.style.borderColor='';}}
+  });
+}
+
+function renderTypeChips(){
+  document.getElementById('typeChips').innerHTML=Object.entries(TYC).map(([t,c])=>
+    `<button class="type-chip" id="tc-${t}" style="color:${c.bg};border-color:${c.bg}" onclick="toggleType('${t}',this)"><span class="tc-dot" style="background:${c.bg}"></span>${c.lb}</button>`
+  ).join('');
+}
+
+function toggleType(type,chip){
+  if(selTypes.has(type)){selTypes.delete(type);const c=TYC[type];chip.classList.remove('on');chip.style.background='';chip.style.color=c.bg;chip.style.borderColor=c.bg;}
+  else{selTypes.add(type);chip.classList.add('on');chip.style.background=TYC[type].bg;chip.style.color='#fff';chip.style.borderColor='transparent';}
+  updateHint();render();
+}
+
+function updateHint(){
+  const h=document.getElementById('filterHint');
+  if(selTypes.size===0){h.textContent='전체 작업 유형 표시 중 · 복수 선택 가능';h.style.color='';h.style.fontWeight='';}
+  else{h.textContent='선택됨: '+[...selTypes].map(t=>TYC[t].lb).join(', ');h.style.color='var(--accent)';h.style.fontWeight='600';}
+}
+
+function setSort(s,btn){
+  curSort=s;
+  document.querySelectorAll('#sort-newest,#sort-views').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function refreshPage(){
+  window.location.reload();
+}
+
+function renderToolChips(){
+  const cnt={};UP.forEach(p=>(p.tools||[]).forEach(t=>{cnt[t]=(cnt[t]||0)+1;}));
+  const top=Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,16);
+  document.getElementById('toolChips').innerHTML=top.map(([t,n],i)=>{
+    const c=TOOLCOLS[i%TOOLCOLS.length];
+    return `<button class="tool-chip" id="toolc-${t.replace(/[\s&]/g,'_')}" style="color:${c};border-color:${c}" onclick="searchTool('${t}',this)" title="${n}개">${t}</button>`;
+  }).join('');
+}
+
+function searchTool(tool,chip){
+  if(curSearch===tool){curSearch='';document.getElementById('searchInput').value='';renderToolChips();}
+  else{curSearch=tool;document.getElementById('searchInput').value=tool;document.querySelectorAll('.tool-chip').forEach(c=>c.classList.remove('on'));chip.classList.add('on');chip.style.background=chip.style.color;chip.style.color='#fff';chip.style.borderColor='transparent';}
+  render();
+}
+
+function updateCounts(){
+  document.getElementById('totalCount').textContent=UP.length;
+  document.getElementById('cnt-ALL').textContent=UP.length;
+  ["레드","퍼플","블루","브라운","올림포스","공용"].forEach(t=>{const el=document.getElementById('cnt-'+t);if(el)el.textContent=UP.filter(p=>p.team===t).length;});
+}
+
+function render(){
+  const list=getFiltered();
+  document.getElementById('feedLabel').textContent=list.length+'개 페이지';
+  const parts=[];
+  if(selTeams.size>0)parts.push([...selTeams].join(', '));
+  if(selTypes.size>0)parts.push([...selTypes].map(t=>TYC[t].lb).join(', '));
+  if(curSearch)parts.push('"'+curSearch+'"');
+  document.getElementById('activeFiltersLabel').textContent=parts.length?'필터: '+parts.join(' · '):'';
+  const el=document.getElementById('postList');
+  if(!list.length){el.innerHTML='<div class="empty"><span class="empty-e">🎨</span><div style="font-size:17px;font-weight:600;margin-bottom:6px">결과가 없습니다</div><div style="font-size:14px">다른 조건을 시도해 보세요</div></div>';return;}
+  el.innerHTML=list.map((p,i)=>{
+    const tc=TC[p.team]||{p:'#ccc',s:'#888',t:'#333'};
+    const tfl=(p.types||[]).map(t=>{const c=TYC[t];return c?`<span class="type-flair" style="background:${c.bg}">${c.lb}</span>`:''}).join('');
+    return `<div class="post" style="animation-delay:${Math.min(i,15)*0.025}s" onclick="window.open('${p.url}','_blank')">
+      <div class="post-bar" style="background:${tc.p}"></div>
+      <div class="pc">
+        <div class="ptop"><span class="team-flair" style="background:${tc.s}">${p.team}</span>${tfl}<span class="pmeta">space/<b>${p.space}</b> · ${p.date}</span></div>
+        <div class="ptitle">${p.title}</div>
+        <div class="psummary">${p.summary||''}</div>
+        <div class="pact" onclick="event.stopPropagation()">
+          
+          <a class="pa open" href="${p.url}" target="_blank" rel="noopener"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>열기</a>
+          <button class="pa" onclick="navigator.clipboard&&navigator.clipboard.writeText('${p.url}').then(()=>{this.textContent='✓';setTimeout(()=>this.textContent='복사',1200)})">복사</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderRankings(){
+  const nc5=['#ff4500','#ff7043','#ffa726','#878a8c','#878a8c'];
+  const ncB=['#0079d3','#1565c0','#42a5f5','#878a8c','#878a8c'];
+  const ncG=['#16a34a','#22c55e','#86efac','#878a8c','#878a8c'];
+
+  // 반응 많은 글 (이모티콘 합산)
+  document.getElementById('topNew').innerHTML=TOP_REACTION.map((p,i)=>{
+    const tc=TC[p.team]||{s:'#888'};
+    return `<div class="rank-item" onclick="window.open('${p.url}','_blank')"><span class="rnum" style="color:${nc5[i]}">${i+1}</span><div class="rbdy"><div class="rtitle">${p.title}</div><div class="rmeta">${p.label}</div></div></div>`;
+  }).join('');
+
+  // 구독자 많은 글
+  document.getElementById('topWatchers').innerHTML=TOP_WATCHERS.map((p,i)=>{
+    const tc=TC[p.team]||{s:'#888'};
+    return `<div class="rank-item" onclick="window.open('${p.url}','_blank')"><span class="rnum" style="color:${ncB[i]}">${i+1}</span><div class="rbdy"><div class="rtitle">${p.title}</div><div class="rmeta">👀 ${p.watchers}명 · ✏️${p.version}회</div></div></div>`;
+  }).join('');
+
+  // 수정 많은 글
+  document.getElementById('topVersion').innerHTML=TOP_VERSION.map((p,i)=>{
+    const tc=TC[p.team]||{s:'#888'};
+    return `<div class="rank-item" onclick="window.open('${p.url}','_blank')"><span class="rnum" style="color:${ncG[i]}">${i+1}</span><div class="rbdy"><div class="rtitle">${p.title}</div><div class="rmeta">✏️ ${p.version}회 · 👀${p.watchers}명</div></div></div>`;
+  }).join('');
+}
+updateCounts();renderTypeChips();renderToolChips();renderRankings();updateHint();updateTeamUI();render();
+
+</script>
+</body>
+</html>

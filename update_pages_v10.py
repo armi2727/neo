@@ -1,0 +1,240 @@
+# -*- coding: utf-8 -*-
+import os, re, json, time, sys
+from datetime import datetime
+
+try:
+    import requests
+    requests.packages.urllib3.disable_warnings()
+except ImportError:
+    print("pip install requests")
+    sys.exit(1)
+
+CONFLUENCE_BASE  = "https://neowiz.atlassian.net/wiki"
+CONFLUENCE_EMAIL = os.environ.get("CONFLUENCE_EMAIL", "")
+CONFLUENCE_TOKEN = os.environ.get("CONFLUENCE_TOKEN", "")
+INDEX_PATH       = os.environ.get("INDEX_PATH", "./index.html")
+
+TEAM_NAME = {
+    "1107": "\ud37c\ud50c",
+    "1122": "\ub808\ub4dc",
+    "1109": "\ube14\ub8e8",
+    "1234": "\ube0c\ub77c\uc6b4",
+    "1235": "\ud37c\ud50c",
+    "1033": "\ub808\ub4dc",
+    "1192": "\uacf5\uc6a9",
+}
+
+TITLE_KEYWORDS = ["artcraft", "art craft", "aid tf", "aid tft", "techcraft"]
+
+TYPE_KEYWORDS = {
+    "\uc774\ubbf8\uc9c0\uc0dd\uc131": ["image gen","\uc774\ubbf8\uc9c0 \uc0dd\uc131","\uc774\ubbf8\uc9c0\uc0dd\uc131","\uc77c\ub7ec\uc2a4\ud2b8","midjourney","\ubbf8\ub4dc\uc800\ub2c8","dzine","krea","flux","comfyui","dreamina","whisk","\ub098\ub178\ubc14\ub098\ub098","nanobanana","ai \uc774\ubbf8\uc9c0"],
+    "\uc601\uc0c1": ["\uc601\uc0c1 \uc81c\uc791","\uc601\uc0c1\uc81c\uc791","\uc601\uc0c1 \uc0dd\uc131","video","kling","\ud074\ub9c1","sora","higgsfield","seedance","veo","hailuo","\uc778\ud2b8\ub85c \uc601\uc0c1","\ubaa8\uc158","\uc560\ub2c8\uba54\uc774\uc158"],
+    "\ub9ac\uc18c\uc2a4": ["\uac8c\uc784 \ub9ac\uc18c\uc2a4","\ub9ac\uc18c\uc2a4 \uc81c\uc791","\uc2ac\ub86f.*\ub9ac\uc18c\uc2a4","\uc2ec\ubcfc","\uadf8\ub798\ud53d \ub9ac\uc18c\uc2a4"],
+    "\uc0ac\uc6b4\ub4dc": ["\uc0ac\uc6b4\ub4dc","\uc74c\uc545","bgm","sound","music","suno","elevenlabs","\uc77c\ub808\ube10\ub7a9\uc2a4","\uc624\ub514\uc624","\ubcf4\uc774\uc2a4"],
+    "\uc790\ub3d9\ud654\ud234": ["\uc790\ub3d9\ud654","automation","\uc2a4\ud06c\ub9bd\ud2b8","\ud30c\uc774\ud504\ub77c\uc778","claude code","cursor","\ucee4\uc11c","n8n","gitlab ci","ci/cd","apps script"],
+    "\ud3ec\ud1a0\uc0f5": ["\ud3ec\ud1a0\uc0f5","photoshop","\ud3b8\uc9d1","\ud6c4\ud3b8\uc9d1","weavy","\uc704\ube44","upscayl","segment anything"],
+    "UI\ub514\uc790\uc778": ["ui \ub514\uc790\uc778","ui\ub514\uc790\uc778","ui design","\ubc30\ub108","\ud31d\uc5c5","\ubc84\ud2bc","\uc778\ud130\ud398\uc774\uc2a4","ux"],
+    "Figma": ["figma","\ud53c\uadf8\ub9c8"],
+    "R&D\u00b7\ube44\uad50": ["r&d","r&amp;d","\ube44\uad50","\ud14c\uc2a4\ud2b8","\ub9ac\uc11c\uce58","research","\ubd84\uc11d","\uac80\ud1a0","\uc2e4\ud5d8"],
+    "AI\uc81c\uc791\ud234": ["\ud50c\ub7ec\uadf8\uc778","plugin","\ud234 \uc81c\uc791","\ud234\uc744 \ub9cc","bluetester","streamlit","page launcher","scheduler","\uac8c\uc784 \uc81c\uc791\uae30","poc \uad6c\ud604","\uc6f9 \uc571 \uc81c\uc791","\uc790\ub3d9\ud654 \uc2dc\uc2a4\ud15c","\ud30c\uc77c\uba85 \uc0dd\uc131\uae30","align tool","resource namer"],
+    "\uc720\ub2c8\ud2f0": ["unity","\uc720\ub2c8\ud2f0","\uc178\uc774\ub354","shader"],
+}
+
+TOOL_KEYWORDS = {
+    "ChatGPT":          ["chatgpt","gpt"],
+    "Midjourney":       ["midjourney","\ubbf8\ub4dc\uc800\ub2c8"],
+    "Gemini":           ["gemini","\uc81c\ubbf8\ub098\uc774"],
+    "\ub098\ub178\ubc14\ub098\ub098": ["\ub098\ub178\ubc14\ub098\ub098","nanobanana"],
+    "Dzine":            ["dzine"],
+    "Kling AI":         ["kling","\ud074\ub9c1"],
+    "Google AI Studio": ["google ai studio","ai studio"],
+    "Suno":             ["suno"],
+    "KREA":             ["krea"],
+    "Weavy":            ["weavy"],
+    "Claude":           ["claude","\ud074\ub85c\ub4dc"],
+    "Higgsfield":       ["higgsfield"],
+    "FLUX":             ["flux"],
+    "Whisk":            ["whisk"],
+    "Veo":              ["veo"],
+    "Seedance":         ["seedance"],
+    "Dreamina":         ["dreamina"],
+    "\uc704\ube44":     ["\uc704\ube44"],
+    "Upscayl":          ["upscayl"],
+    "Grok":             ["grok"],
+    "ElevenLabs":       ["elevenlabs","\uc77c\ub808\ube10\ub7a9\uc2a4"],
+    "ComfyUI":          ["comfyui"],
+    "Tripo 3D":         ["tripo"],
+    "Sora":             ["sora"],
+    "Segment Anything": ["segment anything"],
+    "Google Flow":      ["google flow"],
+    "AI \uc774\ubbf8\uc9c0": ["ai \uc774\ubbf8\uc9c0","ai\uc774\ubbf8\uc9c0"],
+}
+
+def get_session():
+    from base64 import b64encode
+    s = requests.Session()
+    creds = b64encode(f"{CONFLUENCE_EMAIL}:{CONFLUENCE_TOKEN}".encode("utf-8")).decode("ascii")
+    s.headers.update({
+        "Authorization": f"Basic {creds}",
+        "Content-Type": "application/json",
+    })
+    cert_path = r"C:\Program Files\Common Files\SSL\cert.pem"
+    if os.path.exists(cert_path):
+        s.verify = cert_path
+    else:
+        s.verify = False
+    return s
+
+def api_get(session, path, params=None, retry=3):
+    url = f"{CONFLUENCE_BASE}{path}"
+    for attempt in range(retry):
+        try:
+            r = session.get(url, params=params, timeout=15)
+            if r.status_code == 401:
+                print("  [401] token error")
+                return None
+            if r.status_code == 404:
+                return None
+            r.raise_for_status()
+            return r.json()
+        except Exception as e:
+            wait = 2 ** attempt
+            if attempt < retry - 1:
+                print(f"  [retry {attempt+1}] {wait}s... ({e})")
+                time.sleep(wait)
+            else:
+                print(f"  [error] {e}")
+                return None
+
+def fetch_space_pages(session, space_key):
+    pages = []
+    path = f"/rest/api/space/{space_key}/content/page"
+    params = {"limit": 100, "expand": "history.createdBy,version", "depth": "all", "orderby": "history.createdDate desc"}
+    while True:
+        data = api_get(session, path, params)
+        if not data:
+            break
+        pages.extend(data.get("results", []))
+        next_link = data.get("_links", {}).get("next", "")
+        if next_link:
+            path = next_link.replace(CONFLUENCE_BASE, "").replace("/wiki", "")
+            params = None
+        else:
+            break
+        time.sleep(0.2)
+    return pages
+
+def fetch_excerpts(session, space_key):
+    excerpts = {}
+    start = 0
+    cql = f'space = "{space_key}" AND (title ~ "ArtCraft" OR title ~ "Art Craft" OR title ~ "AID TF" OR title ~ "AID TFT" OR title ~ "TechCraft") AND type = page'
+    while True:
+        data = api_get(session, "/rest/api/content/search", {"cql": cql, "limit": 50, "start": start})
+        if not data or not data.get("results"):
+            break
+        for item in data["results"]:
+            excerpt = re.sub(r'\s+', ' ', item.get("excerpt", "")).strip()[:200]
+            excerpts[item["id"]] = excerpt
+        if not data.get("_links", {}).get("next"):
+            break
+        start += 50
+        time.sleep(0.2)
+    return excerpts
+
+def is_artcraft(title):
+    return any(kw in title.lower() for kw in TITLE_KEYWORDS)
+
+def extract_types(text):
+    found = []
+    tl = text.lower()
+    for key, kws in TYPE_KEYWORDS.items():
+        if any(re.search(kw, tl) for kw in kws):
+            found.append(key)
+    seen = set()
+    result = [t for t in found if not (t in seen or seen.add(t))]
+    return result if result else ["R&D\u00b7\ube44\uad50"]
+
+def extract_tools(text):
+    found = []
+    tl = text.lower()
+    for name, kws in TOOL_KEYWORDS.items():
+        if any(kw in tl for kw in kws):
+            found.append(name)
+    seen = set()
+    return [t for t in found if not (t in seen or seen.add(t))]
+
+def build_pages_array():
+    session = get_session()
+    all_pages = []
+    seen_ids = set()
+
+    for space_key, team in TEAM_NAME.items():
+        print(f"\n[{team}] space={space_key} ...")
+        space_pages = fetch_space_pages(session, space_key)
+        artcraft = [p for p in space_pages if is_artcraft(p.get("title", ""))]
+        new_pages = [p for p in artcraft if p["id"] not in seen_ids]
+        for p in new_pages:
+            seen_ids.add(p["id"])
+        print(f"  -> {len(space_pages)}pages / ArtCraft {len(new_pages)}")
+
+        excerpts = fetch_excerpts(session, space_key)
+        print(f"  -> excerpt {len(excerpts)}")
+
+        for page in new_pages:
+            pid = page["id"]
+            title = page.get("title", "")
+            summary = excerpts.get(pid, "")
+            full_text = title + " " + summary
+            try:
+                author = page["history"]["createdBy"]["displayName"]
+            except:
+                author = ""
+            try:
+                date = page["history"]["createdDate"][:10]
+            except:
+                date = ""
+
+            all_pages.append({
+                "team": team, "types": extract_types(full_text),
+                "tools": extract_tools(full_text), "views": 0,
+                "title": title,
+                "url": f"https://neowiz.atlassian.net/wiki/spaces/{space_key}/pages/{pid}",
+                "space": space_key, "date": date, "author": author,
+                "summary": summary[:200],
+            })
+        print(f"  -> done {len(new_pages)}")
+
+    all_pages.sort(key=lambda p: p["date"], reverse=True)
+    return all_pages
+
+def pages_to_js(pages):
+    def esc(s):
+        return str(s).replace("\\","\\\\").replace('"','\\"').replace("\n"," ").replace("\r","")
+    lines = []
+    for p in pages:
+        types_js = "[" + ",".join(f'"{t}"' for t in p["types"]) + "]"
+        tools_js = "[" + ",".join(f'"{t}"' for t in p["tools"]) + "]"
+        lines.append(f'  {{team:"{esc(p["team"])}",types:{types_js},tools:{tools_js},views:{p["views"]},title:"{esc(p["title"])}",url:"{esc(p["url"])}",space:"{p["space"]}",date:"{p["date"]}",author:"{esc(p["author"])}",summary:"{esc(p["summary"])}"}}'        )
+    return "const PAGES=[\n" + ",\n".join(lines) + "\n];"
+
+def update_index_html(pages):
+    with open(INDEX_PATH, "r", encoding="utf-8") as f:
+        content = f.read()
+    new_js = pages_to_js(pages)
+    new_content = re.sub(r'const PAGES=\[.*?\];', new_js, content, flags=re.DOTALL)
+    if new_content == content:
+        print("\n[warning] PAGES not found")
+        return False
+    with open(INDEX_PATH, "w", encoding="utf-8") as f:
+        f.write(new_content)
+    print(f"\n[done] {len(pages)} pages updated")
+    return True
+
+if __name__ == "__main__":
+    if not CONFLUENCE_EMAIL or not CONFLUENCE_TOKEN:
+        print("set CONFLUENCE_EMAIL and CONFLUENCE_TOKEN")
+        sys.exit(1)
+    print(f"=== update ({datetime.now().strftime('%Y-%m-%d %H:%M')}) ===")
+    pages = build_pages_array()
+    print(f"\ntotal {len(pages)} pages")
+    update_index_html(pages)

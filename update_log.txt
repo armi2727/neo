@@ -1,0 +1,493 @@
+'te_pages_v8.py'Àº(´Â) ³»ºÎ ¶Ç´Â ¿ÜºÎ ¸í·É, ½ÇÇàÇÒ ¼ö ÀÖ´Â ÇÁ·Î±×·¥, ¶Ç´Â
+¹èÄ¡ ÆÄÀÏÀÌ ¾Æ´Õ´Ï´Ù.
+'te_pages_v8.py'Àº(´Â) ³»ºÎ ¶Ç´Â ¿ÜºÎ ¸í·É, ½ÇÇàÇÒ ¼ö ÀÖ´Â ÇÁ·Î±×·¥, ¶Ç´Â
+¹èÄ¡ ÆÄÀÏÀÌ ¾Æ´Õ´Ï´Ù.
+'te_pages_v8.py'Àº(´Â) ³»ºÎ ¶Ç´Â ¿ÜºÎ ¸í·É, ½ÇÇàÇÒ ¼ö ÀÖ´Â ÇÁ·Î±×·¥, ¶Ç´Â
+¹èÄ¡ ÆÄÀÏÀÌ ¾Æ´Õ´Ï´Ù.
+'te_pages_v8.py'Àº(´Â) ³»ºÎ ¶Ç´Â ¿ÜºÎ ¸í·É, ½ÇÇàÇÒ ¼ö ÀÖ´Â ÇÁ·Î±×·¥, ¶Ç´Â
+¹èÄ¡ ÆÄÀÏÀÌ ¾Æ´Õ´Ï´Ù.
+=== ArtCraft ÆäÀÌÁö ÀÚµ¿ ¾÷µ¥ÀÌÆ® (2026-05-26 10:01) ===
+´ë»ó: ./index.html
+
+[ÆÛÇÃ] space=1107 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1107/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[·¹µå] space=1122 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1122/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ºí·ç] space=1109 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1109/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ºê¶ó¿î] space=1234 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1234/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ÆÛÇÃ] space=1235 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1235/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[·¹µå] space=1033 ¼öÁı Áß...
+  [Àç½Ãµµ 1/5] 1ÃÊ ´ë±â... (<urlopen error [WinError 10054] ÇöÀç ¿¬°áÀº ¿ø°İ È£½ºÆ®¿¡ ÀÇÇØ °­Á¦·Î ²÷°å½À´Ï´Ù>)
+  [HTTP 401] /rest/api/space/1033/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[°ø¿ë] space=1192 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1192/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+ÃÑ 0°³ ÆäÀÌÁö ¼öÁı ¿Ï·á
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 323, in <module>
+    update_index_html(pages)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 310, in update_index_html
+    print(f"\n\u2705 {INDEX_PATH} ¾÷µ¥ÀÌÆ® ¿Ï·á \u2014 {len(pages)}°³ ÆäÀÌÁö")
+UnicodeEncodeError: 'cp949' codec can't encode character '\u2705' in position 2: illegal multibyte sequence
+=== ArtCraft ÆäÀÌÁö ÀÚµ¿ ¾÷µ¥ÀÌÆ® (2026-05-26 10:01) ===
+´ë»ó: ./index.html
+
+[ÆÛÇÃ] space=1107 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1107/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[·¹µå] space=1122 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1122/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ºí·ç] space=1109 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1109/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ºê¶ó¿î] space=1234 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1234/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ÆÛÇÃ] space=1235 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1235/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[·¹µå] space=1033 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1033/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[°ø¿ë] space=1192 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1192/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+ÃÑ 0°³ ÆäÀÌÁö ¼öÁı ¿Ï·á
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 323, in <module>
+    update_index_html(pages)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 306, in update_index_html
+    print("\n\u26a0\ufe0f  PAGES ¹è¿­À» Ã£Áö ¸øÇß½À´Ï´Ù.")
+UnicodeEncodeError: 'cp949' codec can't encode character '\u26a0' in position 2: illegal multibyte sequence
+=== ArtCraft ÆäÀÌÁö ÀÚµ¿ ¾÷µ¥ÀÌÆ® (2026-05-26 10:08) ===
+´ë»ó: ./index.html
+
+[ÆÛÇÃ] space=1107 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1107/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[·¹µå] space=1122 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1122/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ºí·ç] space=1109 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1109/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ºê¶ó¿î] space=1234 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1234/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ÆÛÇÃ] space=1235 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1235/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[·¹µå] space=1033 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1033/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[°ø¿ë] space=1192 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1192/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+ÃÑ 0°³ ÆäÀÌÁö ¼öÁı ¿Ï·á
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 323, in <module>
+    update_index_html(pages)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 310, in update_index_html
+    print(f"\n\u2705 {INDEX_PATH} ¾÷µ¥ÀÌÆ® ¿Ï·á \u2014 {len(pages)}°³ ÆäÀÌÁö")
+UnicodeEncodeError: 'cp949' codec can't encode character '\u2705' in position 2: illegal multibyte sequence
+=== ArtCraft ÆäÀÌÁö ÀÚµ¿ ¾÷µ¥ÀÌÆ® (2026-05-26 10:30) ===
+´ë»ó: ./index.html
+
+[ÆÛÇÃ] space=1107 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1107/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[·¹µå] space=1122 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1122/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ºí·ç] space=1109 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1109/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ºê¶ó¿î] space=1234 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1234/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[ÆÛÇÃ] space=1235 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1235/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[·¹µå] space=1033 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1033/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+[°ø¿ë] space=1192 ¼öÁı Áß...
+  [HTTP 401] /rest/api/space/1192/content/page
+  ¡æ ÀüÃ¼ 0°³ Áß ArtCraft 0°³ ¹ß°ß
+
+ÃÑ 0°³ ÆäÀÌÁö ¼öÁı ¿Ï·á
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 323, in <module>
+    update_index_html(pages)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 306, in update_index_html
+    print("\n\u26a0\ufe0f  PAGES ¹è¿­À» Ã£Áö ¸øÇß½À´Ï´Ù.")
+UnicodeEncodeError: 'cp949' codec can't encode character '\u26a0' in position 2: illegal multibyte sequence
+^C=== ArtCraft í˜ì´ì§€ ìë™ ì—…ë°ì´íŠ¸ (2026-05-26 10:39) ===
+ëŒ€ìƒ: ./index.html
+
+[í¼í”Œ] space=1107 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1107/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ë ˆë“œ] space=1122 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1122/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ë¸”ë£¨] space=1109 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1109/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ë¸Œë¼ìš´] space=1234 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1234/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[í¼í”Œ] space=1235 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1235/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ë ˆë“œ] space=1033 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1033/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ê³µìš©] space=1192 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1192/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+ì´ 0ê°œ í˜ì´ì§€ ìˆ˜ì§‘ ì™„ë£Œ
+
+[ê²½ê³ ] PAGES ë°°ì—´ì„ ì°¾ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.
+=== ArtCraft í˜ì´ì§€ ìë™ ì—…ë°ì´íŠ¸ (2026-05-26 10:40) ===
+ëŒ€ìƒ: ./index.html
+
+[í¼í”Œ] space=1107 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1107/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ë ˆë“œ] space=1122 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1122/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ë¸”ë£¨] space=1109 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1109/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ë¸Œë¼ìš´] space=1234 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1234/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[í¼í”Œ] space=1235 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1235/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ë ˆë“œ] space=1033 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1033/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+[ê³µìš©] space=1192 ìˆ˜ì§‘ ì¤‘...
+  [HTTP 401] /rest/api/space/1192/content/page
+  â†’ ì „ì²´ 0ê°œ ì¤‘ ArtCraft 0ê°œ ë°œê²¬
+
+ì´ 0ê°œ í˜ì´ì§€ ìˆ˜ì§‘ ì™„ë£Œ
+
+[ê²½ê³ ] PAGES ë°°ì—´ì„ ì°¾ì§€ ëª»í–ˆìŠµë‹ˆë‹¤.
+=== ArtCraft í˜ì´ì§€ ìë™ ì—…ë°ì´íŠ¸ (2026-05-26 10:44) ===
+ëŒ€ìƒ: C:\Users\opp191\Documents\AIConfluenceArchiving-auto\index.html
+
+[í¼í”Œ] space=1107 ìˆ˜ì§‘ ì¤‘...
+  â†’ ì „ì²´ 12152ê°œ ì¤‘ ArtCraft 321ê°œ ë°œê²¬
+  â†’ ë³¸ë¬¸ ìˆ˜ì§‘ ì¤‘... (321ê°œ, 1ë¼ìš´ë“œ)
+     50/321 ì²˜ë¦¬ (ì‹¤íŒ¨: 0ê°œ)
+     100/321 ì²˜ë¦¬ (ì‹¤íŒ¨: 0ê°œ)
+     150/321 ì²˜ë¦¬ (ì‹¤íŒ¨: 0ê°œ)
+     200/321 ì²˜ë¦¬ (ì‹¤íŒ¨: 0ê°œ)
+     250/321 ì²˜ë¦¬ (ì‹¤íŒ¨: 0ê°œ)
+     300/321 ì²˜ë¦¬ (ì‹¤íŒ¨: 0ê°œ)
+  [ì¬ì‹œë„ 1/5] 1ì´ˆ ëŒ€ê¸°... (<urlopen error [WinError 10054] í˜„ì¬ ì—°ê²°ì€ ì›ê²© í˜¸ìŠ¤íŠ¸ì— ì˜í•´ ê°•ì œë¡œ ëŠê²¼ìŠµë‹ˆë‹¤>)
+  â†’ ì „ì²´ 321ê°œ ìˆ˜ì§‘ ì™„ë£Œ! (ëˆ„ë½ ì—†ìŒ)
+  â†’ 321ê°œ ì™„ë£Œ
+
+[ë ˆë“œ] space=1122 ìˆ˜ì§‘ ì¤‘...
+  â†’ ì „ì²´ 8544ê°œ ì¤‘ ArtCraft 151ê°œ ë°œê²¬
+  â†’ ë³¸ë¬¸ ìˆ˜ì§‘ ì¤‘... (151ê°œ, 1ë¼ìš´ë“œ)
+     50/151 ì²˜ë¦¬ (ì‹¤íŒ¨: 0ê°œ)
+     100/151 ì²˜ë¦¬ (ì‹¤íŒ¨: 0ê°œ)
+     150/151 ì²˜ë¦¬ (ì‹¤íŒ¨: 0ê°œ)
+  â†’ ì „ì²´ 151ê°œ ìˆ˜ì§‘ ì™„ë£Œ! (ëˆ„ë½ ì—†ìŒ)
+  â†’ 151ê°œ ì™„ë£Œ
+
+[ë¸”ë£¨] space=1109 ìˆ˜ì§‘ ì¤‘...
+  [ì¬ì‹œë„ 1/5] 1ì´ˆ ëŒ€ê¸°... (<urlopen error [WinError 10054] í˜„ì¬ ì—°ê²°ì€ ì›ê²© í˜¸ìŠ¤íŠ¸ì— ì˜í•´ ê°•ì œë¡œ ëŠê²¼ìŠµë‹ˆë‹¤>)
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 321, in <module>
+    pages = build_pages_array()
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 242, in build_pages_array
+    space_pages = fetch_space_pages(space_key)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 128, in fetch_space_pages
+    data = api_get(path, params if "?" not in path else None)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v8.py", line 98, in api_get
+    with urlopen(req, timeout=30) as r:
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 519, in open
+    response = self._open(req, data)
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 496, in _call_chain
+    result = func(*args)
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 1391, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 1317, in do_open
+    h = http_class(host, timeout=req.timeout, **http_conn_args)
+  File "C:\Program Files\Python310\lib\http\client.py", line 1421, in __init__
+    context = ssl._create_default_https_context()
+  File "C:\Program Files\Python310\lib\ssl.py", line 771, in create_default_context
+    context.load_default_certs(purpose)
+  File "C:\Program Files\Python310\lib\ssl.py", line 592, in load_default_certs
+    self._load_windows_store_certs(storename, purpose)
+  File "C:\Program Files\Python310\lib\ssl.py", line 576, in _load_windows_store_certs
+    for cert, encoding, trust in enum_certificates(storename):
+KeyboardInterrupt
+^C=== update (2026-05-26 10:58) ===
+
+[í¼í”Œ] space=1107 ...
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v9.py", line 291, in <module>
+    pages = build_pages_array()
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v9.py", line 222, in build_pages_array
+    space_pages = fetch_space_pages(space_key)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v9.py", line 150, in fetch_space_pages
+    time.sleep(0.2)
+KeyboardInterrupt
+^C=== update (2026-05-26 11:00) ===
+
+[í¼í”Œ] space=1107 ...
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v9.py", line 296, in <module>
+    pages = build_pages_array()
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v9.py", line 227, in build_pages_array
+    space_pages = fetch_space_pages(space_key)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v9.py", line 145, in fetch_space_pages
+    data = api_get(path, params if "?" not in path else None)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v9.py", line 115, in api_get
+    with urlopen(req, timeout=20, context=ssl_ctx) as r:
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 519, in open
+    response = self._open(req, data)
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 536, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 496, in _call_chain
+    result = func(*args)
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 1391, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+  File "C:\Program Files\Python310\lib\urllib\request.py", line 1352, in do_open
+    r = h.getresponse()
+  File "C:\Program Files\Python310\lib\http\client.py", line 1374, in getresponse
+    response.begin()
+  File "C:\Program Files\Python310\lib\http\client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "C:\Program Files\Python310\lib\http\client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Program Files\Python310\lib\socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1274, in recv_into
+    return self.read(nbytes, buffer)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1130, in read
+    return self._sslobj.read(len, buffer)
+KeyboardInterrupt
+^C=== update (2026-05-26 11:04) ===
+
+[í¼í”Œ] space=1107 ...
+  -> 12153pages / ArtCraft 321
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 230, in <module>
+    pages = build_pages_array()
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 172, in build_pages_array
+    excerpts = fetch_excerpts(session, space_key)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 124, in fetch_excerpts
+    data = api_get(session, "/rest/api/content/search", {"cql": cql, "limit": 50, "start": start})
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 84, in api_get
+    r = session.get(url, params=params, timeout=15)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\adapters.py", line 696, in send
+    resp = conn.urlopen(
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Program Files\Python310\lib\http\client.py", line 1374, in getresponse
+    response.begin()
+  File "C:\Program Files\Python310\lib\http\client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "C:\Program Files\Python310\lib\http\client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Program Files\Python310\lib\socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1274, in recv_into
+    return self.read(nbytes, buffer)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1130, in read
+    return self._sslobj.read(len, buffer)
+KeyboardInterrupt
+^C=== update (2026-05-26 11:12) ===
+
+[í¼í”Œ] space=1107 ...
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 230, in <module>
+    pages = build_pages_array()
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 165, in build_pages_array
+    space_pages = fetch_space_pages(session, space_key)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 106, in fetch_space_pages
+    data = api_get(session, path, params)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 84, in api_get
+    r = session.get(url, params=params, timeout=15)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\adapters.py", line 696, in send
+    resp = conn.urlopen(
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Program Files\Python310\lib\http\client.py", line 1374, in getresponse
+    response.begin()
+  File "C:\Program Files\Python310\lib\http\client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "C:\Program Files\Python310\lib\http\client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Program Files\Python310\lib\socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1274, in recv_into
+    return self.read(nbytes, buffer)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1130, in read
+    return self._sslobj.read(len, buffer)
+KeyboardInterrupt
+^C=== update (2026-05-26 11:17) ===
+
+[í¼í”Œ] space=1107 ...
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 235, in <module>
+    pages = build_pages_array()
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 170, in build_pages_array
+    space_pages = fetch_space_pages(session, space_key)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 111, in fetch_space_pages
+    data = api_get(session, path, params)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 89, in api_get
+    r = session.get(url, params=params, timeout=15)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\adapters.py", line 696, in send
+    resp = conn.urlopen(
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Program Files\Python310\lib\http\client.py", line 1374, in getresponse
+    response.begin()
+  File "C:\Program Files\Python310\lib\http\client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "C:\Program Files\Python310\lib\http\client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Program Files\Python310\lib\socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1274, in recv_into
+    return self.read(nbytes, buffer)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1130, in read
+    return self._sslobj.read(len, buffer)
+KeyboardInterrupt
+^C=== update (2026-05-26 11:19) ===
+
+[í¼í”Œ] space=1107 ...
+  -> 12153pages / ArtCraft 321
+Traceback (most recent call last):
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 238, in <module>
+    pages = build_pages_array()
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 180, in build_pages_array
+    excerpts = fetch_excerpts(session, space_key)
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 132, in fetch_excerpts
+    data = api_get(session, "/rest/api/content/search", {"cql": cql, "limit": 50, "start": start})
+  File "C:\Users\opp191\Documents\AIConfluenceArchiving-auto\update_pages_v10.py", line 92, in api_get
+    r = session.get(url, params=params, timeout=15)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 671, in get
+    return self.request("GET", url, params=params, **kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\requests\adapters.py", line 696, in send
+    resp = conn.urlopen(
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+  File "C:\Users\opp191\AppData\Roaming\Python\Python310\site-packages\urllib3\connection.py", line 571, in getresponse
+    httplib_response = super().getresponse()
+  File "C:\Program Files\Python310\lib\http\client.py", line 1374, in getresponse
+    response.begin()
+  File "C:\Program Files\Python310\lib\http\client.py", line 318, in begin
+    version, status, reason = self._read_status()
+  File "C:\Program Files\Python310\lib\http\client.py", line 279, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+  File "C:\Program Files\Python310\lib\socket.py", line 705, in readinto
+    return self._sock.recv_into(b)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1274, in recv_into
+    return self.read(nbytes, buffer)
+  File "C:\Program Files\Python310\lib\ssl.py", line 1130, in read
+    return self._sslobj.read(len, buffer)
+KeyboardInterrupt
+^C
