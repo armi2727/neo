@@ -178,19 +178,18 @@ def main():
     seen = set()
 
     for i, r in enumerate(raw):
-        # 실제 API 응답 구조: r.content.id, r.title, r.excerpt, r.lastModified, r.url
-        content = r.get("content", {})
-        cid = content.get("id")
+        # 실제 API 응답: id, title, url, excerpt, lastModified가 최상위에 있음
+        cid = r.get("id")
         if not cid or cid in seen:
             continue
         seen.add(cid)
 
-        title = r.get("title", "") or content.get("title", "")
+        title = r.get("title", "")
         excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:150]
         last_mod = (r.get("lastModified") or "")[:10]
 
         # URL: r.url = "/spaces/1107/pages/..."
-        page_url_path = r.get("url", "") or content.get("_links", {}).get("webui", "")
+        page_url_path = r.get("url", "") or ""
         full_url = CONFLUENCE_BASE + "/wiki" + page_url_path if page_url_path else ""
 
         # space_key: URL에서 추출
@@ -208,8 +207,9 @@ def main():
 
         team = SPACE_TEAM.get(space_key, "\ud37c\ud50c")
 
-        # author
+        # author: content.history.createdBy
         author = ""
+        content = r.get("content", {})
         history = content.get("history", {})
         if history:
             author = history.get("createdBy", {}).get("displayName", "")
