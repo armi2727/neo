@@ -23,7 +23,7 @@ TYPE_KEYWORDS = {
     "\uc774\ubbf8\uc9c0\uc0dd\uc131": ["image gen","\uc774\ubbf8\uc9c0 \uc0dd\uc131","\uc774\ubbf8\uc9c0\uc0dd\uc131","\uc77c\ub7ec\uc2a4\ud2b8","midjourney","\ubbf8\ub4dc\uc800\ub2c8","dzine","krea","flux","comfyui","dreamina","whisk","\ub098\ub178\ubc14\ub098\ub098","nanobanana","ai \uc774\ubbf8\uc9c0"],
     "\uc601\uc0c1": ["\uc601\uc0c1 \uc81c\uc791","\uc601\uc0c1\uc81c\uc791","video","kling","\ud074\ub9c1","sora","higgsfield","seedance","veo","hailuo","\ubaa8\uc158","\uc560\ub2c8\uba54\uc774\uc158"],
     "\ub9ac\uc18c\uc2a4": ["\uac8c\uc784 \ub9ac\uc18c\uc2a4","\ub9ac\uc18c\uc2a4 \uc81c\uc791","\uc2ac\ub86f.*\ub9ac\uc18c\uc2a4","\uc2ec\ubcfc","\uadf8\ub798\ud53d \ub9ac\uc18c\uc2a4"],
-    "\uc0ac\uc6b4\ub4dc": ["\uc0ac\uc6b4\ub4dc","\uc74c\uc545","bgm","sound","music","suno","elevenlabs","\uc624\ub514\uc624","\ubcf4\uc774\uc2a4"],
+    "\uc0ac\uc6b4\ub4dc": ["\uc0ac\uc6b4\ub4dc","\uc74c\uc545","bgm","sound","music","suno","elevenlabs","\uc624\ub514\uc624","\ubcf4\uc774\c2a4"],
     "\uc790\ub3d9\ud654\ud234": ["\uc790\ub3d9\ud654","automation","\uc2a4\ud06c\ub9bd\ud2b8","claude code","cursor","\ucee4\uc11c","n8n","gitlab ci","ci/cd"],
     "\ud3ec\ud1a0\uc0f5": ["\ud3ec\ud1a0\uc0f5","photoshop","\ud3b8\uc9d1","\ud6c4\ud3b8\uc9d1","weavy","\uc704\ube44","upscayl"],
     "UI\ub514\uc790\uc778": ["ui \ub514\uc790\uc778","ui design","\ubc30\ub108","\ud31d\uc5c5","\ubc84\ud2bc","ux"],
@@ -37,7 +37,7 @@ TOOL_KEYWORDS = {
     "ChatGPT": ["chatgpt","gpt"],
     "Midjourney": ["midjourney","\ubbf8\ub4dc\uc800\ub2c8"],
     "Gemini": ["gemini","\uc81c\ubbf8\ub098\uc774"],
-    "\ub098\ub178\ubc14\ub098\ub098": ["\ub098\ub178\ubc14\ub098\ub098","nanobanana"],
+    "\ub098\ub178\ubc14\ub098\ub098": ["\ub098\ub178\ubc14\ub098\ub098","nanobanana","nano banana"],
     "Dzine": ["dzine"],
     "Kling AI": ["kling","\ud074\ub9c1"],
     "Google AI Studio": ["google ai studio","ai studio"],
@@ -62,17 +62,16 @@ TOOL_KEYWORDS = {
     "AI \uc774\ubbf8\uc9c0": ["ai \uc774\ubbf8\uc9c0","ai\uc774\ubbf8\uc9c0"],
 }
 
-def get_auth():
-    return b64encode(f"{EMAIL}:{TOKEN}".encode("utf-8")).decode("ascii")
+def get_headers():
+    auth = b64encode(f"{EMAIL}:{TOKEN}".encode("utf-8")).decode("ascii")
+    return {"Authorization": f"Basic {auth}", "Accept": "application/json"}
 
-def api_get(path, params=None, retry=3):
-    url = f"{CONFLUENCE_BASE}{path}"
-    headers = {"Authorization": f"Basic {get_auth()}", "Accept": "application/json"}
+def api_get(url, params=None, retry=3):
     for attempt in range(retry):
         try:
-            r = requests.get(url, headers=headers, params=params, timeout=10)
+            r = requests.get(url, headers=get_headers(), params=params, timeout=15)
             if r.status_code == 401:
-                print(f"  [HTTP 401] \uc778\uc99d \uc624\ub958")
+                print("  [HTTP 401] \uc778\uc99d \uc624\ub958")
                 return None
             if r.status_code == 404:
                 return None
@@ -86,6 +85,15 @@ def api_get(path, params=None, retry=3):
                 return None
 
 def fetch_all_pages():
+    """
+    expand 없이 검색 — 이 경우 응답 구조:
+      r.content.id, r.content._links.webui
+      r.title, r.excerpt, r.lastModified, r.url
+      r.resultGlobalContainer.displayUrl
+      r.content.history.createdBy.displayName (expand 있을 때만)
+    
+    totalSize 기반으로 start 페이지네이션.
+    """
     spaces = ",".join(f'"{s}"' for s in SPACE_TEAM.keys())
     cql = (
         f'space in ({spaces}) AND '
@@ -93,29 +101,33 @@ def fetch_all_pages():
         f'title ~ "AID TF" OR title ~ "AID TFT" OR title ~ "TechCraft") '
         f'AND type = page ORDER BY created DESC'
     )
+    base_url = f"{CONFLUENCE_BASE}/wiki/rest/api/content/search"
     results = []
     start = 0
-    limit = 100
+    limit = 50
+    total = None
 
     while True:
-        data = api_get("/wiki/rest/api/content/search", {
+        data = api_get(base_url, {
             "cql": cql,
             "limit": limit,
             "start": start,
-            "expand": "content.history.createdBy",
         })
         if not data:
             break
+
+        if total is None:
+            total = data.get("totalSize", 0)
+            print(f"  \uc804\uccb4: {total}\uac1c")
+
         batch = data.get("results", [])
         if not batch:
             break
+
         results.extend(batch)
         print(f"  \ub204\uc801: {len(results)}\uac1c")
 
-        # batch 크기가 limit보다 작으면 마지막 페이지
-        if len(batch) < limit:
-            break
-        if len(results) >= 1000:
+        if len(results) >= total or len(batch) < limit:
             break
 
         start += limit
@@ -171,47 +183,38 @@ def main():
     print(f"  TOKEN: {TOKEN[:4]}..." if TOKEN else "  TOKEN: \ube44\uc5b4\uc788\uc74c")
 
     raw = fetch_all_pages()
-    print(f"  \uc4f0 {len(raw)}\uac1c \uacb0\uacfc")
-
-    # 첫 번째 결과 구조 디버그
-    if raw:
-        r0 = raw[0]
-        print(f"  DEBUG keys: {list(r0.keys())}")
-        print(f"  DEBUG content keys: {list(r0.get('content', {}).keys())}")
-        print(f"  DEBUG content.id: {r0.get('content', {}).get('id')}")
-        print(f"  DEBUG title: {r0.get('title')}")
-        print(f"  DEBUG url: {r0.get('url')}")
-        print(f"  DEBUG r0.id: {r0.get('id')}")
-        print(f"  DEBUG r0.entityType: {r0.get('entityType')}")
-        # 유효 ID 카운트
-        valid = sum(1 for r in raw if r.get("id"))
-        invalid = sum(1 for r in raw if not r.get("id"))
-        print(f"  DEBUG valid ids: {valid}, invalid: {invalid}")
+    print(f"  \uc218\uc9d1: {len(raw)}\uac1c")
 
     pages = []
     seen = set()
 
     for i, r in enumerate(raw):
-        # 실제 API 응답: id, title, url, excerpt, lastModified가 최상위에 있음
-        cid = r.get("id")
+        # expand 없을 때 구조:
+        # r.content.id, r.content._links.webui
+        # r.title, r.excerpt, r.lastModified, r.url
+        # r.resultGlobalContainer.displayUrl
+        content = r.get("content", {})
+        cid = content.get("id", "")
+
         if not cid or cid in seen:
             continue
         seen.add(cid)
 
         title = r.get("title", "")
-        excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:150]
+        excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:200]
         last_mod = (r.get("lastModified") or "")[:10]
 
-        # URL: _links.webui 또는 url 필드
-        page_url_path = r.get("url", "") or r.get("_links", {}).get("webui", "") or ""
-        full_url = CONFLUENCE_BASE + "/wiki" + page_url_path if page_url_path else ""
+        # URL: r.url 또는 content._links.webui
+        page_path = r.get("url", "") or content.get("_links", {}).get("webui", "")
+        full_url = CONFLUENCE_BASE + "/wiki" + page_path if page_path else ""
 
-        # space_key: resultGlobalContainer 우선, URL fallback
+        # space_key: resultGlobalContainer.displayUrl = "/spaces/1107"
         display_url = r.get("resultGlobalContainer", {}).get("displayUrl", "")
         space_key = display_url.strip("/").split("/")[-1] if display_url else ""
 
-        if not space_key and page_url_path:
-            parts = page_url_path.split("/")
+        # space_key fallback: page_path에서 추출
+        if not space_key and page_path:
+            parts = page_path.split("/")
             if "spaces" in parts:
                 idx2 = parts.index("spaces")
                 if idx2 + 1 < len(parts):
@@ -221,7 +224,6 @@ def main():
 
         # author: content.history.createdBy
         author = ""
-        content = r.get("content", {})
         history = content.get("history", {})
         if history:
             author = history.get("createdBy", {}).get("displayName", "")
@@ -243,7 +245,7 @@ def main():
             "summary": excerpt,
         })
 
-    print(f"  \ud544\ud130 \ud6c4 {len(pages)}\uac1c \ud398\uc774\uc9c0")
+    print(f"  \ud398\uc774\uc9c0: {len(pages)}\uac1c")
 
     pages_js = "\n".join(to_js(p) + "," for p in pages)
     updated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
