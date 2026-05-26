@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Confluence에서 AI/디자인 관련 글을 긁어서 index.html을 자동 생성하는 스크립트.
 """
@@ -92,7 +92,7 @@ def search_confluence(cql, limit=50):
         total = data.get("totalSize", 0)
         start += len(batch)
         if start >= total or not batch: break
-        if start >= 500: break
+        if start >= 2000: break
     return results
 
 def fetch_all_pages():
