@@ -15,7 +15,7 @@ SPACE_TEAM = {
     "1109": "\ube14\ub8e8",
     "1234": "\ube0c\ub77c\uc6b4",
     "1235": "\ud37c\ud50c",
-    "1033": "\ub808\ub4dc",h
+    "1033": "\ub808\ub4dc",
     "1192": "\uacf5\uc6a9",
 }
 
