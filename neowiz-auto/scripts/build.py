@@ -155,9 +155,9 @@ def to_js(e):
     )
 
 def build_html(pages_js, updated_at):
-    # build.py 파일 위치 기준으로 상위의 상위 폴더에 있는 index.html 절대 경로 탐색
+    # 💡 [안전 경로 보정] 가상 컴퓨터 웅덩이에서도 확실히 루트 index.html을 겨냥하도록 normpath를 씌웁니다.
     base = os.path.dirname(os.path.abspath(__file__))
-    index_path = os.path.join(base, "..", "..", "index.html")
+    index_path = os.path.normpath(os.path.join(base, "..", "..", "index.html"))
     
     with open(index_path, encoding="utf-8") as f:
         content = f.read()
@@ -165,7 +165,6 @@ def build_html(pages_js, updated_at):
     new_pages = "const PAGES=[\n" + pages_js + "\n];"
     content = _re.sub(r'const PAGES=\[.*?\];', new_pages, content, flags=_re.DOTALL)
     
-    # 수정된 HTML 내용과 함께, 읽어왔던 경로(index_path)를 함께 반환합니다.
     return content, index_path
 
 def main():
@@ -239,7 +238,7 @@ def main():
     pages_js = "\n".join(to_js(p) + "," for p in pages)
     updated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     
-    # [수정 적용] 읽어온 경로 그대로 덮어쓰기 위해 두 인자를 반환받습니다.
+    # 💡 [구조 일치화] 반환받은 정확한 target_path 위치에 곧바로 쓰도록 유도합니다.
     html, target_path = build_html(pages_js, updated_at)
     
     with open(target_path, "w", encoding="utf-8") as f:
