@@ -242,6 +242,8 @@ def main():
     print(f"  \ud398\uc774\uc9c0: {len(pages)}\uac1c")
 
     pages_js = "\n".join(to_js(p) + "," for p in pages)
+    updated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    html = build_html(pages_js, updated_at)
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(html)
     print(f"index.html \uc644\ub8cc ({len(html)} bytes)")
