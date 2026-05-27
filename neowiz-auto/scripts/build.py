@@ -15,7 +15,7 @@ SPACE_TEAM = {
     "1109": "\ube14\ub8e8",
     "1234": "\ube0c\ub77c\uc6b4",
     "1235": "\ud37c\ud50c",
-    "1033": "\ub808\ub4dc",
+    "1033": "\ub808\ub4dc",h
     "1192": "\uacf5\uc6a9",
 }
 
@@ -242,13 +242,9 @@ def main():
     print(f"  \ud398\uc774\uc9c0: {len(pages)}\uac1c")
 
     pages_js = "\n".join(to_js(p) + "," for p in pages)
-    updated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    html = build_html(pages_js, updated_at)
-
-    os.makedirs("public", exist_ok=True)
-    with open("public/index.html", "w", encoding="utf-8") as f:
+    with open("index.html", "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"public/index.html \uc644\ub8cc ({len(html)} bytes)")
+    print(f"index.html \uc644\ub8cc ({len(html)} bytes)")
 
 if __name__ == "__main__":
     main()
