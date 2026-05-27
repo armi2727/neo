@@ -10,6 +10,13 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    
+    # 💡 [핵심 추가] 깃허브 액션이 웹사이트 배포(Pages) 시스템을 강제로 깨우고 실행할 수 있는 특수 권한을 부여합니다.
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+      
     steps:
       - uses: actions/checkout@v4
       
@@ -25,7 +32,7 @@ jobs:
         timeout-minutes: 8
         env:
           CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
-          CONFLUENCE_API_TOKEN: ${{ secrets.CONF_TOKEN }}  # CONF_TOKEN 정상 매칭
+          CONFLUENCE_API_TOKEN: ${{ secrets.CONF_TOKEN }}
         run: python neowiz-auto/scripts/build.py
         
       - name: index.html 배포
@@ -33,10 +40,8 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           
-          # 💡 [해결] 에러를 내던 cp public/... 코드를 완전히 청소했습니다.
-          # build.py가 프로젝트 루트의 index.html을 직접 고치므로 곧바로 git add 합니다.
           git add index.html
           
-          # 변경 사항이 존재할 때만 안전하게 커밋하고 푸시합니다.
+          # 변경 사항이 있을 때만 안전하게 커밋하고 푸시합니다.
           git diff --staged --quiet || git commit -m "자동 업데이트"
           git push
