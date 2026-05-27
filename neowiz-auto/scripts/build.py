@@ -10,48 +10,48 @@ EMAIL = os.environ.get("CONFLUENCE_EMAIL", "")
 TOKEN = os.environ.get("CONFLUENCE_API_TOKEN", "")
 
 SPACE_TEAM = {
-    "1107": "\ud37c\ud50c",
-    "1122": "\ub808\ub4dc",
-    "1109": "\ube14\ub8e8",
-    "1234": "\ube0c\ub77c\uc6b4",
-    "1235": "\ud37c\ud50c",
-    "1033": "\ub808\ub4dc",
-    "1192": "\uacf5\uc6a9",
+    "1107": "퍼플",
+    "1122": "레드",
+    "1109": "블루",
+    "1234": "브라운",
+    "1235": "퍼플",
+    "1033": "레드",
+    "1192": "공용",
 }
 
 TYPE_KEYWORDS = {
-    "\uc774\ubbf8\uc9c0\uc0dd\uc131": ["image gen","\uc774\ubbf8\uc9c0 \uc0dd\uc131","\uc774\ubbf8\uc9c0\uc0dd\uc131","\uc77c\ub7ec\uc2a4\ud2b8","midjourney","\ubbf8\ub4dc\uc800\ub2c8","dzine","krea","flux","comfyui","dreamina","whisk","\ub098\ub178\ubc14\ub098\ub098","nanobanana","ai \uc774\ubbf8\uc9c0"],
-    "\uc601\uc0c1": ["\uc601\uc0c1 \uc81c\uc791","\uc601\uc0c1\uc81c\uc791","video","kling","\ud074\ub9c1","sora","higgsfield","seedance","veo","hailuo","\ubaa8\uc158","\uc560\ub2c8\uba54\uc774\uc158"],
-    "\ub9ac\uc18c\uc2a4": ["\uac8c\uc784 \ub9ac\uc18c\uc2a4","\ub9ac\uc18c\uc2a4 \uc81c\uc791","\uc2ac\ub86f.*\ub9ac\uc18c\uc2a4","\uc2ec\ubcfc","\uadf8\ub798\ud53d \ub9ac\uc18c\uc2a4"],
-    "\uc0ac\uc6b4\ub4dc": ["\uc0ac\uc6b4\ub4dc","\uc74c\uc545","bgm","sound","music","suno","elevenlabs","\uc624\ub514\uc624","\ubcf4\uc774\uc2a4"],
-    "\uc790\ub3d9\ud654\ud234": ["\uc790\ub3d9\ud654","automation","\uc2a4\ud06c\ub9bd\ud2b8","claude code","cursor","\ucee4\uc11c","n8n","gitlab ci","ci/cd"],
-    "\ud3ec\ud1a0\uc0f5": ["\ud3ec\ud1a0\uc0f5","photoshop","\ud3b8\uc9d1","\ud6c4\ud3b8\uc9d1","weavy","\uc704\ube44","upscayl"],
-    "UI\ub514\uc790\uc778": ["ui \ub514\uc790\uc778","ui design","\ubc30\ub108","\ud31d\uc5c5","\ubc84\ud2bc","ux"],
-    "Figma": ["figma","\ud53c\uadf8\ub9c8"],
-    "R&D\u00b7\ube44\uad50": ["r&d","\ube44\uad50","\ud14c\uc2a4\ud2b8","\ub9ac\uc11c\uce58","research","\ubd84\uc11d","\uac80\ud1a0"],
-    "AI\uc81c\uc791\ud234": ["\ud50c\ub7ec\uadf8\uc778","plugin","\ud234 \uc81c\uc791","bluetester","streamlit","page launcher","scheduler","\uac8c\uc784 \uc81c\uc791\uae30","align tool","resource namer"],
-    "\uc720\ub2c8\ud2f0": ["unity","\uc720\ub2c8\ud2f0","shader"],
+    "이미지생성": ["image gen","이미지 생성","이미지생성","일러스트","midjourney","미드저니","dzine","krea","flux","comfyui","dreamina","whisk","나노바나나","nanobanana","ai 이미지"],
+    "영상": ["영상 제작","영상제작","video","kling","클링","sora","higgsfield","seedance","veo","hailuo","모션","애니메이션"],
+    "리소스": ["게임 리소스","리소스 제작","슬롯.*리소스","심볼","그래픽 리소스"],
+    "사운드": ["사운드","음악","bgm","sound","music","suno","elevenlabs","오디오","보이스"],
+    "자동화툴": ["자동화","automation","스크립트","claude code","cursor","커서","n8n","gitlab ci","ci/cd"],
+    "포토샵": ["포토샵","photoshop","편집","후편집","weavy","위비","upscayl"],
+    "UI디자인": ["ui 디자인","ui design","배너","팝업","버튼","ux"],
+    "Figma": ["figma","피그마"],
+    "R&D·비교": ["r&d","비교","테스트","리서치","research","분석","검토"],
+    "AI제작툴": ["플러그인","plugin","툴 제작","bluetester","streamlit","page launcher","scheduler","게임 제작기","align tool","resource namer"],
+    "유니티": ["unity","유니티","shader"],
 }
 
 TOOL_KEYWORDS = {
     "ChatGPT": ["chatgpt","gpt"],
-    "Midjourney": ["midjourney","\ubbf8\ub4dc\uc800\ub2c8"],
-    "Gemini": ["gemini","\uc81c\ubbf8\ub098\uc774"],
-    "\ub098\ub178\ubc14\ub098\ub098": ["\ub098\ub178\ubc14\ub098\ub098","nanobanana","nano banana"],
+    "Midjourney": ["midjourney","미드저니"],
+    "Gemini": ["gemini","제미나이"],
+    "나노바나나": ["나노바나나","nanobanana","nano banana"],
     "Dzine": ["dzine"],
-    "Kling AI": ["kling","\ud074\ub9c1"],
+    "Kling AI": ["kling","클링"],
     "Google AI Studio": ["google ai studio","ai studio"],
     "Suno": ["suno"],
     "KREA": ["krea"],
     "Weavy": ["weavy"],
-    "Claude": ["claude","\ud074\ub85c\ub4dc"],
+    "Claude": ["claude","클로드"],
     "Higgsfield": ["higgsfield"],
     "FLUX": ["flux"],
     "Whisk": ["whisk"],
     "Veo": ["veo"],
     "Seedance": ["seedance"],
     "Dreamina": ["dreamina"],
-    "\uc704\ube44": ["\uc704\ube44"],
+    "위비": ["위비"],
     "Upscayl": ["upscayl"],
     "Grok": ["grok"],
     "ElevenLabs": ["elevenlabs"],
@@ -59,7 +59,7 @@ TOOL_KEYWORDS = {
     "Tripo 3D": ["tripo"],
     "Sora": ["sora"],
     "Google Flow": ["google flow"],
-    "AI \uc774\ubbf8\uc9c0": ["ai \uc774\ubbf8\uc9c0","ai\uc774\ubbf8\uc9c0"],
+    "AI 이미지": ["ai 이미지","ai이미지"],
 }
 
 def get_headers():
@@ -71,7 +71,7 @@ def api_get(url, params=None, retry=3):
         try:
             r = requests.get(url, headers=get_headers(), params=params, timeout=15)
             if r.status_code == 401:
-                print("  [HTTP 401] \uc778\uc99d \uc624\ub958")
+                print("  [HTTP 401] 인증 오류")
                 return None
             if r.status_code == 404:
                 return None
@@ -81,7 +81,7 @@ def api_get(url, params=None, retry=3):
             if attempt < retry - 1:
                 time.sleep(2 ** attempt)
             else:
-                print(f"  [\uc624\ub958] {e}")
+                print(f"  [오류] {e}")
                 return None
 
 def fetch_all_pages():
@@ -108,16 +108,14 @@ def fetch_all_pages():
 
         results.extend(batch)
         total = data.get("totalSize", len(results))
-        print(f"  \ub204\uc801: {len(results)}/{total}\uac1c")
+        print(f"  누적: {len(results)}/{total}개")
 
-        # 다음 페이지: _links.next 커서 사용
         next_path = data.get("_links", {}).get("next", "")
         if not next_path:
             break
 
-        # next_path = "/rest/api/search?..." — /wiki 붙여야 함
         url = CONFLUENCE_BASE + "/wiki" + next_path
-        params = None  # URL에 이미 파라미터 포함됨
+        params = None
 
         time.sleep(0.3)
 
@@ -131,7 +129,7 @@ def extract_types(text):
             found.append(key)
     seen = set()
     result = [t for t in found if not (t in seen or seen.add(t))]
-    return result if result else ["R&D\u00b7\ube44\uad50"]
+    return result if result else ["R&D·비교"]
 
 def extract_tools(text):
     found = []
@@ -157,25 +155,27 @@ def to_js(e):
     )
 
 def build_html(pages_js, updated_at):
-    # index.html에서 PAGES 배열만 교체
+    # build.py 파일 위치 기준으로 상위의 상위 폴더에 있는 index.html 절대 경로 탐색
     base = os.path.dirname(os.path.abspath(__file__))
     index_path = os.path.join(base, "..", "..", "index.html")
+    
     with open(index_path, encoding="utf-8") as f:
         content = f.read()
     import re as _re
     new_pages = "const PAGES=[\n" + pages_js + "\n];"
     content = _re.sub(r'const PAGES=\[.*?\];', new_pages, content, flags=_re.DOTALL)
-    return content
+    
+    # 수정된 HTML 내용과 함께, 읽어왔던 경로(index_path)를 함께 반환합니다.
+    return content, index_path
 
 def main():
-    print("Confluence \uac80\uc0c9 \uc911...")
-    print(f"  EMAIL: {EMAIL[:4]}..." if EMAIL else "  EMAIL: \ube44\uc5b4\uc788\uc74c")
-    print(f"  TOKEN: {TOKEN[:4]}..." if TOKEN else "  TOKEN: \ube44\uc5b4\uc788\uc74c")
+    print("Confluence 검색 중...")
+    print(f"  EMAIL: {EMAIL[:4]}..." if EMAIL else "  EMAIL: 비어있음")
+    print(f"  TOKEN: {TOKEN[:4]}..." if TOKEN else "  TOKEN: 비어있음")
 
     raw = fetch_all_pages()
-    print(f"  \uc218\uc9d1: {len(raw)}\uac1c")
+    print(f"  수집: {len(raw)}개")
 
-    # 첫 번째 결과 구조 확인
     if raw:
         r0 = raw[0]
         c0 = r0.get("content", {})
@@ -188,8 +188,6 @@ def main():
     seen = set()
 
     for i, r in enumerate(raw):
-        # expand 없을 때: r.id, r.title, r.url, r.excerpt, r.lastModified 최상위에 있음
-        # expand 있을 때: r.content.id, r.content._links.webui 에 있음
         content = r.get("content", {})
         cid = str(r.get("id") or content.get("id") or "")
         if not cid or cid in seen:
@@ -200,11 +198,9 @@ def main():
         excerpt = re.sub(r"<[^>]+>", "", r.get("excerpt", "")).strip()[:200]
         last_mod = (r.get("lastModified") or "")[:10]
 
-        # URL
         page_path = r.get("url", "") or content.get("_links", {}).get("webui", "")
         full_url = CONFLUENCE_BASE + "/wiki" + page_path if page_path else ""
 
-        # space_key
         display_url = r.get("resultGlobalContainer", {}).get("displayUrl", "")
         space_key = display_url.strip("/").split("/")[-1] if display_url else ""
         if not space_key and page_path:
@@ -214,9 +210,8 @@ def main():
                 if idx2 + 1 < len(parts):
                     space_key = parts[idx2 + 1]
 
-        team = SPACE_TEAM.get(space_key, "\ud37c\ud50c")
+        team = SPACE_TEAM.get(space_key, "퍼플")
 
-        # author
         author = ""
         history = content.get("history", {})
         if history:
@@ -229,7 +224,7 @@ def main():
         pages.append({
             "team": team,
             "types": types,
-            "tools": tools if tools else ["AI \uc774\ubbf8\uc9c0"],
+            "tools": tools if tools else ["AI 이미지"],
             "views": 100 + i * 3,
             "title": title,
             "url": full_url,
@@ -239,14 +234,18 @@ def main():
             "summary": excerpt,
         })
 
-    print(f"  \ud398\uc774\uc9c0: {len(pages)}\uac1c")
+    print(f"  페이지: {len(pages)}개")
 
     pages_js = "\n".join(to_js(p) + "," for p in pages)
     updated_at = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-    html = build_html(pages_js, updated_at)
-    with open("index.html", "w", encoding="utf-8") as f:
+    
+    # [수정 적용] 읽어온 경로 그대로 덮어쓰기 위해 두 인자를 반환받습니다.
+    html, target_path = build_html(pages_js, updated_at)
+    
+    with open(target_path, "w", encoding="utf-8") as f:
         f.write(html)
-    print(f"index.html \uc644\ub8cc ({len(html)} bytes)")
+        
+    print(f"index.html 업데이트 완료! -> {target_path} ({len(html)} bytes)")
 
 if __name__ == "__main__":
     main()
